@@ -103,7 +103,8 @@ class Faculty(LabeledIntegerEnum):
 class Semester(LabeledIntegerEnum):
     FIRST = 1, _("סמסטר א'")
     SECOND = 2, _("סמסטר ב'")
-    YEARLY = 3, _('שנתי')
+    SUMMER = 3, _("סמסטר קיץ")
+    YEARLY = 4, _('שנתי')
 
 
 class SessionType(LabeledIntegerEnum):
