@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('average', models.IntegerField(validators=[django.core.validators.MinValueValidator(0, 'Value should not fall short of 0'), django.core.validators.MaxValueValidator(5, 'Value should not exceed 5')])),
                 ('amount_of_raters', models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0, 'Value has to be a natural number')])),
-                ('teacher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plan_ilan.teacher')),
+                ('teacher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PlanIlan.teacher')),
             ],
             options={
                 'abstract': False,
@@ -79,8 +79,8 @@ class Migration(migrations.Migration):
                 ('amount_of_likes', models.IntegerField(default=0)),
                 ('headline', models.CharField(max_length=256)),
                 ('text', models.TextField()),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plan_ilan.user')),
-                ('teacher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plan_ilan.teacher')),
+                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PlanIlan.user')),
+                ('teacher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PlanIlan.teacher')),
             ],
             options={
                 'abstract': False,
@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('average', models.IntegerField(validators=[django.core.validators.MinValueValidator(0, 'Value should not fall short of 0'), django.core.validators.MaxValueValidator(5, 'Value should not exceed 5')])),
                 ('amount_of_raters', models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0, 'Value has to be a natural number')])),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plan_ilan.course')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PlanIlan.course')),
             ],
             options={
                 'abstract': False,
@@ -106,8 +106,8 @@ class Migration(migrations.Migration):
                 ('amount_of_likes', models.IntegerField(default=0)),
                 ('headline', models.CharField(max_length=256)),
                 ('text', models.TextField()),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plan_ilan.user')),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plan_ilan.course')),
+                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PlanIlan.user')),
+                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PlanIlan.course')),
             ],
             options={
                 'abstract': False,
@@ -116,16 +116,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='course',
             name='lesson_times',
-            field=models.ManyToManyField(to='plan_ilan.LessonTime'),
+            field=models.ManyToManyField(to='PlanIlan.LessonTime'),
         ),
         migrations.AddField(
             model_name='course',
             name='locations',
-            field=models.ManyToManyField(to='plan_ilan.Location'),
+            field=models.ManyToManyField(to='PlanIlan.Location'),
         ),
         migrations.AddField(
             model_name='course',
             name='teacher_name',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plan_ilan.teacher'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='PlanIlan.teacher'),
         ),
     ]
