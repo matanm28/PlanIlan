@@ -29,7 +29,7 @@ class Day(models.IntegerChoices):
 
 class Faculty(models.IntegerChoices):
     CS = 89, _('למדעי המחשב')
-    NEUROSCIENCE = 27, _('מדעי המוח')
+    NEUROSCIENCE = 272, _('מדעי המוח')
     ARABIC = 36, _('המחלקה לערבית')
     OPT = 82, _('אופטימטריה')
     MANAGEMENT = 55, _('המחלקה לניהול')
@@ -45,7 +45,7 @@ class Faculty(models.IntegerChoices):
     GEO = 75, _('גיאוגרפיה')
     INSTRUCT = 79, _('הוראה')
     BROK = 25, _('תכנית ברוקדייל')
-    GENDER = 27, _('לימודי מגדר')
+    GENDER = 279, _('לימודי מגדר')
     FR = 43, _('המחלקה לתרבות צרפת')
     MD = 81, _('הפקולטה לרפואה')
     LAW = 99, _('הפקולטה למשפטים')
@@ -85,10 +85,14 @@ class Faculty(models.IntegerChoices):
     BASE_ISR = 4, _('לימודי יסוד - תולדות ישראל')
     BASE_TALMUD = 2, _('לימודי יסוד - תלמוד')
     BASE_BIBLE = 1, _('לימודי יסוד - תנ"ך')
-    INTER = 27, _('פרשנות')
+    INTER = 271, _('פרשנות')
     EDIT = 22, _('לימודי תעודה בעריכה')
-    ISR = 16, _('לימודי ארץ ישראל וארכיאולוגיה')
-
+    INTERDIS = 277, _('לימודים בין תחומיים')
+    SCI_TECH = 278, _('מדע, טכנולוגיה וחברה')
+    NEUROSCIENCE_HIGH = 275, _('מדעי המוח לתארים מתקדמים')
+    CONF = 277, _('ניהול וישוב סכסוכים')
+    CONF_THESES = 273, _('ניהול וישוב סכסוכים - תזה')
+    SOC_WORK = 59, _('עבודה סוציאלי - לימודי חוץ')
 
     @classmethod
     def get_faculty_by_number(cls, num: int):
