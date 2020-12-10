@@ -67,6 +67,39 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'basic': {
+            'format': '%(asctime)s - %(levelname)-4s - %(message)s',
+            'datefmt': '%d.%m.%y-%H-%M-%S',
+            'level': 'DEBUG',
+        },
+        'handlers': {
+            'format': '[%(levelname)s] - %(message)s',
+            'level': 'DEBUG',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '{0}{1}.log'.format('logger', 'database_builder'),
+            'mode': 'w',
+            'encoding': 'utf-8',
+            'formatter': 'handlers',
+        },
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['file'],
+            'formatter': 'basic',
+        },
+    },
+}
+
 WSGI_APPLICATION = 'PlanIlan.wsgi.application'
 
 # Database
