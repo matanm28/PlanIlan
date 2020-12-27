@@ -1,6 +1,9 @@
 import sys
+import logging
 from typing import List
 from django.db import models
+
+from PlanIlan.exceptaions.cant_create_model_error import CantCreateModelError
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
 from PlanIlan.models import BaseModel, LessonTime, Location, Faculty, Semester, Teacher
 
@@ -20,7 +23,8 @@ class Course(BaseModel):
                locations: List[Location],
                semester: str, link: str) -> 'Course':
         if len(lesson_times) != len(locations):
-            return None
+            reason = f'Amount of locations ({len(locations)}) differs from the amount of lesson times ({len(lesson_times)})'
+            raise CantCreateModelError(cls.__name__, reason)
         try:
             faculty_enum = Faculty.from_int(int(cls.get_faculty_code_from_course_id(course_id)))
             semester_enum = Semester.from_string(semester)
@@ -28,8 +32,7 @@ class Course(BaseModel):
                             locations=locations, faculty=faculty_enum, semester=semester_enum, details_link=link)
             return course
         except EnumNotExistError as err:
-            print(err, file=sys.stderr)
-            return None
+            raise err
 
     course_id = models.CharField(primary_key=True, max_length=10)
     name = models.CharField(max_length=80)

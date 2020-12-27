@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -28,12 +30,20 @@ class LabeledIntegerEnum(models.IntegerChoices):
 
 
 class Day(LabeledIntegerEnum):
-    SUNDAY = 1, _('ראשון')
-    MONDAY = 2, _('שני')
-    TUESDAY = 3, _('שלישי')
-    WEDNESDAY = 4, _('רביעי')
-    THURSDAY = 5, _('חמישי')
-    FRIDAY = 6, _('שישי')
+    SUNDAY = 1, _('א')
+    MONDAY = 2, _('ב')
+    TUESDAY = 3, _('ג')
+    WEDNESDAY = 4, _('ד')
+    THURSDAY = 5, _('ה')
+    FRIDAY = 6, _('ו')
+
+    @classmethod
+    def full_strings_labels(cls) -> Tuple[str]:
+        return 'ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'
+
+    @property
+    def full_label(self) -> str:
+        return Day.full_strings_labels()[Day.labels.indexof(self.label)]
 
 
 class Faculty(LabeledIntegerEnum):
@@ -120,14 +130,3 @@ class TeacherTitle(LabeledIntegerEnum):
     MR = 2, _('מר')
     MRS = 3, _('גברת')
 
-    @classmethod
-    def get_enum(cls, title: str) -> 'TeacherTitle':
-        title = title.strip()
-        if title[0] in cls.DOC:
-            return cls.DOC
-        elif title[0] in cls.PROF:
-            return cls.PROF
-        elif title[0] in cls.MR:
-            return cls.MR
-        elif title[0] in cls.MRS:
-            return cls.MRS

@@ -9,6 +9,6 @@ class Teacher(BaseModel):
 
     @classmethod
     def create(cls, name: str, title: str) -> 'Teacher':
-        title_enum = TeacherTitle.get_enum(title)
+        title_enum = TeacherTitle.from_string(title)
         teacher = Teacher(name=name, title=title_enum)
         return teacher
