@@ -20,7 +20,7 @@ class Course(BaseModel):
 
     @classmethod
     def create(cls, course_id: str, name: str, teacher: Teacher, lesson_times: List[LessonTime],
-               locations: List[Location],
+               locations: Location,
                semester: str, link: str) -> 'Course':
         # if len(lesson_times) != len(locations):
         #     reason = f'Amount of locations ({len(locations)}) differs from the amount of lesson times ({len(lesson_times)})'
@@ -28,10 +28,10 @@ class Course(BaseModel):
         try:
             faculty_enum = Faculty.from_int(int(cls.get_faculty_code_from_course_id(course_id)))
             semester_enum = Semester.from_string(semester)
-            course = Course(course_id=course_id, name=name, teacher=teacher, faculty=faculty_enum,
+            course = Course(id=course_id, name=name, teacher=teacher, faculty=faculty_enum,
                             semester=semester_enum, details_link=link)
-            course.locations.add([locations])
-            course.lesson_times.add(lesson_times)
+            course.locations.add(locations)
+            course.lesson_times.add(lesson_times[0])
 
             # course.locations.add(locations)
             # for lesson_time in lesson_times:
@@ -42,9 +42,9 @@ class Course(BaseModel):
 
     id = models.CharField(primary_key=True, max_length=10)
     name = models.CharField(max_length=80)
-    teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
-    lesson_times = models.ManyToManyField('LessonTime')
-    locations = models.ManyToManyField('Location')
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    lesson_times = models.ManyToManyField(LessonTime)
+    locations = models.ManyToManyField(Location)
     faculty = models.IntegerField(choices=Faculty.choices)
     semester = models.IntegerField(choices=Semester.choices)
     details_link = models.URLField(null=True)
