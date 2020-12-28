@@ -22,19 +22,25 @@ class Course(BaseModel):
     def create(cls, course_id: str, name: str, teacher: Teacher, lesson_times: List[LessonTime],
                locations: List[Location],
                semester: str, link: str) -> 'Course':
-        if len(lesson_times) != len(locations):
-            reason = f'Amount of locations ({len(locations)}) differs from the amount of lesson times ({len(lesson_times)})'
-            raise CantCreateModelError(cls.__name__, reason)
+        # if len(lesson_times) != len(locations):
+        #     reason = f'Amount of locations ({len(locations)}) differs from the amount of lesson times ({len(lesson_times)})'
+        #     raise CantCreateModelError(cls.__name__, reason)
         try:
             faculty_enum = Faculty.from_int(int(cls.get_faculty_code_from_course_id(course_id)))
             semester_enum = Semester.from_string(semester)
-            course = Course(course_id=course_id, name=name, teacher=teacher, lesson_times=lesson_times,
-                            locations=locations, faculty=faculty_enum, semester=semester_enum, details_link=link)
+            course = Course(course_id=course_id, name=name, teacher=teacher, faculty=faculty_enum,
+                            semester=semester_enum, details_link=link)
+            course.locations.add([locations])
+            course.lesson_times.add(lesson_times)
+
+            # course.locations.add(locations)
+            # for lesson_time in lesson_times:
+            #     course.lesson_times.add(lesson_time)
             return course
         except EnumNotExistError as err:
             raise err
 
-    course_id = models.CharField(primary_key=True, max_length=10)
+    id = models.CharField(primary_key=True, max_length=10)
     name = models.CharField(max_length=80)
     teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
     lesson_times = models.ManyToManyField('LessonTime')
@@ -45,12 +51,12 @@ class Course(BaseModel):
 
     @property
     def group_code(self) -> str:
-        return self.course_id[-2:]
+        return self.id[-2:]
 
     @property
     def code(self) -> str:
-        return self.course_id[:-2]
+        return self.id[:-2]
 
     @property
     def faculty_code(self) -> str:
-        return Course.get_faculty_code_from_course_id(self.course_id)
+        return Course.get_faculty_code_from_course_id(self.id)

@@ -7,16 +7,16 @@ from .teacher_dto import TeacherDto
 
 
 class CourseDto(BaseDto):
-    code: str
-    group_code: str
-    name: str
-    teacher: TeacherDto
-    faculty: str
-    semester: str
-    details_link: str
-    rating: RatingDto
+    code: str = field(init=False)
+    group_code: str = field(init=False)
+    name: str = field(init=False)
+    teacher: TeacherDto = field(init=False)
+    faculty: str = field(init=False)
+    semester: str = field(init=False)
+    details_link: str = field(init=False)
+    rating: RatingDto = field(init=False)
 
-    @property
+    @classmethod
     def mapping_options(self):
         return {
             # 'code': lambda course: course.code,
@@ -30,10 +30,8 @@ class CourseDto(BaseDto):
 
     @classmethod
     def maps_from(cls):
-        return type(Course)
+        return Course
 
     @classmethod
     def maps_to(cls):
-        return type(cls)
-
-
+        return cls

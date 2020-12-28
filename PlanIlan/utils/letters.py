@@ -25,7 +25,7 @@ letters = {"a": ["####", "#  #", "####", "#  #", "#  #"], "b": ["###", "# #", "#
 
 # letters stolen from here: http://www.stuffaboutcode.com/2013/08/raspberry-pi-minecraft-twitter.html
 
-def print_letters(text, scale=1, e_space=2):
+def big_letters(text, scale=1, e_space=2)->str:
     print('\n\n')
     big_letters = []
     for i in text:

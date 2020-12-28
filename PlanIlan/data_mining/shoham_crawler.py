@@ -1,20 +1,20 @@
 import time
+from datetime import datetime
 from typing import List
 
 from bs4 import BeautifulSoup
 import re
 import logging
-from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
-from PlanIlan.models import Course, Location, Day, LessonTime, Teacher
+from PlanIlan.models import Course, Location, Day, LessonTime, Teacher, SessionType
 
 
 class ShohamCrawler:
     __hour_regex = '[0-9][0-9]:[0-9][0-9] - [0-9][0-9]:[0-9][0-9]'
-    __time_format = '%H:%M'
+    __time_format = '%d-%m-%Y -- %H:%M'
 
     def __init__(self, base_url: str):
         logging.info('Creating a ShoamCrawler instance')
@@ -52,7 +52,7 @@ class ShohamCrawler:
         return self.__hour_regex
 
     @property
-    def time_format(self):
+    def time_format(self) -> str:
         return self.__time_format
 
     @property
@@ -83,10 +83,11 @@ class ShohamCrawler:
     def add_html_page(self, link: str):
         self.html_links.append(link)
 
-    def add_page_to_soup_list(self, content: str):
-        self.soups_list.append(BeautifulSoup(content, 'html.parser'))
+    def add_page_to_soup_list(self, content: BeautifulSoup):
+        self.soups_list.append(content)
 
     def parse_single_course_page(self, soup: BeautifulSoup) -> List[Course]:
+        page_courses_list = []
         if self.print_soup:
             print(soup.prettify())
         table = soup.find(attrs={'class': 'resulte_table'})
@@ -97,11 +98,11 @@ class ShohamCrawler:
             course_name = tr.contents[2].text.strip()
             group_code = str(tr.contents[3].text.strip())
             id = code + group_code
-            teacher_title, teacher_name = tr.contents[4].text.strip().split(' ')
-            if not teacher_name or not teacher_title:
-                continue
             session_type = tr.contents[5].text.strip()
-            if not session_type:
+            if not session_type or session_type not in SessionType.labels:
+                continue
+            teacher_title, teacher_name = tr.contents[4].text.strip().split(' ', 1)
+            if not teacher_name or not teacher_title:
                 continue
             semester = tr.contents[6].text.strip()
             if not semester:
@@ -115,19 +116,19 @@ class ShohamCrawler:
             if len(hours) == 0:
                 continue
             lesson_time_list = self.parse_lesson_times(days, hours)
-            link = f"https://shoham.biu.ac.il/BiuCoursesViewer/{tr.contents[9].find('a', href=True)['href']}"
-            teacher = Teacher.create(name=teacher_name,teacher_title=teacher_title)
-            course = Course.create(course_id=id, name=course_name,teacher=teacher,lesson_times=lesson_time_list,
-                                   locations=)
-            page_courses_list.append(course)
+            link = f"{self.base_url}{tr.contents[9].find('a', href=True)['href']}"
+            teacher = Teacher.create(teacher_name, teacher_title)
+            course_dict = {'id': id, 'name': course_name, 'teacher': teacher, 'lesson_times': lesson_time_list,
+                           'semester': semester, 'link': link}
+            page_courses_list.append(course_dict)
         return page_courses_list
 
     def parse_all_content(self):
-        driver = ShohamCrawler.__get_chrome_driver()
-        for page in self.htmlPageContents:
+        driver = self.__get_chrome_driver()
+        for page in self.soups_list:
             page_courses = self.parse_single_course_page(page)
-            for course in page_courses:
-                driver.get(course.details_link)
+            for course_dict in page_courses:
+                driver.get(course_dict['link'])
                 building_place_holder = '//*[@id="ContentPlaceHolder1_tdBuilding"]/table/tbody/tr/td'
                 class_number_place_holder = '//*[@id="ContentPlaceHolder1_tdRoom"]/table/tbody/tr/td'
                 try:
@@ -138,17 +139,24 @@ class ShohamCrawler:
                     class_number = driver.find_element_by_xpath(class_number_place_holder).text
                 except:
                     class_number = 'אין מידע'
-                course.location = ShohamCrawler.parse_location(building, class_number)
+                locations = ShohamCrawler.parse_location(building, class_number)
+                locations.save()
+                for lesson_time in course_dict['lesson_times']:
+                    lesson_time.save()
+                course = Course.create(course_dict['id'], course_dict['name'], course_dict['teacher'],
+                                       course_dict['lesson_times'], locations, course_dict['semester'],
+                                       course_dict['link'])
+                course.save()
                 logging.info(
-                    f'Done processing course with code:{course.code}, group:{course.group_code}, '
-                    f'name:{course.name}')
-                self.coursesList.append(course)
+                    f'Done processing course with code:{course_dict.code}, group:{course_dict.group_code}, '
+                    f'name:{course_dict.name}')
+                self.courses_list.append(course)
         driver.close()
         logging.info('Closed ChromeWebDriver')
 
     def populate_html_pages_from_course_viewer(self, faculty_name):
         logging.info('Started populating html pages from courses viewer')
-        driver = ShohamCrawler.__get_chrome_driver()
+        driver = self.__get_chrome_driver()
         url = "https://shoham.biu.ac.il/BiuCoursesViewer/MainPage.aspx"
         driver.get(url)
         faculty_place_holder = '//*[@id="ContentPlaceHolder1_cmbDepartments"]'
@@ -176,7 +184,7 @@ class ShohamCrawler:
     @classmethod
     def __all_days_valid(cls, days: List[str]):
         for day in days:
-            if day.strip("' ") not in Day.single_char_labels():
+            if day.strip("' ") not in Day.labels:
                 return False
         return True
 
@@ -193,6 +201,7 @@ class ShohamCrawler:
 
     @classmethod
     def parse_location(cls, building_name: str, class_number: str):
+        # todo return as list
         building_number = None
         if '-' in building_name:
             str_list = building_name.split('-')
@@ -202,17 +211,16 @@ class ShohamCrawler:
             class_number = int(class_number)
         return Location.create(building_name=building_name, building_number=building_number, class_number=class_number)
 
-    @classmethod
-    def parse_lesson_times(cls, days: List[str], hours: List[str]):
+    def parse_lesson_times(self, days: List[str], hours: List[str]):
         hours_per_day = int(len(hours) / len(days))
         lesson_time_list = []
         for i, day in enumerate(days):
-            day_object = Day.from_string(day.strip("' "))
+            day_object = Day.from_string(day.strip("'"))
+            date = f'{str(18 + day_object.value - 1)}-10-2020 -- '
             for j in range(0, hours_per_day):
                 times = hours[i * hours_per_day + j].split(' - ')
-                start_time = time.strptime(times[0], cls.time_format)
-                end_time = time.strptime(times[1], cls.time_format)
-                class_time = LessonTime.create(day=day_object, start_time=start_time, end_time=end_time)
+                start_time = datetime.strptime(date + times[0], self.time_format)
+                end_time = datetime.strptime(date + times[1], self.time_format)
+                class_time = LessonTime.create(day=day.strip("'"), start_time=start_time, end_time=end_time)
                 lesson_time_list.append(class_time)
         return lesson_time_list
-

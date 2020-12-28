@@ -14,10 +14,10 @@ class RatingDto(BaseDto):
 
     @classmethod
     def maps_from(cls):
-        return type(Rating)
+        return Rating
 
     @classmethod
     def maps_to(cls):
-        return type(cls)
+        return cls
 
 

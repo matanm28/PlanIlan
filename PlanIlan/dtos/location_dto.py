@@ -16,7 +16,7 @@ class LocationDto(BaseDto):
 
     @classmethod
     def maps_from(cls):
-        return type(Location)
+        return Location
 
     @classmethod
     def maps_to(cls):

@@ -17,10 +17,10 @@ class LessonTimeDto(BaseDto):
 
     @classmethod
     def maps_from(cls):
-        return type(LessonTime)
+        return LessonTime
 
     @classmethod
     def maps_to(cls):
-        return type(cls)
+        return cls
 
 

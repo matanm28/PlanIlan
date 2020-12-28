@@ -7,21 +7,20 @@ from PlanIlan.models import Teacher
 
 @dataclass
 class TeacherDto(BaseDto):
-    title: str
-    name: str
+    title: str = field(init=False)
+    name: str = field(init=False)
     rating: RatingDto = field(default=None, init=False, compare=False)
 
     @classmethod
     def mapping_options(cls):
         return {
             'title': lambda teacher: teacher.title.label,
-            'rating': lambda teacher: RatingDto.map(teacher.rating)
+            'rating': lambda teacher: RatingDto.map(teacher.teacherrating_set)
         }
 
     @classmethod
     def maps_from(cls):
-        t = Teacher(name='navu',title='sss')
-        return type(t)
+        return Teacher
 
     @classmethod
     def maps_to(cls):
