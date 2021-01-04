@@ -1,6 +1,7 @@
 from .base_model import BaseModel
-from .enums import Day, Faculty, Semester, TeacherTitle, SessionType
-from .lesson_time import LessonTime
+from .enums import Day, Department, Semester, TeacherTitle, SessionType, ExamPeriod
+from .exam import Exam
+from .session_time import SessionTime
 from .location import Location
 from .teacher import Teacher
 from .course import Course

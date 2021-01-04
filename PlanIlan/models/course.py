@@ -1,14 +1,25 @@
 import sys
 import logging
-from typing import List
+from typing import List, Union
 from django.db import models
 
-from PlanIlan.exceptaions.cant_create_model_error import CantCreateModelError
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
-from PlanIlan.models import BaseModel, LessonTime, Location, Faculty, Semester, Teacher
+from PlanIlan.models import BaseModel, SessionTime, Location, Department, Teacher, Rating, Exam
 
 
 class Course(BaseModel):
+    id = models.CharField(primary_key=True, max_length=10)
+    name = models.CharField(max_length=160)
+    department = models.IntegerField(choices=Department.choices)
+    points = models.FloatField(null=True)
+    details_link = models.URLField(null=True)
+    syllabus_link = models.URLField(null=True)
+    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_course')
+    # todo: decide what to do with multiple teachers - [27345-01,89230-01] for example
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='courses')
+    session_times = models.ManyToManyField(SessionTime, related_name='courses')
+    locations = models.ManyToManyField(Location, related_name='courses')
+
     @staticmethod
     def get_faculty_code_from_course_id(course_id: str) -> str:
         if not course_id:
@@ -19,35 +30,22 @@ class Course(BaseModel):
         return course_id[:index]
 
     @classmethod
-    def create(cls, course_id: str, name: str, teacher: Teacher, lesson_times: List[LessonTime],
-               locations: Location,
-               semester: str, link: str) -> 'Course':
-        # if len(lesson_times) != len(locations):
-        #     reason = f'Amount of locations ({len(locations)}) differs from the amount of lesson times ({len(lesson_times)})'
-        #     raise CantCreateModelError(cls.__name__, reason)
+    def create_without_save(cls, course_id: str, name: str, teacher: Teacher, department: Union[Department, str, int],
+                            session_times: List[SessionTime], locations: List[Location], exams: List[Exam],
+                            points: float, link: str, syllabus_link: str) -> 'Course':
         try:
-            faculty_enum = Faculty.from_int(int(cls.get_faculty_code_from_course_id(course_id)))
-            semester_enum = Semester.from_string(semester)
-            course = Course(id=course_id, name=name, teacher=teacher, faculty=faculty_enum,
-                            semester=semester_enum, details_link=link)
-            course.locations.add(locations)
-            course.lesson_times.add(lesson_times[0])
-
-            # course.locations.add(locations)
-            # for lesson_time in lesson_times:
-            #     course.lesson_times.add(lesson_time)
+            department_enum = Department.from_int(int(cls.get_faculty_code_from_course_id(course_id)))
+            course = Course(id=course_id, name=name, teacher=teacher, department=department_enum, details_link=link,
+                            points=points, rating=Rating.create(), syllabus_link=syllabus_link)
+            for location in locations:
+                course.locations.add(location)
+            for lesson_time in session_times:
+                course.session_times.add(lesson_time)
+            for exam in exams:
+                exam.course = course
             return course
         except EnumNotExistError as err:
             raise err
-
-    id = models.CharField(primary_key=True, max_length=10)
-    name = models.CharField(max_length=80)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    lesson_times = models.ManyToManyField(LessonTime)
-    locations = models.ManyToManyField(Location)
-    faculty = models.IntegerField(choices=Faculty.choices)
-    semester = models.IntegerField(choices=Semester.choices)
-    details_link = models.URLField(null=True)
 
     @property
     def group_code(self) -> str:

@@ -9,21 +9,26 @@ VALIDATORS = [MinValueValidator(MIN_RATING, f'Value should not fall short of {MI
 
 
 class Rating(BaseModel):
-    average = models.IntegerField(null=True, default=None, validators=VALIDATORS)
+    average = models.FloatField(null=True, default=None, validators=VALIDATORS)
     amount_of_raters = models.IntegerField(default=0,
                                            validators=[MinValueValidator(0, 'Value has to be a natural number')])
 
-    class Meta:
-        abstract = True
-
     @classmethod
-    def create(cls, rated_instance) -> 'Rating':
-        if isinstance(rated_instance, Teacher):
-            return TeacherRating(average=None, teacher=rated_instance)
-        elif isinstance(rated_instance, Course):
-            return CourseRating(average=None, course=rated_instance)
-        else:
-            return None
+    def create_without_save(cls, average: float = None, amount_of_raters: int = 0) -> 'Rating':
+        return Rating(average=average, amount_of_raters=amount_of_raters)
+
+        # class Meta:
+
+    #     abstract = True
+
+    # @classmethod
+    # def create_without_save(cls, rated_instance) -> 'Rating':
+    #     if isinstance(rated_instance, Teacher):
+    #         return TeacherRating(average=None, teacher=rated_instance)
+    #     elif isinstance(rated_instance, Course):
+    #         return CourseRating(average=None, course=rated_instance)
+    #     else:
+    #         return None
 
     def update_rating(self, new_rating: int, save=True):
         if self.amount_of_raters in None:
@@ -34,10 +39,9 @@ class Rating(BaseModel):
         if save:
             self.save()
 
-
-class TeacherRating(Rating):
-    teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
-
-
-class CourseRating(Rating):
-    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+# class TeacherRating(Rating):
+#     teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+#
+#
+# class CourseRating(Rating):
+#     course = models.ForeignKey('Course', on_delete=models.CASCADE)

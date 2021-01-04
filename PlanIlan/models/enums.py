@@ -46,7 +46,7 @@ class Day(LabeledIntegerEnum):
         return Day.full_strings_labels()[Day.labels.indexof(self.label)]
 
 
-class Faculty(LabeledIntegerEnum):
+class Department(LabeledIntegerEnum):
     NULL_FACULTY = -1, _('לא קיים')
     YESSOD_BIBLE = 1, _('לימודי יסוד - תנ"ך')
     YESSOD_TALMUD = 2, _('לימודי יסוד - תלמוד')
@@ -81,6 +81,7 @@ class Faculty(LabeledIntegerEnum):
     TRANS = 50, _('תרגום וחקר התרגום')
     HUM = 54, _('מדעי הרוח')
     MANAGEMENT = 55, _('המחלקה לניהול')
+    FORIEGN_STUDIES = 59, _('ע"ס-לימודי חוץ')
     PSY = 60, _('פסיכולוגיה')
     COMM = 63, _('ביה"ס לתקשורת')
     SOCIOLOGY = 64, _('סוציולוגיה ואנתרופולוגיה')
@@ -92,8 +93,8 @@ class Faculty(LabeledIntegerEnum):
     SOCIAL = 74, _('מדעי החברה')
     GEO = 75, _('גיאוגרפיה')
     SOC = 76, _('עבודה סוציאלית')
-    EDU = 77, _('חינוך')
-    INSTRUCT = 79, _('הוראה')
+    EDU_1 = 77, _('חינוך')
+    INSTRUCT_1 = 79, _('הוראה')
     LIFE = 80, _('מדעי החיים')
     MD = 81, _('הפקולטה לרפואה')
     OPTIMETRICS = 82, _('אופטימטריה')
@@ -108,13 +109,22 @@ class Faculty(LabeledIntegerEnum):
     NEUROSCIENCE = 272, _('מדעי המוח')
     GENDER = 273, _('לימודי מגדר')
     NEUROSCIENCE_ADVANCED = 275, _('מדעי המוח לתארים מתקדמים')
+    EDU_2 = 772, _('חינוך')
+    INSTRUCT_2 = 790, _('הוראה')
 
 
 class Semester(LabeledIntegerEnum):
     FIRST = 1, _("סמסטר א'")
     SECOND = 2, _("סמסטר ב'")
-    SUMMER = 3, _("סמסטר קיץ")
+    SUMMER = 3, _("סמסטר ק'")
     YEARLY = 4, _('שנתי')
+
+
+class ExamPeriod(LabeledIntegerEnum):
+    FIRST = 1, _("מועד א'")
+    SECOND = 2, _("מועד ב'")
+    THIRD = 3, _("מועד ג'")
+    SPECIAL = 4, _("מועד מיוחד")
 
 
 class SessionType(LabeledIntegerEnum):
@@ -122,6 +132,7 @@ class SessionType(LabeledIntegerEnum):
     RECITATION = 1, _('תרגול')
     REINFORCING = 2, _('תגבור')
     SEMINAR = 3, _('סמינריון')
+    HEVROOTA = 4, _('חברותא')
 
 
 class TeacherTitle(LabeledIntegerEnum):
@@ -129,4 +140,7 @@ class TeacherTitle(LabeledIntegerEnum):
     PROF = 1, _("פרופ'")
     MR = 2, _('מר')
     MRS = 3, _('גברת')
-
+    RABBI = 4, _('הרב')
+    LAWYER = 5, _('עו"ד')
+    JUDGE = 6, _('השופט')
+    BLANK = -1, _('')

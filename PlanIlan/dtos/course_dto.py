@@ -22,7 +22,7 @@ class CourseDto(BaseDto):
             # 'code': lambda course: course.code,
             # 'group_code': lambda course:course.group_code,
             'teacher': lambda course: TeacherDto.map(course.teacher),
-            'faculty': lambda course: course.faculty.label,
+            'faculty': lambda course: course.department.label,
             'semester': lambda course: course.semester.label,
             'details_link': lambda course: str(course.details_link),
             'rating': lambda course: RatingDto.map(course.rating)

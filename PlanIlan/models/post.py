@@ -20,7 +20,7 @@ class TeacherPost(Post):
     teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
 
     @classmethod
-    def create(cls, author_name: str, headline: str, text: str, teacher: Teacher) -> 'TeacherPost':
+    def create_without_save(cls, author_name: str, headline: str, text: str, teacher: Teacher) -> 'TeacherPost':
         user = User.get_user_by_user_name(author_name)
         if not user:
             return None
@@ -32,7 +32,7 @@ class CoursePost(Post):
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
 
     @classmethod
-    def create(cls, author_name: str, headline: str, text: str, course: Course) -> 'CoursePost':
+    def create_without_save(cls, author_name: str, headline: str, text: str, course: Course) -> 'CoursePost':
         user = User.get_user_by_user_name(author_name)
         if not user:
             return None

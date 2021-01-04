@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -73,10 +74,40 @@ WSGI_APPLICATION = 'PlanIlan.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# sqlite db
+# 'default': {
+#     'ENGINE': 'django.db.backends.sqlite3',
+#     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# }
+# local mariadb
+# 'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'plan_ilan_dev',
+#         'USER': 'plan_ilan_devs_team',
+#         'PASSWORD': 'gVrK7jQEqm3DNkQF',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+
+#aws mariadb
+# 'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'plan_ilan_dev',
+#         'USER': 'admin',
+#         'PASSWORD': 'Aa123456',
+#         'HOST': 'plan-ilan-db.cm0of70qzgoe.us-east-2.rds.amazonaws.com',
+#         'PORT': '3306',
+#     }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER_NAME'],
+        'PASSWORD': os.environ['DB_USER_PASSWORD'],
+        'HOST': os.environ['DB_HOST_NAME'],
+        'PORT': os.environ['DB_PORT'],
     }
 }
 
@@ -115,4 +146,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
