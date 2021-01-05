@@ -110,7 +110,7 @@ class ShohamCrawler:
             self.__run(driver)
         else:
             self.__run_with_threads(driver)
-        logging.info(f'Finished scraping process')
+        logging.info(f'Finished scraping process total of {len(self.courses_list)} courses processed')
 
     def __run(self, driver: WebDriver):
         self.parse_pages_to_soup_list(driver)
@@ -321,6 +321,7 @@ class ShohamCrawler:
         if not teacher_td:
             self.all_correct = False
             return []
+        # todo have a problem with splitting names here - maybe use regex?
         teacher_names = teacher_td.text.split('\n')
         teachers_list = []
         for name in teacher_names:
