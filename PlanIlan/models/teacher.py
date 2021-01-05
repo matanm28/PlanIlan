@@ -12,7 +12,7 @@ class Teacher(BaseModel):
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_teacher')
 
     @classmethod
-    def create_without_save(cls, name: str, title: Any) -> 'Teacher':
+    def create(cls, name: str, title: Any) -> 'Teacher':
         if not isinstance(title, (TeacherTitle, str, int)):
             raise CantCreateModelError(Teacher.__name__,
                                        cls.generate_cant_create_model_err((Teacher.__name__, str, int), type(title)))
@@ -22,8 +22,7 @@ class Teacher(BaseModel):
             title_enum = TeacherTitle.from_int(title)
         else:
             title_enum = title
-        teacher, created = Teacher.objects.get_or_create(name=name, title=title_enum)
-        if created:
-            teacher.rating = Rating.create()
+        teacher, created = Teacher.objects.get_or_create(name=name, title=title_enum,
+                                                         defaults={'rating': Rating.create})
         cls.log_created(cls.__name__, teacher.id, created)
         return teacher

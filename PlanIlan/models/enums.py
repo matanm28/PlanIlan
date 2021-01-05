@@ -6,6 +6,29 @@ from django.utils.translation import gettext_lazy as _
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
 
 
+class LabeledTextEnum(models.TextChoices):
+    @classmethod
+    def from_string(cls, search_value: str) -> 'LabeledTextEnum':
+        for enum in cls:
+            if search_value in enum.label:
+                return enum
+        raise EnumNotExistError(cls.__name__, search_value)
+
+    @classmethod
+    def from_number(cls, search_value: str) -> 'LabeledTextEnum':
+        for enum in cls:
+            if enum.value == search_value:
+                return enum
+        raise EnumNotExistError(cls.__name__, search_value)
+
+    @classmethod
+    def from_name(cls, search_value: str) -> 'LabeledTextEnum':
+        for enum in cls:
+            if search_value in enum.name:
+                return enum
+        raise EnumNotExistError(cls.__name__, search_value)
+
+
 class LabeledIntegerEnum(models.IntegerChoices):
     @classmethod
     def from_string(cls, search_value: str) -> 'LabeledIntegerEnum':
@@ -47,70 +70,76 @@ class Day(LabeledIntegerEnum):
 
 
 class Department(LabeledIntegerEnum):
-    NULL_FACULTY = -1, _('לא קיים')
-    YESSOD_BIBLE = 1, _('לימודי יסוד - תנ"ך')
-    YESSOD_TALMUD = 2, _('לימודי יסוד - תלמוד')
-    JUD_PHIL = 3, _('פילוסופיה יהודית')
-    YESSOD_ISR = 4, _('לימודי יסוד - תולדות ישראל')
-    WOMEN_MIDRASHA = 5, _('המדרשה לנשים')
-    EXP = 6, _('הבעה אקדמית ואולפן')
-    BIBLE = 8, _('תנ"ך')
-    TALMUD_TOSHBA = 9, _('תלמוד ותושב"ע')
-    TOSHBA = 10, _('תושב"ע')
-    JEW_HIST = 11, _('תולדות ישראל ויהדות זמננו')
-    SPEECH = 12, _('המחלקה ללשון עברית וללשונות שמיות')
-    LIT_ISR = 13, _('ספרות עם ישראל')
-    ISR = 16, _('לימודי ארץ ישראל וארכיאולוגיה')
-    JUD = 17, _('מדעי היהדות')
-    HIST = 18, _('הסטוריה כללית')
-    M_EAST = 19, _('מזרח התיכון')
-    ART = 21, _('אמנות יהודית')
-    EDIT = 22, _('לימודי תעודה בעריכה')
-    BROK = 25, _('תכנית ברוקדייל')
-    INTER = 27, _('לימודי פרשנות ותרבות')
-    JUD_CALC = 30, _('מחשבת ישראל')
-    PHIL = 31, _('פילוסופיה')
-    LIT = 33, _('ספרות')
-    INFO = 35, _('מדעי המידע')
-    ARABIC = 36, _('המחלקה לערבית')
-    LING = 37, _('בלשנות וספרות אנגלית')
-    ENG = 41, _('אנגלית כשפה זרה')
-    FR = 43, _('המחלקה לתרבות צרפת')
-    CLASSIC = 46, _('לימודים קלאסיים')
-    MUSIC = 47, _('מוסיקה')
-    TRANS = 50, _('תרגום וחקר התרגום')
-    HUM = 54, _('מדעי הרוח')
-    MANAGEMENT = 55, _('המחלקה לניהול')
-    FORIEGN_STUDIES = 59, _('ע"ס-לימודי חוץ')
-    PSY = 60, _('פסיכולוגיה')
-    COMM = 63, _('ביה"ס לתקשורת')
-    SOCIOLOGY = 64, _('סוציולוגיה ואנתרופולוגיה')
-    ECO = 66, _('כלכלה')
-    BUSINESS = 70, _('מינהל עסקים')
-    COUNT = 71, _('מדעי המדינה')
-    GOVERNMENT = 72, _('המכון לשלטון מקומי')
-    CRIME = 73, _('קרימינולוגיה')
-    SOCIAL = 74, _('מדעי החברה')
-    GEO = 75, _('גיאוגרפיה')
-    SOC = 76, _('עבודה סוציאלית')
-    EDU_1 = 77, _('חינוך')
-    INSTRUCT_1 = 79, _('הוראה')
-    LIFE = 80, _('מדעי החיים')
-    MD = 81, _('הפקולטה לרפואה')
-    OPTIMETRICS = 82, _('אופטימטריה')
-    ENGINEERING = 83, _('הנדסה')
-    CHEM = 84, _('כימיה')
-    PHY = 86, _('פיסיקה')
-    MATH = 88, _('מתמטיקה')
-    CS = 89, _('למדעי המחשב')
-    MULTI = 93, _('רב תחומי')
-    DIPLOMA = 94, _('דיפלומה')
-    LAW = 99, _('הפקולטה למשפטים')
-    NEUROSCIENCE = 272, _('מדעי המוח')
-    GENDER = 273, _('לימודי מגדר')
-    NEUROSCIENCE_ADVANCED = 275, _('מדעי המוח לתארים מתקדמים')
-    EDU_2 = 772, _('חינוך')
-    INSTRUCT_2 = 790, _('הוראה')
+    NULL_DEPARTMENT = -1, _('לא קיים')
+    HUMAN_STUDIES = 0, _('ב.א. רב תחומי במדעי הרוח')
+    MULTI_DISCIPLINARY = 1, _('ב.א. רב-תחומי')
+    OPTOMETRY = 2, _('ביה"ס לאופטומטריה ומדעי הראייה')
+    LAW_SCHOOL = 3, _('ביה"ס ללימודי משפט')
+    BUSINESS = 4, _('ביה"ס למינהל עסקים')
+    PRESS = 5, _('ביה"ס לתקשורת')
+    EDUCATION_PINHAS_HORGIN = 6, _('בית הספר לחינוך ע"ש פנחס חורגין')
+    SOCIAL_WORK = 7, _('בית הספר לעבודה סוציאלית ע"ש לואיס וגבי וייספלד')
+    DIPLOMA = 8, _('דיפלומה')
+    JOINT_SOCIAL_STUDIES = 9, _('החוג המשולב במדעי החברה')
+    JUDAISM = 10, _('החוג הרב-תחומי במדעי היהדות')
+    ENGLISH = 11, _('היחידה לאנגלית כשפה זרה')
+    ULPAN = 12, _('היחידה להבעה אקדמית ואולפן')
+    PRESS_STUDIES_UNIT = 13, _('היחידה ללימודי תקשורת ועיתונאות')
+    LANGUAGES = 14, _('היחידה לשפות')
+    TOSHBA = 15, _('המגמה לתושב"ע')
+    WOMEN_MIDRASHA = 16, _('המדרשה לנשים')
+    JEW_ART = 17, _('המחלקה לאמנות יהודית')
+    LITERATURE = 18, _('המחלקה לבלשנות וספרות אנגלית')
+    GEOGRAPHY = 19, _('המחלקה לגיאוגרפיה וסביבה')
+    GENERAL_HISTORY = 20, _('המחלקה להסטוריה כללית')
+    CHEMISTRY = 21, _('המחלקה לכימיה')
+    ECONOMICS = 22, _('המחלקה לכלכלה')
+    ARCHAEOLOGY = 23, _('המחלקה ללימודי ארץ ישראל וארכיאולוגיה')
+    MIDDLE_EAST_STUDIES = 24, _('המחלקה ללימודי המזרח התיכון')
+    CLASSIC = 25, _('המחלקה ללימודים קלאסיים')
+    LASHON_IVRIT = 26, _('המחלקה ללשון העברית וללשונות שמיות')
+    POLITICAL_SCIENCE = 27, _('המחלקה למדעי המדינה')
+    COMPUTER_SCIENCE = 28, _('המחלקה למדעי המחשב')
+    INFORMATION_SCIENCE = 29, _('המחלקה למדעי המידע')
+    MUSIC = 30, _('המחלקה למוזיקה')
+    MACHSHEVET_ISRAEL = 31, _('המחלקה למחשבת ישראל')
+    MATHEMATICS = 32, _('המחלקה למתמטיקה')
+    MANAGEMENT = 33, _('המחלקה לניהול')
+    SOCIOLOGY = 34, _('המחלקה לסוציולוגיה ואנתרופולוגיה')
+    SAFRUT_MASHVA = 35, _('המחלקה לספרות משווה')
+    SAFRUT_OF_ISRAEL = 36, _('המחלקה לספרות עם ישראל ע"ש יוסף ונחום ברמן')
+    ARABIC = 37, _('המחלקה לערבית')
+    PHILOSOPHY = 38, _('המחלקה לפילוסופיה')
+    PHYSICS = 39, _('המחלקה לפיסיקה')
+    PSYCHOLOGY = 40, _('המחלקה לפסיכולוגיה')
+    CRIMINOLOGY = 41, _('המחלקה לקרימינולוגיה')
+    JEWISH_HISTORY = 42, _('המחלקה לתולדות ישראל ויהדות זמננו')
+    TALMUD_AND_TOSHBA = 43, _('המחלקה לתלמוד ותושב"ע ע"ש נפתלי יפה')
+    BIBLE_ZALMAN_SHAMIR = 44, _('המחלקה לתנ"ך על שם זלמן שמיר')
+    FRANCE = 45, _('המחלקה לתרבות צרפת')
+    TRANSLATIONS_STUDIES = 46, _('המחלקה לתרגום וחקר התרגום')
+    SHILTON_MEKOMI = 47, _('המכון לשלטון מקומי')
+    ENGINEERING = 48, _('הפקולטה להנדסה ע"ש אלכסנדר קופקין')
+    LIFE_SCIENCE = 49, _('הפקולטה למדעי החיים ע"ש מינה ואבררד גודמן')
+    LAW = 50, _('הפקולטה למשפטים')
+    MED_SCHOOL = 51, _('הפקולטה לרפואה')
+    YAHADUT_ZMANENU = 52, _('יהדות זמננו')
+    YESSOD_JEWISH_PHILOSOPHY = 53, _('לימודי יסוד - פילוסופיה יהודית')
+    YESSOD_ISRAEL = 54, _('לימודי יסוד - תולדות ישראל')
+    YESSOD_TALMUD = 55, _('לימודי יסוד - תלמוד')
+    YESSOD_BIBLE = 56, _('לימודי יסוד - תנ"ך')
+    GENDER = 57, _('לימודי מגדר')
+    PARSHANUT_AND_TARBUT = 58, _('לימודי פרשנות ותרבות')
+    EDIT = 59, _('לימודי תעודה בעריכה')
+    MULTI_DISCIPLINARY_STUDIES = 60, _('לימודים בין-תחומיים')
+    SCIENCE_TECH_SOCIETY = 61, _('מדע, טכנולוגיה וחברה')
+    NEUROSCIENCE = 62, _('מדעי המוח')
+    NEUROSCIENCE_ADVANCED = 63, _('מדעי המוח לתארים מתקדמים')
+    CONFLICT_RESOLUTION = 64, _('ניהול ויישוב סכסוכים')
+    FOREIGN_STUDIES = 65, _('ע"ס-לימודי חוץ')
+    ART_HISTORY = 66, _('תולדות אמנות')
+    BROKDAIL_PROGRAM = 67, _('תכנית ברוקדייל')
+    TEODAT_HORAA = 68, _('תעודת הוראה')
 
 
 class Semester(LabeledIntegerEnum):
@@ -126,16 +155,26 @@ class ExamPeriod(LabeledIntegerEnum):
     THIRD = 3, _("מועד ג'")
     SPECIAL = 4, _("מועד מיוחד")
 
+    @classmethod
+    def from_string(cls, search_value: str) -> 'LabeledIntegerEnum':
+        try:
+            return super().from_string(search_value)
+        except EnumNotExistError:
+            return cls.SPECIAL
+
 
 class SessionType(LabeledIntegerEnum):
     LECTURE = 0, _('הרצאה')
-    RECITATION = 1, _('תרגול')
+    TIRGUL = 1, _('תרגול')
     REINFORCING = 2, _('תגבור')
     SEMINAR = 3, _('סמינריון')
     HEVROOTA = 4, _('חברותא')
+    SADNA = 5, _('סדנה')
+
 
 
 class TeacherTitle(LabeledIntegerEnum):
+    BLANK = -1, _('')
     DOC = 0, _('ד"ר')
     PROF = 1, _("פרופ'")
     MR = 2, _('מר')
@@ -143,4 +182,3 @@ class TeacherTitle(LabeledIntegerEnum):
     RABBI = 4, _('הרב')
     LAWYER = 5, _('עו"ד')
     JUDGE = 6, _('השופט')
-    BLANK = -1, _('')

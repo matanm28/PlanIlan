@@ -13,14 +13,8 @@ class BaseModel(models.Model):
         abstract = True
 
     @classmethod
-    def create_without_save(cls, *args, **kwargs) -> 'BaseModel':
-        pass
-
-    @classmethod
     def create(cls, *args, **kwargs) -> 'BaseModel':
-        model = cls.create_without_save(*args, **kwargs)
-        model.save()
-        return model
+        pass
 
     @classmethod
     def generate_cant_create_model_err(cls, model_type: str, param_name: str, allowed_types: Iterable[str],

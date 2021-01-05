@@ -20,10 +20,13 @@ class User(BaseModel):
     password_hash = models.BinaryField(max_length=1024, editable=False)
 
     @classmethod
-    def create_without_save(cls, user_name: str, email: str, password: str) -> 'User':
+    def create(cls, user_name: str, email: str, password: str) -> 'User':
         salt = uuid.uuid4()
         hashed_pass = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), salt.hex, 100000, dklen=128)
-        user = User(user_name=user_name, email=email, salt=salt, password_hash=hashed_pass)
+        user, created = User.objects.get_or_create(user_name=user_name,
+                                                   defaults={'email': email, 'salt': salt,
+                                                             'password_hash': hashed_pass})
+        cls.log_created(cls.__name__, user_name, created)
         return user
 
     @classmethod

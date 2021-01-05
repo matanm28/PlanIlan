@@ -9,7 +9,7 @@ class Post(BaseModel):
     class Meta:
         abstract = True
 
-    author = models.ForeignKey('User', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(default=datetime.now)
     amount_of_likes = models.IntegerField(default=0)
     headline = models.CharField(max_length=256)
@@ -17,24 +17,26 @@ class Post(BaseModel):
 
 
 class TeacherPost(Post):
-    teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
     @classmethod
-    def create_without_save(cls, author_name: str, headline: str, text: str, teacher: Teacher) -> 'TeacherPost':
+    def create(cls, author_name: str, headline: str, text: str, teacher: Teacher) -> 'TeacherPost':
         user = User.get_user_by_user_name(author_name)
         if not user:
             return None
-        post = TeacherPost(author=user, headline=headline, text=text, Teacher=teacher)
+        post, created = TeacherPost.objects.get_or_create(author=user, headline=headline, text=text, Teacher=teacher)
+        cls.log_created(cls.__name__, post.id, created)
         return post
 
 
 class CoursePost(Post):
-    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     @classmethod
-    def create_without_save(cls, author_name: str, headline: str, text: str, course: Course) -> 'CoursePost':
+    def create(cls, author_name: str, headline: str, text: str, course: Course) -> 'CoursePost':
         user = User.get_user_by_user_name(author_name)
         if not user:
             return None
-        post = CoursePost(author=user, headline=headline, text=text, course=course)
+        post, created = CoursePost.objects.get_or_create(author=user, headline=headline, text=text, course=course)
+        cls.log_created(cls.__name__, post.id, created)
         return post

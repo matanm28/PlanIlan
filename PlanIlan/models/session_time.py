@@ -15,7 +15,7 @@ class SessionTime(BaseModel):
     end_time = models.TimeField()
 
     @classmethod
-    def create_without_save(cls, semester: Union[Semester, str, int], day: Union[Day, str, int], start_time: time,
+    def create(cls, semester: Union[Semester, str, int], day: Union[Day, str, int], start_time: time,
                             end_time: time) -> 'SessionTime':
         try:
             if not isinstance(semester, (Semester, str, int)):
@@ -32,7 +32,10 @@ class SessionTime(BaseModel):
                 raise cls.generate_cant_create_model_err(cls.__name__, day.__name__, (Day, str, int),
                                                          type(day))
             if isinstance(day, str):
-                day_enum = Day.from_string(day)
+                day_char = day
+                if len(day) > 1:
+                    day_char = day[0]
+                day_enum = Day.from_string(day_char)
             elif isinstance(semester, int):
                 day_enum = Day.from_int(day)
             else:

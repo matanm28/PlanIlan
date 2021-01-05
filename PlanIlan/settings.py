@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+import json
 import sys
 from pathlib import Path
 
@@ -98,16 +99,19 @@ WSGI_APPLICATION = 'PlanIlan.wsgi.application'
 #         'HOST': 'plan-ilan-db.cm0of70qzgoe.us-east-2.rds.amazonaws.com',
 #         'PORT': '3306',
 #     }
-
+db_data = dict(os.environ)
+if os.path.exists('db_data.json'):
+    with open('db_data.json', 'r') as json_file:
+        db_data = json.load(json_file)
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER_NAME'],
-        'PASSWORD': os.environ['DB_USER_PASSWORD'],
-        'HOST': os.environ['DB_HOST_NAME'],
-        'PORT': os.environ['DB_PORT'],
+        'NAME': db_data['DB_NAME'],
+        'USER': db_data['DB_USER_NAME'],
+        'PASSWORD': db_data['DB_USER_PASSWORD'],
+        'HOST': db_data['DB_HOST_NAME'],
+        'PORT': db_data['DB_PORT'],
     }
 }
 
@@ -140,7 +144,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

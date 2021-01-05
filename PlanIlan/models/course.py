@@ -1,21 +1,24 @@
 import sys
 import logging
+import uuid
 from typing import List, Union
 from django.db import models
 
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
-from PlanIlan.models import BaseModel, SessionTime, Location, Department, Teacher, Rating, Exam
+from PlanIlan.models import BaseModel, SessionTime, Location, Department, Teacher, Rating, SessionType
 
 
 class Course(BaseModel):
-    id = models.CharField(primary_key=True, max_length=10)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=160)
+    code = models.CharField(max_length=10)
+    group = models.CharField(max_length=3)
     department = models.IntegerField(choices=Department.choices)
+    session_type = models.IntegerField(choices=SessionType.choices)
     points = models.FloatField(null=True)
     details_link = models.URLField(null=True)
     syllabus_link = models.URLField(null=True)
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_course')
-    # todo: decide what to do with multiple teachers - [27345-01,89230-01] for example
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='courses')
     session_times = models.ManyToManyField(SessionTime, related_name='courses')
     locations = models.ManyToManyField(Location, related_name='courses')
@@ -30,31 +33,25 @@ class Course(BaseModel):
         return course_id[:index]
 
     @classmethod
-    def create_without_save(cls, course_id: str, name: str, teacher: Teacher, department: Union[Department, str, int],
-                            session_times: List[SessionTime], locations: List[Location], exams: List[Exam],
-                            points: float, link: str, syllabus_link: str) -> 'Course':
+    def create(cls, code: str, group: str, name: str, teacher: Teacher,session_type:SessionType,
+               department: Union[Department, str], session_times: List[SessionTime],
+               locations: List[Location], points: float, link: str, syllabus_link: str) -> 'Course':
         try:
-            department_enum = Department.from_int(int(cls.get_faculty_code_from_course_id(course_id)))
-            course = Course(id=course_id, name=name, teacher=teacher, department=department_enum, details_link=link,
-                            points=points, rating=Rating.create(), syllabus_link=syllabus_link)
-            for location in locations:
-                course.locations.add(location)
-            for lesson_time in session_times:
-                course.session_times.add(lesson_time)
-            for exam in exams:
-                exam.course = course
+            if not isinstance(department, (Department, str, int)):
+                raise cls.generate_cant_create_model_err(cls.__name__, department.__name__, (Department.__name__, str),
+                                                         type(department))
+            if isinstance(department, str):
+                department = Department.from_string(department)
+            if isinstance(department, int):
+                department = Department.from_int(department)
+            course, created = Course.objects.get_or_create(code=code, group=group, name=name, teacher=teacher,
+                                                           department=department, session_type=session_type,
+                                                           defaults={'details_link': link, 'points': points,
+                                                                     'rating': Rating.create,
+                                                                     'syllabus_link': syllabus_link})
+            course.locations.set(locations)
+            course.session_times.set(session_times)
+            cls.log_created(cls.__name__, course.id, created)
             return course
         except EnumNotExistError as err:
             raise err
-
-    @property
-    def group_code(self) -> str:
-        return self.id[-2:]
-
-    @property
-    def code(self) -> str:
-        return self.id[:-2]
-
-    @property
-    def faculty_code(self) -> str:
-        return Course.get_faculty_code_from_course_id(self.id)

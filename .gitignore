@@ -1,7 +1,10 @@
 # private resources
-db_data.json
 db.sqlite3
+db_data.json
 db_config.txt
 3rd_party
 *.log
 .idea
+faculty_names_and_numbers.json
+label_to_param_name.json
+department_enums.txt

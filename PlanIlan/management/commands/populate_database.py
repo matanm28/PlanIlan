@@ -11,8 +11,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def run():
-        crawler = ShohamCrawler('https://shoham.biu.ac.il/BiuCoursesViewer/')
-        crawler.populate_html_pages_from_course_viewer()
-        crawler.open_window = True
-        crawler.parse_all_content()
+        crawler = ShohamCrawler('https://shoham.biu.ac.il/BiuCoursesViewer/', True)
+        crawler.start()
         print(big_letters('success', 2, 4))
