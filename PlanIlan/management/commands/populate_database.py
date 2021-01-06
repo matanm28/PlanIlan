@@ -4,6 +4,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import List
 
+from codetiming import Timer
 from django.core.management import BaseCommand
 
 from PlanIlan.data_mining.shoham_crawler import ShohamCrawler
@@ -26,13 +27,10 @@ class Command(BaseCommand):
                             help='The number of crawlers to instantiate.', default=4)
         parser.add_argument('--run_with_single_thread', dest='run_with_threads', action='store_false', default=True)
 
-    @classmethod
-    def print(cls):
-        print('started')
 
     @classmethod
+    @Timer(text='Script finished after total of {:.4f} seconds', logger=logging.info)
     def run(cls, base_url: str, num_of_crawlers: int, run_with_threads: bool):
-        start_time = time.time()
         courses = []
         if run_with_threads:
             with ThreadPoolExecutor(num_of_crawlers) as executor:
@@ -51,7 +49,6 @@ class Command(BaseCommand):
         else:
             courses = cls.run_single_crawler(base_url, 'בחר', run_with_threads)
         logging.info(f'Parsed total of {len(courses)} courses')
-        logging.info(f'Script finished after total of {time.time() - start_time:.2f} seconds')
         print(big_letters('finished', 2, 4))
 
     @classmethod
