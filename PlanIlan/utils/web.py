@@ -1,4 +1,5 @@
 import logging
+import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -6,6 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 open_drivers_list = []
 
+os.environ['WDM_LOG_LEVEL'] = '0'
 
 def get_chrome_driver(open_window=False) -> webdriver.Chrome:
     chrome_options = Options()

@@ -103,9 +103,9 @@ class ShohamCrawler:
     def all_correct(self, value: bool):
         self.__all_correct = value
 
-    def start(self, faculty_name: str = 'בחר', run_with_threads: bool = True):
+    def start(self, department_name: str = 'בחר', run_with_threads: bool = True):
         logging.info(f'Started scraping process {"with threads" if run_with_threads else ""}')
-        driver = self.__start_search_and_get_drive(faculty_name)
+        driver = self.__start_search_and_get_drive(department_name)
         if not run_with_threads:
             self.__run(driver)
         else:
@@ -277,7 +277,7 @@ class ShohamCrawler:
         try:
             session_type = SessionType.from_string(session_type_str)
         except EnumNotExistError as err:
-            logging.error(f'course: {name}, {err}')
+            logging.warning(f'course: {name}, {err}')
             self.all_correct = False
         return name, session_type
 
@@ -306,7 +306,7 @@ class ShohamCrawler:
         try:
             department = Department.from_string(department_str)
         except EnumNotExistError as err:
-            logging.error(f'{err}')
+            logging.warning(f'{err}')
             self.all_correct = False
         return department
 
@@ -334,10 +334,11 @@ class ShohamCrawler:
                 full_name = f'{title} {full_name}'
                 title = TeacherTitle.BLANK
             try:
+                # todo: check problem with 	80801-01 for example, teacher name to long.
                 teacher = Teacher.create(title=title, name=full_name)
                 teachers_list.append(teacher)
             except (EnumNotExistError, CantCreateModelError) as err:
-                logging.error(f'{err}')
+                logging.warning(f'{err}')
         if not teachers_list:
             self.all_correct = False
         return teachers_list
@@ -357,7 +358,7 @@ class ShohamCrawler:
                 semester = None
                 self.all_correct = False
         except EnumNotExistError as err:
-            logging.error(f'{err}')
+            logging.warning(f'{err}')
             self.all_correct = False
         return semester
 
@@ -458,7 +459,7 @@ class ShohamCrawler:
                 period_enum = ExamPeriod.from_string(period)
                 exams_list.append(Exam.create(period=period_enum, date=date_time_data, course=course))
             except EnumNotExistError as err:
-                logging.error(f'{err}')
+                logging.warning(f'{err}')
                 self.all_correct = False
         return exams_list
 
