@@ -4,6 +4,7 @@ from typing import Any, Union
 from django.db import models
 
 from PlanIlan.models import BaseModel, ExamPeriod, Course
+from PlanIlan.utils.general import name_of
 
 
 class Exam(BaseModel):
@@ -14,7 +15,7 @@ class Exam(BaseModel):
     @classmethod
     def create(cls, period: Union[ExamPeriod, str, int], date: datetime, course: 'Course') -> 'Exam':
         if not isinstance(period, (ExamPeriod, str, int)):
-            raise cls.generate_cant_create_model_err(cls.__name__, period.__name__, (ExamPeriod.__name__, str, int),
+            raise cls.generate_cant_create_model_err(cls.__name__, period.__name__, (name_of(ExamPeriod), str, int),
                                                      type(period))
         if isinstance(period, str):
             period = ExamPeriod.from_string(period)

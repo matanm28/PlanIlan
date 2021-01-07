@@ -34,5 +34,5 @@ class User(BaseModel):
         try:
             return User.objects.get(user_name=name)
         except (Model.DoesNotExist, Model.MultipleObjectsReturned) as err:
-            # todo add logging
+            # todo add logging - for entire project
             return None

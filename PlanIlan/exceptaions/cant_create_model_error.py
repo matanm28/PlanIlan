@@ -1,5 +1,5 @@
 class CantCreateModelError(Exception):
-    def __init__(self, model_type: str, reason:str, *args: object) -> None:
+    def __init__(self, model_type: str, reason: str, *args: object) -> None:
         super().__init__(*args)
         self.__model_type = model_type
         self.__reason = reason

@@ -321,7 +321,7 @@ class ShohamCrawler:
         if not teacher_td:
             self.all_correct = False
             return []
-        # todo have a problem with splitting names here - maybe use regex?
+        # todo have a problem with splitting names here - maybe use regex? - look at hours regex.
         teacher_names = teacher_td.text.split('\n')
         teachers_list = []
         for name in teacher_names:
