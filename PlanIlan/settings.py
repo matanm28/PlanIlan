@@ -75,30 +75,6 @@ WSGI_APPLICATION = 'PlanIlan.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# sqlite db
-# 'default': {
-#     'ENGINE': 'django.db.backends.sqlite3',
-#     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-# }
-# local mariadb
-# 'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'plan_ilan_dev',
-#         'USER': 'plan_ilan_devs_team',
-#         'PASSWORD': 'gVrK7jQEqm3DNkQF',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-
-#aws mariadb
-# 'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'plan_ilan_dev',
-#         'USER': 'admin',
-#         'PASSWORD': 'Aa123456',
-#         'HOST': 'plan-ilan-db.cm0of70qzgoe.us-east-2.rds.amazonaws.com',
-#         'PORT': '3306',
-#     }
 db_data = dict(os.environ)
 if os.path.exists('db_data.json'):
     with open('db_data.json', 'r') as json_file:
@@ -113,6 +89,56 @@ DATABASES = {
         'HOST': db_data['DB_HOST_NAME'],
         'PORT': db_data['DB_PORT'],
     }
+}
+
+# Loggers
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} - {levelname:4s} - {module} - {funcName} - {message}',
+            'datefmt': '%d.%m.%y-%H-%M-%S',
+            'style': '{',
+        },
+        'simple': {
+            'format': '[{levelname}] - {message}',
+            'encoding': 'utf-8',
+            'style': '{'
+        },
+    },
+    'handlers': {
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': './logs/debug.log',
+            'mode': 'w',
+            'encoding': 'utf-8',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'django': {
+            'level': 'DEBUG',
+            'handlers': ['file', 'console'],
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'PlanIlan.management.commands.populate_database': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file'],
+            'propagate': False,
+        }
+
+    },
 }
 
 # Password validation

@@ -13,8 +13,8 @@ class Course(BaseModel):
     name = models.CharField(max_length=160)
     code = models.CharField(max_length=10)
     group = models.CharField(max_length=3)
-    department = models.IntegerField(choices=Department.choices)
-    session_type = models.IntegerField(choices=SessionType.choices)
+    _department = models.IntegerField(choices=Department.choices, db_column='department')
+    _session_type = models.IntegerField(choices=SessionType.choices, db_column='session_type')
     points = models.FloatField(null=True)
     details_link = models.URLField(null=True)
     syllabus_link = models.URLField(null=True)
@@ -33,7 +33,7 @@ class Course(BaseModel):
         return course_id[:index]
 
     @classmethod
-    def create(cls, code: str, group: str, name: str, teacher: Teacher,session_type:SessionType,
+    def create(cls, code: str, group: str, name: str, teacher: Teacher, session_type: SessionType,
                department: Union[Department, str], session_times: List[SessionTime],
                locations: List[Location], points: float, link: str, syllabus_link: str) -> 'Course':
         try:
@@ -45,7 +45,7 @@ class Course(BaseModel):
             if isinstance(department, int):
                 department = Department.from_int(department)
             course, created = Course.objects.get_or_create(code=code, group=group, name=name, teacher=teacher,
-                                                           department=department, session_type=session_type,
+                                                           _department=department, _session_type=session_type,
                                                            defaults={'details_link': link, 'points': points,
                                                                      'rating': Rating.create,
                                                                      'syllabus_link': syllabus_link})
@@ -55,3 +55,30 @@ class Course(BaseModel):
             return course
         except EnumNotExistError as err:
             raise err
+
+    @property
+    def session_type(self):
+        return SessionType.from_int(self._session_type)
+
+    @property
+    def department(self):
+        return Department.from_int(self._department)
+
+    def get_course_session_types(self):
+        session_types = set()
+        for course in Course.objects.filter(code=self.code):
+            session_types.add(course.session_type)
+        return list(session_types)
+
+    @property
+    def code_and_group(self):
+        return f'{self.code}-{self.group}'
+
+    def __repr__(self):
+        return f'{self.code_and_group}: {self.name}'
+
+    def __str__(self):
+        return f'{self.code_and_group}: {self.name}'
+
+    def get_full_string(self):
+        return f'{self.code_and_group}: {self.name}, מרצה: {self.teacher.title_and_name}'

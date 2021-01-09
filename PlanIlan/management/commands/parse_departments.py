@@ -1,5 +1,6 @@
 import os
 import sys
+from argparse import ArgumentParser
 from collections import defaultdict, deque
 from typing import List, Set, Dict
 
@@ -27,7 +28,7 @@ class Command(BaseCommand):
         if options['gen_enum_file'] or not options['parse_enums']:
             self.parse_department_enums_as_python_code('department_enums.txt')
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser:ArgumentParser):
         parser.add_argument('json_file_path', type=str, help='File path for output')
         parser.add_argument('--gen_enum_file', dest='gen_enum_file', action='store_true', default=False)
         parser.add_argument('--only_enum_file', dest='parse_enums', action='store_false', default=True)

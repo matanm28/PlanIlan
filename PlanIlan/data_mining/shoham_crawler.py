@@ -1,4 +1,5 @@
 import logging
+from logging import Logger
 import time
 import re
 from collections import deque
@@ -13,7 +14,7 @@ from selenium.webdriver.support.select import Select
 from PlanIlan.exceptaions import EnumNotExistError, CantCreateModelError
 from PlanIlan.models import Course, Location, Day, SessionTime, Teacher, SessionType, TeacherTitle, Department, \
     Semester, Exam, ExamPeriod
-from PlanIlan.utils.general import name_of, isfloat
+from PlanIlan.utils.general import name_of, is_float
 
 from selenium.common.exceptions import NoSuchElementException
 
@@ -44,8 +45,9 @@ class ShohamCrawler:
         'syllabus': re.compile('sylabusHyperLink1', re.IGNORECASE),
     }
 
-    def __init__(self, base_url: str, open_window: bool = False):
-        logging.info('Creating a ShoamCrawler instance')
+    def __init__(self, base_url: str, open_window: bool = False, logger: Logger = None):
+        self.__logger = logger if logger else logging.getLogger()
+        self.logger.info('Creating a ShoamCrawler instance')
         self.__courses_list = []
         self.__soups_queue = deque()
         self.__course_detail_url_list = deque()
@@ -53,11 +55,15 @@ class ShohamCrawler:
         self.__open_window = open_window
         self.__running = False
         self.__all_correct = False
-        logging.info('Finished creating a ShoamCrawler instance')
+        self.logger.info('Finished creating a ShoamCrawler instance')
 
     @property
     def courses_list(self) -> Deque[Course]:
         return self.__courses_list
+
+    @property
+    def logger(self):
+        return self.__logger
 
     @property
     def soups_queue(self) -> Deque[BeautifulSoup]:
@@ -104,13 +110,13 @@ class ShohamCrawler:
         self.__all_correct = value
 
     def start(self, department_name: str = 'בחר', run_with_threads: bool = True):
-        logging.info(f'Started scraping process {"with threads" if run_with_threads else ""}')
+        self.logger.info(f'Started scraping process {"with threads" if run_with_threads else ""}')
         driver = self.__start_search_and_get_drive(department_name)
         if not run_with_threads:
             self.__run(driver)
         else:
             self.__run_with_threads(driver)
-        logging.info(f'Finished scraping process total of {len(self.courses_list)} courses processed')
+        self.logger.info(f'Finished scraping process total of {len(self.courses_list)} courses processed')
 
     def __run(self, driver: WebDriver):
         self.parse_pages_to_soup_list(driver)
@@ -127,7 +133,7 @@ class ShohamCrawler:
         return driver
 
     def __run_with_threads(self, driver: WebDriver):
-        logging.info('Instantiating threads')
+        self.logger.info('Instantiating threads')
         threads = [threading.Thread(target=self.parse_pages_to_soup_list, args=(driver,)),
                    threading.Thread(target=self.fill_courses_details_pages_from_courses_table_page),
                    threading.Thread(target=self.create_courses_from_details_pages)]
@@ -138,10 +144,10 @@ class ShohamCrawler:
         self.running = False
         for thread in threads[1:]:
             thread.join()
-        logging.info('All threads finished')
+        self.logger.info('All threads finished')
 
     def parse_pages_to_soup_list(self, driver: WebDriver):
-        logging.info('Started populating html pages from courses viewer')
+        self.logger.info('Started populating html pages from courses viewer')
         parser = 'html.parser'
         try:
             pagination_tr = driver.find_element_by_css_selector('.cssPager')
@@ -157,7 +163,7 @@ class ShohamCrawler:
                 if len(elements) == 1:
                     elements[0].click()
                 else:
-                    logging.error(f'Error on {driver.current_url} with page number {page_number}')
+                    self.logger.error(f'Error on {driver.current_url} with page number {page_number}')
             if page_number == '...':
                 elements = driver.find_elements_by_link_text('...')
                 if len(elements) == 2:
@@ -176,15 +182,15 @@ class ShohamCrawler:
             self.soups_queue.append(BeautifulSoup(driver.page_source, parser))
             last_page_number = page_number
         close_chrome_driver(driver)
-        logging.info('Finished populating html pages from courses viewer')
+        self.logger.info('Finished populating html pages from courses viewer')
 
     def fill_courses_details_pages_from_courses_table_page(self):
         consecutive_times_slept = 0
         amount_of_urls = 0
         while self.running or len(self.soups_queue) > 0:
             if not self.soups_queue:
-                logging.info(
-                    f'function {name_of(self.fill_courses_details_pages_from_courses_table_page)} going to sleep for 2 seconds')
+                self.logger.info(
+                    f'function {name_of(self.fill_courses_details_pages_from_courses_table_page)} going to sleep for 3.5 seconds')
                 time.sleep(3.5)
                 consecutive_times_slept += 1
                 continue
@@ -196,7 +202,7 @@ class ShohamCrawler:
             self.course_detail_urls.extend(urls)
             amount_of_urls += len(urls)
             consecutive_times_slept = 0
-        logging.info(f'Scrapped {amount_of_urls} of urls')
+        self.logger.info(f'Scrapped {amount_of_urls} of urls')
 
     def create_courses_from_details_pages(self):
         driver = get_chrome_driver(self.open_window)
@@ -210,9 +216,9 @@ class ShohamCrawler:
             course = self.parse_course_details_page(course_details_page, url)
             if self.all_correct:
                 self.courses_list.append(course)
-                logging.info(
-                    f'Done processing course with code:{course.code}, group:{course.group}, '
-                    f'name:{course.name}')
+                self.logger.info(
+                    f'Done processing course with code: {course.code}, group: {course.group}, ' +
+                    f'name: {course.name}')
         close_chrome_driver(driver)
 
     @classmethod
@@ -277,7 +283,7 @@ class ShohamCrawler:
         try:
             session_type = SessionType.from_string(session_type_str)
         except EnumNotExistError as err:
-            logging.warning(f'course: {name}, {err}')
+            self.logger.warning(f'course: {name}, {err}')
             self.all_correct = False
         return name, session_type
 
@@ -306,7 +312,7 @@ class ShohamCrawler:
         try:
             department = Department.from_string(department_str)
         except EnumNotExistError as err:
-            logging.warning(f'{err}')
+            self.logger.warning(f'{err}')
             self.all_correct = False
         return department
 
@@ -338,7 +344,7 @@ class ShohamCrawler:
                 teacher = Teacher.create(title=title, name=full_name)
                 teachers_list.append(teacher)
             except (EnumNotExistError, CantCreateModelError) as err:
-                logging.warning(f'{err}')
+                self.logger.warning(f'{err}')
         if not teachers_list:
             self.all_correct = False
         return teachers_list
@@ -358,7 +364,7 @@ class ShohamCrawler:
                 semester = None
                 self.all_correct = False
         except EnumNotExistError as err:
-            logging.warning(f'{err}')
+            self.logger.warning(f'{err}')
             self.all_correct = False
         return semester
 
@@ -434,7 +440,7 @@ class ShohamCrawler:
     def parse_course_points(self, points_td: Tag) -> float:
         if not self.all_correct:
             return None
-        return float(points_td.text.strip()) if isfloat(points_td.text.strip()) else None
+        return float(points_td.text.strip()) if is_float(points_td.text.strip()) else None
 
     def parse_course_exams(self, exam_table: Tag, course: Course) -> List[Exam]:
         if not self.all_correct:
@@ -459,7 +465,7 @@ class ShohamCrawler:
                 period_enum = ExamPeriod.from_string(period)
                 exams_list.append(Exam.create(period=period_enum, date=date_time_data, course=course))
             except EnumNotExistError as err:
-                logging.warning(f'{err}')
+                self.logger.warning(f'{err}')
                 self.all_correct = False
         return exams_list
 

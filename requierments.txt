@@ -1,1 +1,10 @@
-
+django
+djangorestframework
+markdown
+django-filter
+bs4
+codetiming
+selenium
+ipython
+webdriver_manager
+pulp

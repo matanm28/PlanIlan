@@ -46,7 +46,6 @@ class Time:
     hour: int = field(default=0)
     minute: int = field(default=0)
     second: int = field(default=0)
-    min_time: ClassVar[int] = None
 
     def __post_init__(self):
         validations_list = [0 <= self.hour < 24, 0 <= self.minute < 60, 0 <= self.second < 60]

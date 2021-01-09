@@ -8,7 +8,7 @@ from PlanIlan.models import TeacherTitle, BaseModel, Rating
 
 class Teacher(BaseModel):
     name = models.CharField(max_length=80)
-    title = models.IntegerField(choices=TeacherTitle.choices)
+    _title = models.IntegerField(choices=TeacherTitle.choices, db_column='title')
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_teacher')
 
     @classmethod
@@ -22,7 +22,19 @@ class Teacher(BaseModel):
             title_enum = TeacherTitle.from_int(title)
         else:
             title_enum = title
-        teacher, created = Teacher.objects.get_or_create(name=name, title=title_enum,
+        teacher, created = Teacher.objects.get_or_create(name=name, _title=title_enum,
                                                          defaults={'rating': Rating.create})
         cls.log_created(cls.__name__, teacher.id, created)
         return teacher
+
+    @property
+    def title_and_name(self):
+        return f'{self.title.label} {self.name}'.strip()
+
+    @property
+    def title(self):
+        return TeacherTitle.from_int(self._title)
+
+    def __repr__(self):
+        return f'id: {self.id} name: {self.title_and_name}'
+

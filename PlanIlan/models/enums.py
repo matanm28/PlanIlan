@@ -172,7 +172,6 @@ class SessionType(LabeledIntegerEnum):
     SADNA = 5, _('סדנה')
 
 
-
 class TeacherTitle(LabeledIntegerEnum):
     BLANK = -1, _('')
     DOC = 0, _('ד"ר')
