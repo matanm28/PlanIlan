@@ -9,8 +9,8 @@ from PlanIlan.timetable_optimizer.optimized_course import OptimizedCourse
 
 
 class TimetableOptimizer:
-    def __init__(self, mandatory_courses: List[str], elective: List[str], blocked_times: Dict, rankings: Dict) -> None:
-        self.mandatory_courses_codes = mandatory_courses
+    def __init__(self, mandatory: List[str], elective: List[str], blocked_times: Dict, rankings: Dict) -> None:
+        self.mandatory_courses_codes = mandatory
         self.mandatory_courses_dict = defaultdict(lambda: defaultdict(list))
         self.elective = elective
         self.elective_courses_dict = defaultdict(lambda: defaultdict(list))
