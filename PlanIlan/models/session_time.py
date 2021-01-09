@@ -86,8 +86,8 @@ class SessionTime(BaseModel):
         end_time = Time(self.end_time.hour, self.end_time.minute, self.end_time.second)
         times_list = []
         time_delta = TimeDelta(seconds=jump_by_multiplier[jump_by] * jump)
-        while current_time <= end_time:
-            times_list.append(str(current_time))
+        while current_time < end_time:
+            times_list.append(current_time)
             current_time += time_delta
         return times_list
 

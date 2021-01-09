@@ -86,13 +86,12 @@ class Time:
         for t in time_str.split(delimiter):
             if t.isnumeric():
                 time_list.append(int(t))
-        for i in range(3-len(time_list)):
+        for i in range(3 - len(time_list)):
             time_list.append(0)
         return Time(*time_list[:3])
 
     def __str__(self) -> str:
-        return f'{self.hour:02d}:{self.minute:02d}{f":{self.minute:02d}" if self.second>0 else ""}'
+        return f'{self.hour:02d}:{self.minute:02d}{f":{self.minute:02d}" if self.second > 0 else ""}'
 
-
-
-
+    def __repr__(self) -> str:
+        return f'{self.hour:02d}:{self.minute:02d}{f":{self.minute:02d}" if self.second > 0 else ""}'
