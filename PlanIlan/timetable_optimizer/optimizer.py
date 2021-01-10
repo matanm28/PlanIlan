@@ -23,9 +23,10 @@ class TimetableOptimizer:
 
     def post_init(self):
         all_courses = self.populate_courses_dicts()
-        self.populate_id_to_course_dict(all_courses)
+        id_to_courses = self.populate_id_to_course_dict(all_courses)
         vars = self.create_lp_variables()
-        self.populate_model(vars)
+        self.populate_model(vars, id_to_courses)
+
 
     @classmethod
     def get_courses_from_codes_list(cls, courses: List[str], rankings: Dict) -> List[OptimizedCourse]:
@@ -52,7 +53,7 @@ class TimetableOptimizer:
         # todo: here just for breakpoint during debug.
         print(f'Finished {name_of([self.populate_id_to_course_dict])}')
 
-    def populate_model(self, vars: Dict):
+    def populate_model(self, vars: Dict, id_to_courses:Dict):
         objective = [self.__get_ranking_for_course_id(key) * var for key, var in vars.items()]
         self.model += lpSum(objective)
         # todo: create methods for days constraints and hours constraints (don't forget about semesters)
@@ -95,5 +96,7 @@ class TimetableOptimizer:
         return self.rankings[course_tuple[0]]
 
     def populate_id_to_course_dict(self, courses_list: List[Course]):
-        # todo: implement
-        pass
+        id_to_course = dict()
+        for course in courses_list:
+            id_to_course[course.id] = course
+        return id_to_course

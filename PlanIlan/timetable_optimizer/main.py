@@ -5,6 +5,8 @@ from typing import List
 from optimized_course import OptimizedCourse
 import pickle
 
+from PlanIlan.logger.logging import configure_logging
+
 
 def main(db_name: str, collection_name: str, courses_code_list: List[str]):
     configure_logging('logging', 'optimization')
