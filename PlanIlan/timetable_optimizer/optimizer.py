@@ -6,6 +6,7 @@ from django.db.models import QuerySet
 
 from PlanIlan.models import Course
 from PlanIlan.timetable_optimizer.optimized_course import OptimizedCourse
+from PlanIlan.utils.general import name_of
 
 
 class TimetableOptimizer:
@@ -21,7 +22,8 @@ class TimetableOptimizer:
         self.post_init()
 
     def post_init(self):
-        self.populate_courses_dicts()
+        all_courses = self.populate_courses_dicts()
+        self.populate_id_to_course_dict(all_courses)
         vars = self.create_lp_variables()
         self.populate_model(vars)
 
@@ -31,53 +33,67 @@ class TimetableOptimizer:
         optimized_course_list = [OptimizedCourse.from_course_model(course, rankings) for course in courses_query_set]
         return optimized_course_list
 
-    def get_courses_groups_stated(self):
-        must_go_to = []
-        for course_code in self.mandatory_courses_codes:
-            courses = Course.objects.filter(code=course_code)
-            session_types = courses[0].get_session_types()
-            possible_combinations = courses
-            if len(session_types) == 2:
-                possible_combinations = [combi for combi in pl.allcombinations(courses, 2) if
-                                         combi[0] != combi[1] and (combi[1].session_type, combi[2].session_type in session_types)]
-            must_go_to.extend(possible_combinations)
-        must = pl.LpVariable.dicts(f'mandatory', possible_combinations, 0, 1, pl.const.LpBinary)
-
     def populate_courses_dicts(self):
-        courses = Course.objects.filter(code__in=self.mandatory_courses_codes)
-        for course in courses:
+        mandatory_courses = Course.objects.filter(code__in=self.mandatory_courses_codes)
+        for course in mandatory_courses:
             self.mandatory_dict[course.code][course.session_type.name].append(course)
-        self.populate_day_to_hours_to_course_dict(courses)
+        self.populate_day_to_hours_to_course_dict(mandatory_courses)
         elective_courses = Course.objects.filter(code__in=self.elective)
         for course in elective_courses:
             self.elective_dict[course.code][course.session_type.name].append(course)
         self.populate_day_to_hours_to_course_dict(elective_courses)
+        return elective_courses + mandatory_courses
 
     def populate_day_to_hours_to_course_dict(self, courses: QuerySet[Course]):
         for course in courses:
             for session_time in course.session_times.all():
                 for hour in session_time.get_hours_list(jump=1, jump_by='hours'):
                     self.day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour].append(course)
-        return
+        # todo: here just for breakpoint during debug.
+        print(f'Finished {name_of([self.populate_id_to_course_dict])}')
 
     def populate_model(self, vars: Dict):
-        ranks = []
-        # for value in vars.values():
-        self.model += lpSum([])
+        objective = [self.__get_ranking_for_course_id(key) * var for key, var in vars.items()]
+        self.model += lpSum(objective)
+        # todo: create methods for days constraints and hours constraints (don't forget about semesters)
 
     def create_lp_variables(self):
         combs = []
         for key in self.mandatory_dict:
-            temp = [self.mashu(combi) for combi in itertools.product(*list(self.mandatory_dict[key].values()))]
+            products = self.__get_lists_cartesian_product(list(self.mandatory_dict[key].values()))
+            temp = [self.__convert_course_tuple_to_ip(product) for product in products]
             combs.extend(temp)
         for key in self.elective_dict:
-            temp = [self.mashu(combi) for combi in itertools.product(*list(self.elective_dict[key].values()))]
+            products = self.__get_lists_cartesian_product(list(self.elective_dict[key].values()))
+            temp = [self.__convert_course_tuple_to_ip(product) for product in products]
             combs.extend(temp)
-        vars = LpVariable.dicts('courses', combs)
-        return vars
+        # todo: create vars as binary
+        lp_vars = LpVariable.dicts('courses', combs)
+        # we need to make sure that the tuple string representation for courses with both
+        # TIRGUL and LECTURE is consistent, s.t one or the other always show up first, otherwise
+        # it'll be mess to access the values every time.
+        return lp_vars
 
     @staticmethod
-    def mashu(t: Tuple):
-        if len(t) == 2:
-            return t[0].code_and_group, t[1].code_and_group
-        return tuple(t[0].code_and_group)
+    def __get_lists_cartesian_product(lists: List) -> List:
+        if not lists:
+            return []
+        if len(lists) == 1:
+            return itertools.product(lists[0])
+        if len(lists) > 1:
+            return itertools.product(*lists)
+
+    @staticmethod
+    def __convert_course_tuple_to_ip(course_tuple: Tuple):
+        if len(course_tuple) == 2:
+            return course_tuple[0].code_and_group, course_tuple[1].code_and_group
+        return course_tuple[0].code_and_group,
+
+    def __get_ranking_for_course_id(self, course_tuple: Tuple):
+        if len(course_tuple) == 2:
+            return self.rankings[course_tuple[0]] + self.rankings[course_tuple[1]]
+        return self.rankings[course_tuple[0]]
+
+    def populate_id_to_course_dict(self, courses_list: List[Course]):
+        # todo: implement
+        pass
