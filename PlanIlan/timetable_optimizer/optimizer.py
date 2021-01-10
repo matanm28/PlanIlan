@@ -4,29 +4,35 @@ from typing import List, Dict, Tuple
 from pulp import *
 from django.db.models import QuerySet
 
-from PlanIlan.models import Course
+from PlanIlan.models import Course, Day, Semester
 from PlanIlan.timetable_optimizer.optimized_course import OptimizedCourse
 from PlanIlan.utils.general import name_of
 
 
 class TimetableOptimizer:
-    def __init__(self, mandatory: List[str], elective: List[str], blocked_times: Dict, rankings: Dict) -> None:
+    def __init__(self, mandatory: List[str], elective: List[str], blocked_times: Dict, rankings: Dict,
+                 elective_points_bound: Tuple[float, float] = (0, 10), max_days: int = 6) -> None:
         self.mandatory_courses_codes = mandatory
         self.mandatory_dict = defaultdict(lambda: defaultdict(list))
         self.elective = elective
+        self.course_code_to_vars = defaultdict(list)
+        self.id_to_course = {}
+        self.max_days = max_days
         self.elective_dict = defaultdict(lambda: defaultdict(list))
         self.blocked_times = blocked_times
         self.rankings = rankings
-        self.day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+        self.elective_points_bound = elective_points_bound
+        self.semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+        self.course_id_to_semester_and_days = defaultdict(list)
         self.model = LpProblem('Timetable', LpMaximize)
         self.post_init()
 
     def post_init(self):
         all_courses = self.populate_courses_dicts()
-        id_to_courses = self.populate_id_to_course_dict(all_courses)
-        vars = self.create_lp_variables()
-        self.populate_model(vars, id_to_courses)
-
+        self.populate_id_to_course_dict(all_courses)
+        courses_vars, day_vars = self.create_lp_variables()
+        self.populate_course_code_to_vars(courses_vars)
+        self.populate_model(courses_vars, day_vars)
 
     @classmethod
     def get_courses_from_codes_list(cls, courses: List[str], rankings: Dict) -> List[OptimizedCourse]:
@@ -49,14 +55,45 @@ class TimetableOptimizer:
         for course in courses:
             for session_time in course.session_times.all():
                 for hour in session_time.get_hours_list(jump=1, jump_by='hours'):
-                    self.day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour].append(course)
+                    self.semester_to_day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour].append(course)
+                self.course_id_to_semester_and_days[course.code_and_group].append((session_time.semester.value,
+                                                                                  session_time.day.value))
         # todo: here just for breakpoint during debug.
         print(f'Finished {name_of([self.populate_id_to_course_dict])}')
 
-    def populate_model(self, vars: Dict, id_to_courses:Dict):
-        objective = [self.__get_ranking_for_course_id(key) * var for key, var in vars.items()]
+    def populate_model(self, courses_vars: Dict, days_vars: Dict):
+        objective = [self.__get_ranking_for_course_id(key, days_vars) * var for key, var in courses_vars.items()]
         self.model += lpSum(objective)
+        # constraints must take mandatory courses
+        for key in self.mandatory_dict:
+            must_take_mandatory = []
+            for t in courses_vars:
+                if key not in t[0]:
+                    continue
+                must_take_mandatory.append(courses_vars[t])
+            self.model += lpSum(must_take_mandatory) == 1
+        # constraint for taking the right amount of elective points
+        course_code_to_points = self.__get_courses_code_to_points_dict()
+        points_elective_constraint = []
+        for course_code in self.elective_dict:
+            for var_key in self.course_code_to_vars[course_code]:
+                points_elective_constraint.append(course_code_to_points[course_code] * courses_vars[var_key])
+        self.model += lpSum(points_elective_constraint) >= self.elective_points_bound[0]
+        self.model += lpSum(points_elective_constraint) <= self.elective_points_bound[1]
         # todo: create methods for days constraints and hours constraints (don't forget about semesters)
+        id_to_containing_vars = self.__id_to_containing_vars(courses_vars)
+        for semester in self.semester_to_day_to_hours_to_courses_dict:
+            day_courses_took_place = {}
+            for day in self.semester_to_day_to_hours_to_courses_dict[semester]:
+                courses_vars_in_day = []
+                for hour in self.semester_to_day_to_hours_to_courses_dict[semester][day]:
+                    for course in self.semester_to_day_to_hours_to_courses_dict[semester][day][hour]:
+                        relevant_vars = [courses_vars[key] for key in id_to_containing_vars[course.code_and_group]]
+                        courses_vars_in_day.extend(relevant_vars)
+                        self.model += lpSum(relevant_vars) <= 1
+                day_courses_took_place[day] = courses_vars_in_day
+
+        x = 1
 
     def create_lp_variables(self):
         combs = []
@@ -68,12 +105,13 @@ class TimetableOptimizer:
             products = self.__get_lists_cartesian_product(list(self.elective_dict[key].values()))
             temp = [self.__convert_course_tuple_to_ip(product) for product in products]
             combs.extend(temp)
-        # todo: create vars as binary
-        lp_vars = LpVariable.dicts('courses', combs)
         # we need to make sure that the tuple string representation for courses with both
         # TIRGUL and LECTURE is consistent, s.t one or the other always show up first, otherwise
         # it'll be mess to access the values every time.
-        return lp_vars
+        courses_vars = LpVariable.dicts('courses', combs, cat=LpBinary)
+        semester_days_combs = list(itertools.product(Semester.values, Day.values))
+        days_vars = LpVariable.dicts('days', semester_days_combs, cat=LpBinary)
+        return courses_vars, days_vars
 
     @staticmethod
     def __get_lists_cartesian_product(lists: List) -> List:
@@ -90,14 +128,41 @@ class TimetableOptimizer:
             return course_tuple[0].code_and_group, course_tuple[1].code_and_group
         return course_tuple[0].code_and_group,
 
-    def __get_ranking_for_course_id(self, course_tuple: Tuple):
+    def __get_ranking_for_course_id(self, course_tuple: Tuple, days_vars: Dict):
+        days = set(self.course_id_to_semester_and_days[course_tuple[0]])
         if len(course_tuple) == 2:
-            return self.rankings[course_tuple[0]] + self.rankings[course_tuple[1]]
-        return self.rankings[course_tuple[0]]
+            ranking = (self.rankings[course_tuple[0]] + self.rankings[course_tuple[1]])
+            days = days | set(self.course_id_to_semester_and_days[course_tuple[1]])
+        else:
+            ranking = self.rankings[course_tuple[0]]
+        expression = ranking
+        for key in list(days):
+            expression *= days_vars[key]
+        return expression
 
     def populate_id_to_course_dict(self, courses_list: List[Course]):
-        id_to_course = dict()
         for course in courses_list:
-            id_to_course[course.id] = course
-        return id_to_course
+            self.id_to_course[course.code_and_group] = course
 
+    def populate_course_code_to_vars(self, courses_vars: Dict):
+        for course in list(self.mandatory_dict) + list(self.elective_dict):
+            for t in courses_vars:
+                if course in t[0]:
+                    self.course_code_to_vars[course].append(t)
+
+    def __get_courses_code_to_points_dict(self):
+        course_code_to_points = {}
+        for course in self.elective_dict:
+            points = 0
+            for session_type in self.elective_dict[course]:
+                points += self.elective_dict[course][session_type][0].points
+            course_code_to_points[course] = points
+        return course_code_to_points
+
+    @staticmethod
+    def __id_to_containing_vars(courses_vars: Dict):
+        id_to_containing_vars = defaultdict(list)
+        for key in courses_vars:
+            for t in key:
+                id_to_containing_vars[t].append(key)
+        return id_to_containing_vars
