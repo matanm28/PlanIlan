@@ -100,3 +100,4 @@ class TimetableOptimizer:
         for course in courses_list:
             id_to_course[course.id] = course
         return id_to_course
+
