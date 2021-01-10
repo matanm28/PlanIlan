@@ -42,7 +42,7 @@ class TimetableOptimizer:
         for course in elective_courses:
             self.elective_dict[course.code][course.session_type.name].append(course)
         self.populate_day_to_hours_to_course_dict(elective_courses)
-        return elective_courses + mandatory_courses
+        return list(elective_courses) + list(mandatory_courses)
 
     def populate_day_to_hours_to_course_dict(self, courses: QuerySet[Course]):
         for course in courses:
