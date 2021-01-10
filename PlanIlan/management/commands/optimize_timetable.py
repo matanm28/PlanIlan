@@ -52,6 +52,7 @@ class Command(BaseCommand):
     @Timer(text='Script finished after total of {:.4f} seconds')
     def handle(self, *args, **options):
         optimizer = TimetableOptimizer(options['mandatory'], options['elective'], options['blocked_times'], options['rankings'])
+        optimizer.solve()
         print(optimizer)
 
     def add_arguments(self, parser: ArgumentParser):
