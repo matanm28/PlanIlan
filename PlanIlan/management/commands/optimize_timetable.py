@@ -100,8 +100,8 @@ class Command(BaseCommand):
     @staticmethod
     def process_solution(solution):
         courses = []
-        a1, a2 = [s.split('-')[0] for s in solution], [s.split('-')[1] for s in solution]
-        for code, group in zip(a1, a2):
+        results = [s.split('-') for s in solution]
+        for code, group in results:
             courses.extend(Course.objects.filter(code=code, group=group))
         semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
         for course in courses:

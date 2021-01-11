@@ -43,17 +43,12 @@ class TimetableOptimizer:
 
     @Timer('solve')
     def solve(self):
-        self.model.options.SOLVER = 1
+        self.model.options.SOLVER = 1  # solves MILP
         self.model.solve(disp=True, debug=False)
         solution = []
-        alternative = []
         for key, item in self.course_vars.items():
             if sum(item.VALUE.value) == 1:
                 solution.extend(key)
-            if sum(item.VALUE.value) != 0:
-                alternative.extend(key)
-
-        print(', '.join(solution))
         return solution
 
     @classmethod
