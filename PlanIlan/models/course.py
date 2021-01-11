@@ -82,3 +82,15 @@ class Course(BaseModel):
 
     def get_full_string(self):
         return f'{self.code_and_group}: {self.name}, מרצה: {self.teacher.title_and_name}'
+
+    @property
+    def semester(self):
+        semesters = set()
+        for session_times in self.session_times.all():
+            semesters.add(session_times.semester.value)
+        if len(semesters) != 1:
+            if len(semesters) == 0:
+                logging.warning('Course with no listed semesters')
+            else:
+                logging.warning('Course with more than one different semesters')
+        return semesters.pop()

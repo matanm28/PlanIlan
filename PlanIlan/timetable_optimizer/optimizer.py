@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union
 
 from codetiming import Timer
 from pulp import *
@@ -8,12 +8,13 @@ from gekko import *
 
 from PlanIlan.models import Course, Day, Semester
 from PlanIlan.timetable_optimizer.optimized_course import OptimizedCourse
+from PlanIlan.timetable_optimizer.utils import Interval
 from PlanIlan.utils.general import name_of
 
 
 class TimetableOptimizer:
-    def __init__(self, mandatory: List[str], elective: List[str], blocked_times: Dict, rankings: Dict,
-                 elective_points_bound: Tuple[float, float] = (0, 10), max_days: int = 6) -> None:
+    def __init__(self, mandatory: List[str], elective: List[str], blocked_times: Dict, rankings: Dict, semester: int,
+                 elective_points_bound: Union[Interval, Tuple[float, float]] = (0, 20), max_days: int = 6) -> None:
         self.mandatory_dict = defaultdict(lambda: defaultdict(list))
         self.course_code_to_vars = defaultdict(list)
         self.id_to_course = {}
@@ -21,7 +22,9 @@ class TimetableOptimizer:
         self.elective_dict = defaultdict(lambda: defaultdict(list))
         self.blocked_times = blocked_times
         self.rankings = rankings
-        self.elective_points_bound = elective_points_bound
+        self.semester = semester
+        self.elective_points_bound = elective_points_bound if isinstance(elective_points_bound, Interval) else Interval(
+            elective_points_bound[0], elective_points_bound[1])
         self.semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
         self.course_id_to_semester_and_days = defaultdict(list)
         self.model = Gekko(remote=False)
@@ -41,12 +44,15 @@ class TimetableOptimizer:
     @Timer('solve')
     def solve(self):
         self.model.options.SOLVER = 1
-        self.model.solve(disp=True, debug=True)
+        self.model.solve(disp=True, debug=False)
         solution = []
+        alternative = []
         for key, item in self.course_vars.items():
-            if sum(item.VALUE.value) == 0:
-                continue
-            solution.extend(key)
+            if sum(item.VALUE.value) == 1:
+                solution.extend(key)
+            if sum(item.VALUE.value) != 0:
+                alternative.extend(key)
+
         print(', '.join(solution))
         return solution
 
@@ -57,8 +63,10 @@ class TimetableOptimizer:
         return optimized_course_list
 
     def populate_courses_dicts(self, mandatory: List[str], elective: List[str]):
-        mandatory_courses = Course.objects.filter(code__in=mandatory)
+        mandatory_courses = Course.objects.filter(code__in=mandatory).exclude(teacher__name__contains='אסתר')
         for course in mandatory_courses:
+            if course.semester != self.semester:
+                continue
             self.mandatory_dict[course.code][course.session_type.name].append(course)
         self.populate_day_to_hours_to_course_dict(mandatory_courses)
         elective_courses = Course.objects.filter(code__in=elective)
@@ -74,10 +82,9 @@ class TimetableOptimizer:
                     self.semester_to_day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour].append(course)
                 self.course_id_to_semester_and_days[course.code_and_group].append((session_time.semester.value,
                                                                                    session_time.day.value))
-        # todo: here just for breakpoint during debug.
-        print(f'Finished {name_of([self.populate_id_to_course_dict])}')
 
     def populate_model(self, courses_vars: Dict, days_vars: Dict):
+        self.days_vars = []
         objective = [self.__get_ranking_for_course_id(key, days_vars) * var for key, var in courses_vars.items()]
         self.model.Maximize(self.sum(objective))
         # constraints must take mandatory courses
@@ -88,14 +95,22 @@ class TimetableOptimizer:
                     continue
                 must_take_mandatory.append(courses_vars[t])
             self.model.Equation(self.model.sum(must_take_mandatory) == 1)
+
+        for key in self.elective_dict:
+            take_only_one_elective = []
+            for t in courses_vars:
+                if key not in t[0]:
+                    continue
+                take_only_one_elective.append(courses_vars[t])
+            self.model.Equation(self.model.sum(take_only_one_elective) <= 1)
         # constraint for taking the right amount of elective points
         course_code_to_points = self.__get_courses_code_to_points_dict()
         points_elective_constraint = []
         for course_code in self.elective_dict:
             for var_key in self.course_code_to_vars[course_code]:
                 points_elective_constraint.append(course_code_to_points[course_code] * courses_vars[var_key])
-        self.model.Equation(self.model.sum(points_elective_constraint) >= self.elective_points_bound[0])
-        self.model.Equation(self.model.sum(points_elective_constraint) <= self.elective_points_bound[1])
+        self.model.Equation(self.model.sum(points_elective_constraint) >= self.elective_points_bound.left)
+        self.model.Equation(self.model.sum(points_elective_constraint) <= self.elective_points_bound.right)
         # todo: create methods for days constraints and hours constraints (don't forget about semesters)
         id_to_containing_vars = self.__id_to_containing_vars(courses_vars)
         zero = self.model.Const(0, 'zero')
@@ -105,17 +120,24 @@ class TimetableOptimizer:
             for day in self.semester_to_day_to_hours_to_courses_dict[semester]:
                 courses_vars_in_day = []
                 for hour in self.semester_to_day_to_hours_to_courses_dict[semester][day]:
+                    courses_in_hour = []
                     for course in self.semester_to_day_to_hours_to_courses_dict[semester][day][hour]:
                         relevant_vars = [courses_vars[key] for key in id_to_containing_vars[course.code_and_group]]
-                        courses_vars_in_day.extend(relevant_vars)
-                        self.model.Equation(self.model.sum(relevant_vars) <= 1)
+                        courses_in_hour.extend(relevant_vars)
+                        # todo: check why acting weird.
+                        # I don't think we need this
+                        # self.model.Equation(self.model.sum(relevant_vars) <= 1)
+                    self.model.Equation(self.model.sum(courses_in_hour) <= 1)
+                    courses_vars_in_day.extend(courses_in_hour)
                 day_courses_took_place[day] = courses_vars_in_day
             intermediate_days_vars = []
             for day in day_courses_took_place:
-                i = self.model.Intermediate(self.model.if2(self.model.sum(day_courses_took_place[day]) - 1, zero, one),
+                i = self.model.Intermediate(self.model.if3(-self.model.sum(day_courses_took_place[day]), one, zero),
                                             f'{semester, day}_inter')
                 intermediate_days_vars.append(i)
+            self.days_vars.extend(intermediate_days_vars)
             self.model.Equation(self.model.sum(intermediate_days_vars) <= self.max_days)
+            self.model.Equation(self.model.sum(intermediate_days_vars) > 0)
         # for semester in Semester:
         #     days_this_semester = [days_vars[semester.value, day.value] for day in Day]
         #     self.model.Equation(self.model.sum(days_this_semester) <= self.max_days)
