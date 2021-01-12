@@ -62,6 +62,8 @@ class TimetableOptimizer:
         for course in mandatory_courses:
             if course.semester != self.semester:
                 continue
+            if self.is_course_at_block_times(course):
+                continue
             self.mandatory_dict[course.code][course.session_type.name].append(course)
         self.populate_day_to_hours_to_course_dict(mandatory_courses)
         elective_courses = Course.objects.filter(code__in=elective)
@@ -74,7 +76,8 @@ class TimetableOptimizer:
         for course in courses:
             for session_time in course.session_times.all():
                 for hour in session_time.get_hours_list(jump=1, jump_by='hours'):
-                    self.semester_to_day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour].append(course)
+                    self.semester_to_day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour].append(
+                        course)
                 self.course_id_to_semester_and_days[course.code_and_group].append((session_time.semester.value,
                                                                                    session_time.day.value))
 
@@ -223,3 +226,14 @@ class TimetableOptimizer:
             for t in key:
                 id_to_containing_vars[t].append(key)
         return id_to_containing_vars
+
+    def is_course_at_block_times(self, course: Course) -> bool:
+        for session_time in course.session_times.all():
+            day = str(session_time.day)
+            if day not in self.blocked_times.keys():
+                return False
+            blocked_hour_at_day = self.blocked_times[day]
+            for hour in session_time.get_hours_list(jump=1, jump_by='hours'):
+                if str(hour) in blocked_hour_at_day:
+                    return True
+        return False
