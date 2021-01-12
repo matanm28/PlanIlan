@@ -1,6 +1,5 @@
 import concurrent
 import logging
-import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import List
 
@@ -42,19 +41,20 @@ class Command(BaseCommand):
                     if department == Department.NULL_DEPARTMENT:
                         continue
                     future = executor.submit(cls.run_single_crawler, base_url, department.label, run_with_threads)
-                    futures[future] = department
+                    futures[future] = department.label
                 for future in concurrent.futures.as_completed(futures.keys()):
                     if future.exception():
-                        logger.error(f'Department {futures[future].label} ended with exception')
+                        logger.error(f'Department {futures[future]} ended with exception')
                         logger.exception(f'{future.exception()}')
+                        rerun_future = executor.submit(cls.run_single_crawler(base_url,futures[future],run_with_threads))
+                        futures[rerun_future] = futures[future]
                         continue
                     courses = future.result()
                     courses_list.extend(courses)
-                    logger.info(f'Processed {len(future.result())} courses from department {futures[future]}')
-
+                    logger.info(f'Processed {len(courses)} courses from department {futures[future]}')
         else:
             courses_list = cls.run_single_crawler(base_url, 'בחר', run_with_threads)
-        logging.info(f'Parsed total of {len(courses_list)} courses.')
+        logger.info(f'Parsed total of {len(courses_list)} courses.')
         print(big_letters('finished', 2, 4))
 
     @classmethod
