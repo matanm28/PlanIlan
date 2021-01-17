@@ -15,7 +15,12 @@ from PlanIlan.utils.letters import big_letters
 logger = logging.getLogger(__name__)
 
 
-class Command(BaseCommand):
+class PopulateDatabaseCommand(BaseCommand):
+
+
+
+    def __init__(self, stdout=None, stderr=None, no_color=False, force_color=False):
+        super(PopulateDatabaseCommand,self).__init__(stdout, stderr, no_color, force_color)
 
     def handle(self, *args, **options):
         self.run(options['base_url'], options['num_of_crawlers'], options['run_with_threads'],
@@ -32,7 +37,7 @@ class Command(BaseCommand):
 
     @classmethod
     @Timer(text='Script finished after total of {:.4f} seconds', logger=logger.info)
-    def run(cls, base_url: str, num_of_crawlers: int, run_with_threads: bool, run_with_thread_pool):
+    def run(cls, base_url: str, num_of_crawlers: int, run_with_threads: bool, run_with_thread_pool: bool):
         courses_list = []
         if run_with_thread_pool:
             with ThreadPoolExecutor(num_of_crawlers) as executor:
@@ -46,7 +51,7 @@ class Command(BaseCommand):
                     if future.exception():
                         logger.error(f'Department {futures[future]} ended with exception')
                         logger.exception(f'{future.exception()}')
-                        rerun_future = executor.submit(cls.run_single_crawler(base_url,futures[future],run_with_threads))
+                        rerun_future = executor.submit(cls.run_single_crawler(base_url, futures[future], run_with_threads))
                         futures[rerun_future] = futures[future]
                         continue
                     courses = future.result()

@@ -261,10 +261,9 @@ class ShohamCrawler:
         syllabus_link = self.parse_course_syllabus(soup.find(id=self.HTML_IDS['syllabus']))
         course = None
         if self.all_correct:
-            for teacher in teachers:
-                course = Course.create(code, group, name, teacher, session_type, department, session_times, locations,
-                                       points, url, syllabus_link)
-                exams = self.parse_course_exams(soup.find(id=self.HTML_IDS['exams']), course)
+            course = Course.create(code, group, name, teachers, session_type, department, session_times, locations,
+                                   points, url, syllabus_link)
+            exams = self.parse_course_exams(soup.find(id=self.HTML_IDS['exams']), course)
 
         return course
 

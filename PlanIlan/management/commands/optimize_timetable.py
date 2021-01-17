@@ -63,10 +63,15 @@ def parse_json_logic(json_path: str):
             data = json.load(file)
         for key in data:
             res[key] = data[key]
+    res['json_path'] = json_path
     return res
 
 
-class Command(BaseCommand):
+def Command():
+    return OptimizeTimetableCommand()
+
+
+class OptimizeTimetableCommand(BaseCommand):
 
     def __init__(self, stdout=None, stderr=None, no_color=False, force_color=False):
         super().__init__(stdout, stderr, no_color, force_color)
@@ -82,7 +87,10 @@ class Command(BaseCommand):
                                        data['semester'], data['elective_points_bound'], data['max_days'])
         solution = optimizer.solve()
         res = self.process_solution(solution)
-        self.print_solution(res)
+        self.print_solution(res, optimizer.is_solved, optimizer.objective_score, optimizer.iterations)
+        if 'json_path' in data:
+            self.output_as_json(res, data['json_path'].replace('.json', '_output.json'), optimizer.is_solved,
+                                optimizer.objective_score, optimizer.iterations)
 
     def add_arguments(self, parser: ArgumentParser):
         parser.add_argument('-json-path', dest='timetable_data', type=parse_json_logic,
@@ -103,15 +111,17 @@ class Command(BaseCommand):
         results = [s.split('-') for s in solution]
         for code, group in results:
             courses.extend(Course.objects.filter(code=code, group=group))
-        semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+        semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict()))
         for course in courses:
             for session_time in course.session_times.all():
                 for hour in session_time.get_hours_list(jump=1, jump_by='hours'):
-                    semester_to_day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour].append(course)
+                    semester_to_day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour] = course
         return semester_to_day_to_hours_to_courses_dict
 
     @staticmethod
-    def print_solution(semester_to_day_to_hours_to_courses: Dict):
+    def print_solution(semester_to_day_to_hours_to_courses: Dict, is_solved: bool, objective_score: float, iterations: int):
+        meta = f'Meta-Info:\nsolved: {is_solved}\nobjective score: {objective_score}\niterations made: {iterations}\n'
+        print(meta)
         for semester in sorted(semester_to_day_to_hours_to_courses):
             print(f'Semester {semester}')
             for day in sorted(semester_to_day_to_hours_to_courses[semester]):
@@ -119,3 +129,15 @@ class Command(BaseCommand):
                 for hour in sorted(semester_to_day_to_hours_to_courses[semester][day]):
                     print(f'{hour}: {semester_to_day_to_hours_to_courses[semester][day][hour]}')
 
+    def output_as_json(self, res: Dict, json_output_path: str, is_solved: bool, objective_score: float, iterations: int):
+        json_dict = {'META_INFO': {'is_solved': is_solved, 'objective_score': objective_score, 'iterations': iterations}}
+        for semester in sorted(res):
+            semester_name = Semester.from_int(semester).name
+            json_dict[semester_name] = {}
+            for day in sorted(res[semester]):
+                day_name = Day.from_int(day).name
+                json_dict[semester_name][day_name] = {}
+                for hour in sorted(res[semester][day]):
+                    json_dict[semester_name][day_name][str(hour)] = str(res[semester][day][hour])
+        with open(json_output_path, 'w', encoding='utf-8') as output_file:
+            json.dump(json_dict, output_file, indent=1, ensure_ascii=False)
