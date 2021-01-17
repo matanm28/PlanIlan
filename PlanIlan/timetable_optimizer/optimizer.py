@@ -1,3 +1,4 @@
+import copy
 import itertools
 from collections import defaultdict
 from typing import List, Dict, Tuple, Union
@@ -27,9 +28,10 @@ class TimetableOptimizer:
         self.semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
         self.course_id_to_semester_and_days = defaultdict(list)
         self.model = Gekko(remote=False)
+        self.objective = []
         self.course_vars = {}
+        self.objective_param = self.model.Param(0, name='objective_param_1')
         self.post_init(mandatory, elective)
-        self.objective_param = self.model.Param(0,name='objective_param')
 
     def post_init(self, mandatory: List[str], elective: List[str]):
         all_courses = self.populate_courses_dicts(mandatory, elective)
@@ -43,6 +45,19 @@ class TimetableOptimizer:
     def solve(self):
         self.solve_in_binary_mode()
         self.model.solve(disp=True, debug=False)
+        i = 1
+        while self.is_solved:
+            i += 1
+            # print(self.objective_score)
+            model_dup = copy.deepcopy(self.model)
+            self.objective_param = self.model.Param(self.objective_score, name='objective_param_' + str(i))
+            self.model.Equation(sum(self.objective) > self.objective_param)
+            self.model.solve(disp=True, debug=False)
+        if i != 1:
+            # The model Don't have any solution
+            self.model = model_dup
+            self.model.solve(disp=True, debug=False)
+        # print(self.objective_score)
         solution = []
         for key, item in self.course_vars.items():
             if sum(item.VALUE.value) == 1:
@@ -88,7 +103,7 @@ class TimetableOptimizer:
                                                                                    session_time.day.value))
 
     def populate_model(self, courses_vars: Dict):
-        objective = [self.__get_ranking_for_course_id(key) * var for key, var in courses_vars.items()]
+        self.objective = objective = [self.__get_ranking_for_course_id(key) * var for key, var in courses_vars.items()]
         self.model.Maximize(sum(objective))
         self.model.Equation(sum(objective) > self.objective_param)
         # constraints must take mandatory courses
