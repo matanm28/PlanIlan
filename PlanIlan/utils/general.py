@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Iterable
 
 
 def name_of(f: any) -> str:
@@ -28,3 +28,10 @@ def is_number(value: Union[int, float, str]) -> bool:
     elif isinstance(value, str):
         return is_number(value) and is_real(float(value))
     return False
+
+
+def clean_string(string: str, clean_from: Union[Iterable[str], str]):
+    new_string = string
+    for c in clean_from:
+        new_string = new_string.replace(c, '')
+    return new_string

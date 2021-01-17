@@ -1,4 +1,3 @@
-import os
 import sys
 from argparse import ArgumentParser
 from collections import defaultdict, deque

@@ -7,7 +7,8 @@ from datetime import datetime
 import threading
 from typing import List, Deque, Tuple
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
+from bs4.element import Tag, NavigableString
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 
@@ -260,10 +261,9 @@ class ShohamCrawler:
         syllabus_link = self.parse_course_syllabus(soup.find(id=self.HTML_IDS['syllabus']))
         course = None
         if self.all_correct:
-            for teacher in teachers:
-                course = Course.create(code, group, name, teacher, session_type, department, session_times, locations,
-                                       points, url, syllabus_link)
-                exams = self.parse_course_exams(soup.find(id=self.HTML_IDS['exams']), course)
+            course = Course.create(code, group, name, teachers, session_type, department, session_times, locations,
+                                   points, url, syllabus_link)
+            exams = self.parse_course_exams(soup.find(id=self.HTML_IDS['exams']), course)
 
         return course
 
@@ -330,7 +330,9 @@ class ShohamCrawler:
         # todo have a problem with splitting names here - maybe use regex? - look at hours regex.
         teacher_names = teacher_td.text.split('\n')
         teachers_list = []
-        for name in teacher_names:
+        for name in teacher_td.contents:
+            if not isinstance(name, NavigableString):
+                continue
             if name in self.BAD_TEACHER_TITLES:
                 continue
             title, full_name = name.strip().split(maxsplit=1)

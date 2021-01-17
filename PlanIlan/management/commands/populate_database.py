@@ -1,6 +1,5 @@
 import concurrent
 import logging
-import time
 from concurrent.futures import ThreadPoolExecutor
 from typing import List
 
@@ -16,7 +15,12 @@ from PlanIlan.utils.letters import big_letters
 logger = logging.getLogger(__name__)
 
 
-class Command(BaseCommand):
+class PopulateDatabaseCommand(BaseCommand):
+
+
+
+    def __init__(self, stdout=None, stderr=None, no_color=False, force_color=False):
+        super(PopulateDatabaseCommand,self).__init__(stdout, stderr, no_color, force_color)
 
     def handle(self, *args, **options):
         self.run(options['base_url'], options['num_of_crawlers'], options['run_with_threads'],
@@ -33,7 +37,7 @@ class Command(BaseCommand):
 
     @classmethod
     @Timer(text='Script finished after total of {:.4f} seconds', logger=logger.info)
-    def run(cls, base_url: str, num_of_crawlers: int, run_with_threads: bool, run_with_thread_pool):
+    def run(cls, base_url: str, num_of_crawlers: int, run_with_threads: bool, run_with_thread_pool: bool):
         courses_list = []
         if run_with_thread_pool:
             with ThreadPoolExecutor(num_of_crawlers) as executor:
@@ -42,19 +46,20 @@ class Command(BaseCommand):
                     if department == Department.NULL_DEPARTMENT:
                         continue
                     future = executor.submit(cls.run_single_crawler, base_url, department.label, run_with_threads)
-                    futures[future] = department
+                    futures[future] = department.label
                 for future in concurrent.futures.as_completed(futures.keys()):
                     if future.exception():
-                        logger.error(f'Department {futures[future].label} ended with exception')
+                        logger.error(f'Department {futures[future]} ended with exception')
                         logger.exception(f'{future.exception()}')
+                        rerun_future = executor.submit(cls.run_single_crawler(base_url, futures[future], run_with_threads))
+                        futures[rerun_future] = futures[future]
                         continue
                     courses = future.result()
                     courses_list.extend(courses)
-                    logger.info(f'Processed {len(future.result())} courses from department {futures[future]}')
-
+                    logger.info(f'Processed {len(courses)} courses from department {futures[future]}')
         else:
             courses_list = cls.run_single_crawler(base_url, 'בחר', run_with_threads)
-        logging.info(f'Parsed total of {len(courses_list)} courses.')
+        logger.info(f'Parsed total of {len(courses_list)} courses.')
         print(big_letters('finished', 2, 4))
 
     @classmethod
