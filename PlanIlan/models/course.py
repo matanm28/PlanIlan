@@ -9,7 +9,7 @@ from PlanIlan.models import BaseModel, SessionTime, Location, Department, Teache
 
 
 class Course(BaseModel):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, max_length=16, editable=False)
     name = models.CharField(max_length=160)
     code = models.CharField(max_length=10)
     group = models.CharField(max_length=3)
@@ -19,7 +19,7 @@ class Course(BaseModel):
     details_link = models.URLField(null=True)
     syllabus_link = models.URLField(null=True)
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_course')
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='courses')
+    teachers = models.ManyToManyField(Teacher, related_name='teaches_courses')
     session_times = models.ManyToManyField(SessionTime, related_name='courses')
     locations = models.ManyToManyField(Location, related_name='courses')
 
@@ -33,7 +33,7 @@ class Course(BaseModel):
         return course_id[:index]
 
     @classmethod
-    def create(cls, code: str, group: str, name: str, teacher: Teacher, session_type: SessionType,
+    def create(cls, code: str, group: str, name: str, teachers: List[Teacher], session_type: SessionType,
                department: Union[Department, str], session_times: List[SessionTime],
                locations: List[Location], points: float, link: str, syllabus_link: str) -> 'Course':
         try:
@@ -44,11 +44,13 @@ class Course(BaseModel):
                 department = Department.from_string(department)
             if isinstance(department, int):
                 department = Department.from_int(department)
-            course, created = Course.objects.get_or_create(code=code, group=group, name=name, teacher=teacher,
+            course_id = code + group
+            course, created = Course.objects.get_or_create(id=course_id, code=code, group=group, name=name,
                                                            _department=department, _session_type=session_type,
                                                            defaults={'details_link': link, 'points': points,
                                                                      'rating': Rating.create,
                                                                      'syllabus_link': syllabus_link})
+            course.teachers.set(teachers)
             course.locations.set(locations)
             course.session_times.set(session_times)
             cls.log_created(cls.__name__, course.id, created)
@@ -74,11 +76,18 @@ class Course(BaseModel):
     def code_and_group(self):
         return f'{self.code}-{self.group}'
 
+    def get_teacher(self, index: int = 0):
+        teachers_list = self.teachers.all()
+        if len(teachers_list) - 1 > index:
+            # todo: make special exception
+            raise Exception('teacher index is invalid')
+        return teachers_list[index]
+
     def __repr__(self):
-        return f'{self.code_and_group}: {self.name}'
+        return f'{self.code_and_group}: {self.name} ({self.points:.1f})'
 
     def __str__(self):
-        return f'{self.code_and_group}: {self.name}'
+        return f'{self.code_and_group}: {self.name} ({self.points:.1f})'
 
     def get_full_string(self):
         return f'{self.code_and_group}: {self.name}, מרצה: {self.teacher.title_and_name}'

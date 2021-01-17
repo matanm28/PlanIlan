@@ -1,0 +1,16 @@
+{
+  "rankings": {
+    "<course_code>-<course_group>": "<number>"
+  },
+  "blocked_times": {
+    "<day_number>": ["<hh:mm>"]
+  },
+  "mandatory": ["<course_code_0>", "<course_code_1>", "...", "<course_code_K>"],
+  "elective": ["<course_code_0>", "<course_code_1>", "...", "<course_code_K>"],
+  "elective_points_bound": ["<min_number>", "<max_number>"],
+  "max_days": "<number>",
+  "semester": "<semester_number>"
+}
+
+
+
