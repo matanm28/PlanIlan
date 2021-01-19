@@ -15,12 +15,14 @@ from PlanIlan.utils.letters import big_letters
 logger = logging.getLogger(__name__)
 
 
+def Command():
+    return PopulateDatabaseCommand()
+
+
 class PopulateDatabaseCommand(BaseCommand):
 
-
-
     def __init__(self, stdout=None, stderr=None, no_color=False, force_color=False):
-        super(PopulateDatabaseCommand,self).__init__(stdout, stderr, no_color, force_color)
+        super(PopulateDatabaseCommand, self).__init__(stdout, stderr, no_color, force_color)
 
     def handle(self, *args, **options):
         self.run(options['base_url'], options['num_of_crawlers'], options['run_with_threads'],

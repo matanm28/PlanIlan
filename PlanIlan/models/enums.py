@@ -110,7 +110,7 @@ class Department(LabeledIntegerEnum):
     SAFRUT_OF_ISRAEL = 36, _('המחלקה לספרות עם ישראל ע"ש יוסף ונחום ברמן')
     ARABIC = 37, _('המחלקה לערבית')
     PHILOSOPHY = 38, _('המחלקה לפילוסופיה')
-    PHYSICS = 39, _('המחלקה לפיסיקה')
+    PHYSICS = 39, _('המחלקה לפיזיקה')
     PSYCHOLOGY = 40, _('המחלקה לפסיכולוגיה')
     CRIMINOLOGY = 41, _('המחלקה לקרימינולוגיה')
     JEWISH_HISTORY = 42, _('המחלקה לתולדות ישראל ויהדות זמננו')
