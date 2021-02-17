@@ -9,3 +9,5 @@ selenium
 ipython
 webdriver_manager
 pulp
+mapper
+gekko
