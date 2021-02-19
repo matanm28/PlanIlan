@@ -11,6 +11,9 @@ class Teacher(BaseModel):
     _title = models.IntegerField(choices=TeacherTitle.choices, db_column='title')
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_teacher')
 
+    def __str__(self):
+        return f'{self.title_and_name}'
+
     @classmethod
     def create(cls, name: str, title: Any) -> 'Teacher':
         if not isinstance(title, (TeacherTitle, str, int)):
