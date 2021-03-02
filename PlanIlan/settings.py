@@ -34,7 +34,6 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 INSTALLED_APPS = [
     'PlanIlan',
-    'PlanIlanApp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -181,6 +180,8 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    os.path.join(BASE_DIR/"PlanIlanApp/static")
+    os.path.join(BASE_DIR, "static")
 ]
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'

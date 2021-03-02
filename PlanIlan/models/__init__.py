@@ -5,6 +5,6 @@ from .location import Location
 from .rating import Rating
 from .teacher import Teacher
 from .course import Course
-from .user import User
+from .usermodel import UserModel
 from .post import Post, CoursePost, TeacherPost
 from .exam import Exam

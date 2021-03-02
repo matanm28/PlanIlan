@@ -2,14 +2,14 @@ from datetime import datetime
 
 from django.db import models
 
-from PlanIlan.models import User, Teacher, Course, BaseModel
+from PlanIlan.models import UserModel, Teacher, Course, BaseModel
 
 
 class Post(BaseModel):
     class Meta:
         abstract = True
 
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     date = models.DateTimeField(default=datetime.now)
     amount_of_likes = models.IntegerField(default=0)
     headline = models.CharField(max_length=256)
@@ -21,7 +21,7 @@ class TeacherPost(Post):
 
     @classmethod
     def create(cls, author_name: str, headline: str, text: str, teacher: Teacher) -> 'TeacherPost':
-        user = User.get_user_by_user_name(author_name)
+        user = UserModel.get_user_by_user_name(author_name)
         if not user:
             return None
         post, created = TeacherPost.objects.get_or_create(author=user, headline=headline, text=text, Teacher=teacher)
@@ -34,7 +34,7 @@ class CoursePost(Post):
 
     @classmethod
     def create(cls, author_name: str, headline: str, text: str, course: Course) -> 'CoursePost':
-        user = User.get_user_by_user_name(author_name)
+        user = UserModel.get_user_by_user_name(author_name)
         if not user:
             return None
         post, created = CoursePost.objects.get_or_create(author=user, headline=headline, text=text, course=course)

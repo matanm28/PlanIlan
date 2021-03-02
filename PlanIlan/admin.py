@@ -1,6 +1,6 @@
 from django.contrib import admin
-from PlanIlan.models import *
+from .models import *
 # Register your models here.
-admin.site.register(User)
+admin.site.register(UserModel)
 admin.site.register(Teacher)
 admin.site.register(Course)
