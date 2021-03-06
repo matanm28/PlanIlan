@@ -183,5 +183,18 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
+# SMTP Configurations
+mail_data = dict(os.environ)
+mail_data_file_name = 'mail_data.json'
+if os.path.exists(mail_data_file_name):
+    with open(mail_data_file_name, 'r') as json_file:
+        mail_data = json.load(json_file)
+
+EMAIL_BACKEND = mail_data['EMAIL_BACKEND']
+EMAIL_HOST = mail_data['EMAIL_HOST']
+EMAIL_PORT = mail_data['EMAIL_PORT']
+EMAIL_USE_TLS = (True if mail_data['EMAIL_USE_TLS'] == "True" else False)
+EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
+
+
