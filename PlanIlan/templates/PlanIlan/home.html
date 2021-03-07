@@ -3,4 +3,9 @@
 
 {% block content %}
     <h1>ברוכים הבאים לאתר הסטודנטים של בר-אילן</h1>
+    <ul>
+        {% for t in teachers %}
+            <li>{{ t.title_and_name }}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

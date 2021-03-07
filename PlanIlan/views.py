@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .decorators import unauthenticated_user
-from .models import UserModel
+from .models import *
 # @login_required(login_url='')
 # @allowed_user(allowed_roles=[''])
 from django.contrib.auth.decorators import login_required
@@ -11,6 +11,12 @@ from .forms import CreateUserForm
 
 
 def home(request):
+    #todo: get last teachers and courses
+    #todo: save them in data structure
+    if request.method == 'GET':
+        teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
+        context = {'teachers': teachers_obj}
+        return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')
 
 
