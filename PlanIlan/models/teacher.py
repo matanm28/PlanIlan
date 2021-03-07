@@ -38,6 +38,12 @@ class Teacher(BaseModel):
     def title(self):
         return TeacherTitle.from_int(self._title)
 
+    @property
+    def translate(self):
+        translationTable = str.maketrans(" אבגדהוזחטיכלמנסעפצקרשתךףץםן", "aabcdefghijklmnopqrstuvwsyz_")
+        eng_name = self.name.translate(translationTable)
+        return eng_name
+
     def __repr__(self):
         return f'id: {self.id} name: {self.title_and_name}'
 

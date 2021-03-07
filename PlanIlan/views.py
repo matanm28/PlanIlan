@@ -11,10 +11,11 @@ from .forms import CreateUserForm
 
 
 def home(request):
-    #todo: get last teachers and courses
-    #todo: save them in data structure
+    # todo: get last teachers and courses
+    # todo: save them in data structure
     if request.method == 'GET':
         teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
+        print([t.translate for t in teachers_obj])
         context = {'teachers': teachers_obj}
         return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')
