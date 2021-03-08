@@ -36,7 +36,7 @@ def register(request):
                 email=user.email,
                 faculty=faculty
             )
-            messages.success(request, 'ההרשמה נקלטה בהצלחה')
+            # messages.success(request, 'ההרשמה נקלטה בהצלחה')
             login(request, user)
             return redirect('home')
     context = {'form': form}
