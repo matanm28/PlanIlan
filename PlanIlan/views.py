@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .decorators import unauthenticated_user
 from .models import *
+from .filters import CourseFilter
 # @login_required(login_url='')
-# @allowed_user(allowed_roles=[''])
 from django.contrib.auth.decorators import login_required
 
 from .forms import CreateUserForm
@@ -14,10 +14,16 @@ def home(request):
     # todo: get last teachers and courses
     # todo: save them in data structure
     if request.method == 'GET':
-        courses_obj = [Course.objects.get(code="75122"), Course.objects.get(code="99929")]
+        # COURSE SEARCH ENGINE
+        courses = Course.objects.all()
+        course_filter = CourseFilter(request.GET, queryset=courses)
+        courses = course_filter.qs
+        # TEACHER BEST RATINGS VIEW
         teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
-        context = {'teachers': teachers_obj,
-                   'courses': courses_obj}
+        # COURSES BEST RATING VIEW
+        courses_obj = [Course.objects.get(code="75122"), Course.objects.get(code="99929")]
+        context = {'teachers': teachers_obj, 'course_filter': course_filter, 'courses': courses,
+                   'courses_obj': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')
 

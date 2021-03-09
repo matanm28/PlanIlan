@@ -83,6 +83,24 @@
                 </div>
             </div>
         </div>
-
     {% endfor %}
+    <div class="container">
+        <form method="get">
+            {% csrf_token %}
+            {{ course_filter.form }}
+            <button class="btn btn-primary" type="submit">חפש</button>
+        </form>
+    </div>
+    <table class="table table-sm">
+        <tr>
+            <th>Name</th>
+            <th>Code</th>
+        </tr>
+        {% for course in courses %}
+            <tr>
+                <td>{{ course.name }}</td>
+                <td>{{ course.code }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

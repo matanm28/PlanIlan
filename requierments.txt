@@ -11,3 +11,4 @@ webdriver_manager
 pulp
 mapper
 gekko
+django-filter
