@@ -12,3 +12,4 @@ pulp
 mapper
 gekko
 Pillow
+django-filter
