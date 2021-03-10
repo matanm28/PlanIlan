@@ -19,6 +19,9 @@ class Rating(BaseModel):
         rating.save()
         return rating
 
+    def __str__(self):
+        return str(self.average)
+
         # class Meta:
 
     #     abstract = True

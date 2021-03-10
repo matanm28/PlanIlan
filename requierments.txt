@@ -12,3 +12,4 @@ pulp
 mapper
 gekko
 django-filter
+django-widget-tweaks
