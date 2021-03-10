@@ -13,3 +13,4 @@ mapper
 gekko
 Pillow
 django-filter
+django-widget-tweaks

@@ -1,11 +1,50 @@
 {% extends 'PlanIlan/base.html' %}
+{% load widget_tweaks %}
 {% block title %}חיפוש{% endblock %}
 
 {% block content %}
-        <div class="container">
+    <div class="container">
         <form method="get">
             {% csrf_token %}
-            {{ course_filter.form }}
+            <div class="field">
+                <label class="label">Course name</label>
+                <div class="control">
+                    {% render_field course_filter.form.name class="input" placeholder="Enter name here" %}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Teacher</label>
+                <div class="control">
+                    <input list="teachers">
+                    <datalist id="teachers">
+                    {% render_field course_filter.form.teachers type="option" %}
+                    </datalist>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Online studies?</label>
+                <div class="control">
+                    {% render_field course_filter.form.locations__online %}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Rating</label>
+                <div class="control">
+                    {% render_field course_filter.form.rating %}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Start time</label>
+                <div class="control">
+                    {% render_field course_filter.form.start_time type="time" %}
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">End time</label>
+                <div class="control">
+                    {% render_field course_filter.form.end_time type="time" %}
+                </div>
+            </div>
             <button class="btn btn-primary" type="submit" name="form-search">חפש</button>
         </form>
     </div>
