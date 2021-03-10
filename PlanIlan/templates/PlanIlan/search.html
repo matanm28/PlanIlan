@@ -1,0 +1,27 @@
+{% extends 'PlanIlan/base.html' %}
+{% block title %}חיפוש{% endblock %}
+
+{% block content %}
+        <div class="container">
+        <form method="get">
+            {% csrf_token %}
+            {{ course_filter.form }}
+            <button class="btn btn-primary" type="submit" name="form-search">חפש</button>
+        </form>
+    </div>
+    {% if 'form-search' in request.GET %}
+        <table class="table table-sm">
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+            </tr>
+            {% for course in courses %}
+                <tr>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.code }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a href="{% url 'search' %}">ניקוי</a>
+    {% endif %}
+{% endblock %}
