@@ -10,20 +10,26 @@ from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 
 
-def home(request):
-    # todo: get last teachers and courses
-    # todo: save them in data structure
+def search(request):
     if request.method == 'GET':
         # COURSE SEARCH ENGINE
         courses = Course.objects.all()
         course_filter = CourseFilter(request.GET, queryset=courses)
         courses = course_filter.qs
+        context = {'course_filter': course_filter, 'courses': courses}
+        return render(request, 'PlanIlan/search.html', context)
+    return render(request, 'PlanIlan/search.html')
+
+
+def home(request):
+    # todo: get last teachers and courses
+    # todo: save them in data structure
+    if request.method == 'GET':
         # TEACHER BEST RATINGS VIEW
         teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
         # COURSES BEST RATING VIEW
         courses_obj = [Course.objects.get(code="75122"), Course.objects.get(code="99929")]
-        context = {'teachers': teachers_obj, 'course_filter': course_filter, 'courses': courses,
-                   'courses_obj': courses_obj}
+        context = {'teachers': teachers_obj, 'courses_obj': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')
 
