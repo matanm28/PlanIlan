@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
           integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'PlanIlan/css/rating_style.css' %}"/>
     <style>
         .btn-primary {
             width: 50%;
@@ -131,11 +133,14 @@
                                 </div>
                                 <div class="row mb-lg-5">
                                     <div class="col text-center">
-                                        <span class="fa fa-star fa-3x checked" id="first-star"></span>
-                                        <span class="fa fa-star fa-3x checked" id="second-star"></span>
-                                        <span class="fa fa-star fa-3x checked" id="third-star"></span>
-                                        <span class="fa fa-star fa-3x" id="fourth-star"></span>
-                                        <span class="fa fa-star fa-3x" id="fifth-star"></span>
+                                        <form class="rate-form" action="" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="first-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="second-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="third-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="fourth-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="fifth-star"></button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -149,4 +154,8 @@
             </div>
 
         {% endfor %}
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'PlanIlan/js/rating.js' %}"></script>
 {% endblock %}
