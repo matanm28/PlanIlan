@@ -3,17 +3,20 @@ from typing import Any, Union
 
 from django.db import models
 
-from PlanIlan.models import BaseModel, ExamPeriod, Course
+from PlanIlan.models import BaseModel, ExamPeriod, CourseInstance
 from PlanIlan.utils.general import name_of
 
 
 class Exam(BaseModel):
     period = models.IntegerField(choices=ExamPeriod.choices)
     date = models.DateTimeField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, related_name='exams')
+    course = models.ForeignKey(CourseInstance, on_delete=models.DO_NOTHING, null=True, related_name='exams')
+
+    class Meta:
+        unique_together = ['period','date','course']
 
     @classmethod
-    def create(cls, period: Union[ExamPeriod, str, int], date: datetime, course: 'Course') -> 'Exam':
+    def create(cls, period: Union[ExamPeriod, str, int], date: datetime, course: CourseInstance) -> 'Exam':
         if not isinstance(period, (ExamPeriod, str, int)):
             raise cls.generate_cant_create_model_err(cls.__name__, period.__name__, (name_of(ExamPeriod), str, int),
                                                      type(period))

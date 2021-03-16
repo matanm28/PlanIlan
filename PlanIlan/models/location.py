@@ -9,6 +9,9 @@ class Location(BaseModel):
     class_number = models.IntegerField(null=True, blank=True)
     online = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ['building_name','building_number','class_number','online']
+
     @classmethod
     def create(cls, building_name: str, building_number: int, class_number: int,
                             online: bool) -> 'Location':

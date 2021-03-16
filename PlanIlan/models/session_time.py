@@ -1,12 +1,12 @@
 import sys
 import logging
 from datetime import datetime, time, timedelta
-from typing import Any, Union
+from typing import Union
 
 from django.db import models
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
 from PlanIlan.models import Day, BaseModel, Semester
-from PlanIlan.utils.general import is_float, is_number
+from PlanIlan.utils.general import is_number
 from PlanIlan.utils.time import Time, TimeDelta
 
 
@@ -15,10 +15,14 @@ class SessionTime(BaseModel):
     _semester = models.IntegerField(choices=Semester.choices, db_column='semester')
     start_time = models.TimeField()
     end_time = models.TimeField()
+    year = models.PositiveSmallIntegerField()
+
+    class Meta:
+        unique_together = ['_day', '_semester', 'start_time', 'end_time', 'year']
 
     @classmethod
     def create(cls, semester: Union[Semester, str, int], day: Union[Day, str, int], start_time: time,
-               end_time: time) -> 'SessionTime':
+               end_time: time, year: int) -> 'SessionTime':
         try:
             if not isinstance(semester, (Semester, str, int)):
                 raise cls.generate_cant_create_model_err(cls.__name__, semester.__name__, (Semester, str, int),
@@ -43,7 +47,8 @@ class SessionTime(BaseModel):
             else:
                 day_enum = day
             lesson_time, created = SessionTime.objects.get_or_create(_day=day_enum, start_time=start_time,
-                                                                     end_time=end_time, _semester=semester_enum)
+                                                                     end_time=end_time, _semester=semester_enum,
+                                                                     year=year)
             cls.log_created(cls.__name__, lesson_time.id, created)
             return lesson_time
         except EnumNotExistError as err:

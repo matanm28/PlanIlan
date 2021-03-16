@@ -67,6 +67,6 @@ class PopulateDatabaseCommand(BaseCommand):
     @classmethod
     def run_single_crawler(cls, base_url: str, department_name: str, run_with_threads: bool) -> List[Course]:
         # todo maybe add debug flag - check if implemented in django.
-        crawler = ShohamCrawler(base_url, False, logger)
+        crawler = ShohamCrawler(base_url, True, logger)
         crawler.start(department_name, run_with_threads)
         return crawler.courses_list

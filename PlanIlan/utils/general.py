@@ -8,9 +8,17 @@ def name_of(f: any) -> str:
     return name
 
 
-def is_float(value) -> bool:
+def is_float(value: str) -> bool:
     try:
         float(value)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
+def is_int(value: str):
+    try:
+        int(value)
         return True
     except (ValueError, TypeError):
         return False
@@ -26,7 +34,7 @@ def is_number(value: Union[int, float, str]) -> bool:
     elif isinstance(value, float) and is_real(value):
         return True
     elif isinstance(value, str):
-        return is_number(value) and is_real(float(value))
+        return is_int(value) or (is_float(value) and is_real(float(value)))
     return False
 
 
