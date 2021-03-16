@@ -28,7 +28,8 @@ def home(request):
         # TEACHER BEST RATINGS VIEW
         teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
         # COURSES BEST RATING VIEW
-        courses_obj = [Course.objects.get(code="75122"), Course.objects.get(code="99929")]
+        courses_obj = [CourseInstance.objects.get(course__name="מערכות בריאות בארץ ובעולם"),
+                       CourseInstance.objects.get(course__name="מבוא למדעי החיים")]
         context = {'teachers': teachers_obj, 'courses_obj': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')
