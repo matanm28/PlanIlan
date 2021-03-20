@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .decorators import unauthenticated_user
 from .models import *
-from .filters import CourseFilter
+from .filters import CourseInstanceFilter
 # @login_required(login_url='')
 from django.contrib.auth.decorators import login_required
 
@@ -13,8 +13,8 @@ from .forms import CreateUserForm
 def search(request):
     if request.method == 'GET':
         # COURSE SEARCH ENGINE
-        courses = Course.objects.all()
-        course_filter = CourseFilter(request.GET, queryset=courses)
+        courses = CourseInstance.objects.all()
+        course_filter = CourseInstanceFilter(request.GET, queryset=courses)
         courses = course_filter.qs
         context = {'course_filter': course_filter, 'courses': courses}
         return render(request, 'PlanIlan/search.html', context)
