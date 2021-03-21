@@ -3,43 +3,67 @@
 {% block title %}חיפוש{% endblock %}
 
 {% block content %}
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
     <div class="container">
         <form method="get">
             {% csrf_token %}
             <div class="field">
-                <label class="label">Course name</label>
+                <label>Course name</label>
                 <div class="control">
                     {% render_field course_filter.form.name class="input" placeholder="Enter name here" %}
                 </div>
             </div>
             <div class="field">
-                <label class="label">Teacher</label>
+                <label>Teacher</label>
                 <div class="control">
-                    {% render_field course_filter.form.teachers type="option" %}
+                    {% render_field course_filter.form.teachers class="selectpicker" data-show-subtext="true" data-live-search="true" id="search-teacher" %}
                 </div>
             </div>
             <div class="field">
-                <label class="label">Online studies?</label>
+                <label>Online studies?</label>
                 <div class="control">
-                    {% render_field course_filter.form.locations__online %}
+                    {% render_field course_filter.form.online %}
                 </div>
             </div>
             <div class="field">
-                <label class="label">Rating</label>
-                <div class="control">
-                    {% render_field course_filter.form.rating %}
-                </div>
+                <label>Rating Between:</label>
+                {% render_field course_filter.form.rating_from %}
+                <label>And:</label>
+                {% render_field course_filter.form.rating_to %}
             </div>
             <div class="field">
-                <label class="label">Start time</label>
+                <label>Start time</label>
                 <div class="control">
                     {% render_field course_filter.form.start_time type="time" %}
                 </div>
             </div>
             <div class="field">
-                <label class="label">End time</label>
+                <label>End time</label>
                 <div class="control">
                     {% render_field course_filter.form.end_time type="time" %}
+                </div>
+            </div>
+            <div class="field">
+                <label>Day</label>
+                <div class="control">
+                    {% render_field course_filter.form.day %}
+                </div>
+            </div>
+            <div class="field">
+                <label>Semester</label>
+                <div class="control">
+                    {% render_field course_filter.form.semester %}
+                </div>
+            </div>
+            <div class="field">
+                <label>Session type</label>
+                <div class="control">
+                    {% render_field course_filter.form.session_type %}
                 </div>
             </div>
             <button class="btn btn-primary" type="submit" name="form-search">חפש</button>
