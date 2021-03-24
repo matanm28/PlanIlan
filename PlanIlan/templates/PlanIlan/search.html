@@ -13,6 +13,12 @@
         <form method="get">
             {% csrf_token %}
             <div class="field">
+                <label>Department</label>
+                <div class="control">
+                    {% render_field course_filter.form.department class="selectpicker" data-show-subtext="true" data-live-search="true" %}
+                </div>
+            </div>
+            <div class="field">
                 <label>Course name</label>
                 <div class="control">
                     {% render_field course_filter.form.name class="input" placeholder="Enter name here" %}

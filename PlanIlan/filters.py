@@ -13,31 +13,9 @@ RATING_CHOICES = [
     (5, '5')
 ]
 
-DAY_CHOICES = [
-    (1, 'א'),
-    (2, 'ב'),
-    (3, 'ג'),
-    (4, 'ד'),
-    (5, 'ה'),
-    (6, 'ו'),
-]
-
-SEMESTER_CHOICES = [
-    (1, 'א'),
-    (2, 'ב'),
-]
-
-SESSION_CHOICES = [
-    (0, 'הרצאה'),
-    (1, 'תרגול'),
-    (2, 'תגבור'),
-    (3, 'סמינריון'),
-    (4, 'חברותא'),
-    (5, 'סדנה'),
-]
-
 
 class CourseInstanceFilter(django_filters.FilterSet):
+    department = ChoiceFilter(field_name='course___department', choices=Department.choices)
     name = CharFilter(field_name='course__name', lookup_expr='icontains')
     online = BooleanFilter(field_name='locations__online', widget=BooleanWidget())
     rating_from = ChoiceFilter(choices=RATING_CHOICES, field_name='course__rating__average', lookup_expr='gt')
@@ -45,12 +23,12 @@ class CourseInstanceFilter(django_filters.FilterSet):
     start_time = TimeFilter(field_name='session_times__start_time', lookup_expr='gt')
     end_time = TimeFilter(field_name='session_times__end_time', lookup_expr='lt')
     teachers = ModelChoiceFilter(queryset=Teacher.objects.all())
-    day = MultipleChoiceFilter(field_name='session_times___day', choices=DAY_CHOICES,
+    day = MultipleChoiceFilter(field_name='session_times___day', choices=Day.choices,
                                widget=forms.SelectMultiple(attrs={"class": "form-control"}))
-    semester = MultipleChoiceFilter(field_name='session_times___semester', choices=SEMESTER_CHOICES,
+    semester = MultipleChoiceFilter(field_name='session_times___semester', choices=Semester.choices,
                                     widget=forms.SelectMultiple(attrs={"class": "form-control"}))
-    session_type = ChoiceFilter(field_name='_session_type', choices=SESSION_CHOICES)
+    session_type = ChoiceFilter(field_name='_session_type', choices=SessionType.choices)
 
     class Meta:
         model = CourseInstance
-        fields = ['teachers']
+        fields = '__all__'
