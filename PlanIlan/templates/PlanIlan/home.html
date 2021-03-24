@@ -36,10 +36,6 @@
             text-align: center;
         }
 
-        .checked {
-            color: red;
-        }
-
         .input-group-text {
             background: rgba(198, 30, 30, 0.7);
             color: white !important;
@@ -59,6 +55,21 @@
 
     </style>
     <h1>ברוכים הבאים לאתר הסטודנטים של בר-אילן</h1>
+    <div>
+        <form class="rate-form" action="" method="post">
+            {% csrf_token %}
+            <button type="submit" class="fa fa-star fa-3x star-btn"
+                    id="first-star"></button>
+            <button type="submit" class="fa fa-star fa-3x star-btn"
+                    id="second-star"></button>
+            <button type="submit" class="fa fa-star fa-3x star-btn"
+                    id="third-star"></button>
+            <button type="submit" class="fa fa-star fa-3x star-btn"
+                    id="fourth-star"></button>
+            <button type="submit" class="fa fa-star fa-3x star-btn"
+                    id="fifth-star"></button>
+        </form>
+    </div>
     <!-- Button trigger modal -->
     <div id="teachers">
         {% for t in teachers %}
@@ -133,14 +144,7 @@
                                 </div>
                                 <div class="row mb-lg-5">
                                     <div class="col text-center">
-                                        <form class="rate-form" action="" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="first-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="second-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="third-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="fourth-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="fifth-star"></button>
-                                        </form>
+                                        {#                                        rating stars#}
                                     </div>
                                 </div>
                             </div>

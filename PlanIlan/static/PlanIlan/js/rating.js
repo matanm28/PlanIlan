@@ -26,7 +26,7 @@ const handleSelect = (selection) => {
             return
         }
         case 'second-star': {
-            handleSelect(2)
+            handleStarSelect(2)
             return
         }
         case 'third-star': {
@@ -34,7 +34,7 @@ const handleSelect = (selection) => {
             return
         }
         case 'fourth-star': {
-            handleSelect(4)
+            handleStarSelect(4)
             return
         }
         case 'fifth-star': {
