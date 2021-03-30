@@ -68,7 +68,7 @@
                             <div class="media-left">
                                 <p>{{ t_c.author }}</p>
                                 <input class="amount-likes" type='number' id='amount_{{ t_c.id }}' value="{{ t_c.amount_of_likes }}" readonly/>
-                                <form method="post" action="{% url 'home' %}" id="heart-form_{{ t_c.id }}" data-id="{{ t_c.id }}">
+                                <form method="post" id="heart-form_{{ t_c.id }}" data-id="{{ t_c.id }}">
                                     {% csrf_token %}
                                     <button type="submit" class="fa fa-heart heart-btn" id="heart" name="heart-like"></button>
                                 </form>
@@ -158,18 +158,18 @@
                                 </div>
                                 <div class="row mb-lg-5">
                                     <div class="col text-center">
-                                        <form class="rate-form_{{ c.id }}" action="" method="post">
+                                        <form class="rate-form" method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="first-star_{{ c.id }}"></button>
+                                                    id="first-star_{{ c.id }}" data-id="{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="second-star_{{ c.id }}"></button>
+                                                    id="second-star_{{ c.id }}" data-id="{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="third-star_{{ c.id }}"></button>
+                                                    id="third-star_{{ c.id }}" data-id="{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="fourth-star_{{ c.id }}"></button>
+                                                    id="fourth-star_{{ c.id }}" data-id="{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="fifth-star_{{ c.id }}"></button>
+                                                    id="fifth-star_{{ c.id }}" data-id="{{ c.id }}"></button>
                                         </form>
                                     </div>
                                 </div>
@@ -187,6 +187,7 @@
 {% endblock %}
 {% block js_block %}
     {% load static %}
+    <script type="text/javascript" src="{% static 'PlanIlan/js/csrf_token_script.js' %}"></script>
     <script type="text/javascript" src="{% static 'PlanIlan/js/rating.js' %}"></script>
     <script type="text/javascript" src="{% static 'PlanIlan/js/comment_likes.js' %}"></script>
 {% endblock %}

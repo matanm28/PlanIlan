@@ -39,11 +39,14 @@ def home(request):
         return render(request, 'PlanIlan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
-            print(request.POST.get('PostID', ''))
             teacher_post = TeacherPost.objects.get(id=request.POST.get('PostID', ''))
             teacher_post.amount_of_likes += 1
             teacher_post.save()
             return render(request, 'PlanIlan/home.html', context)
+        elif request.POST.get('Rating_course_ID', ''):
+            print(request.POST.get('rate_number'))
+            course_id = CourseInstance.objects.get(id=request.POST.get('Rating_course_ID', ''))
+            course_id.course.rating.update_rating(request.POST.get('rate_number', ''))
     return render(request, 'PlanIlan/home.html')
 
 

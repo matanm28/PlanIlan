@@ -36,7 +36,7 @@ class Rating(BaseModel):
     #         return None
 
     def update_rating(self, new_rating: int, save=True):
-        if self.amount_of_raters in None:
+        if self.amount_of_raters == 0:
             self.average = new_rating
         else:
             self.average = ((self.average * self.amount_of_raters) + new_rating) / (self.amount_of_raters + 1)
