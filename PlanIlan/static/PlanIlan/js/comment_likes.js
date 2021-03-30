@@ -26,7 +26,7 @@ const csrftoken = getCookie('csrftoken');
 
 $("[id^=form_]").click(function () {
     let id = $(this).data("id");
-    data = {
+    let data = {
         'PostID': id,
         'csrfmiddlewaretoken': csrftoken,
     };

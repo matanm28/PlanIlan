@@ -57,21 +57,6 @@
 
     </style>
     <h1>ברוכים הבאים לאתר הסטודנטים של בר-אילן</h1>
-    <div>
-        <form class="rate-form" action="" method="post">
-            {% csrf_token %}
-            <button type="submit" class="fa fa-star fa-3x star-btn"
-                    id="first-star"></button>
-            <button type="submit" class="fa fa-star fa-3x star-btn"
-                    id="second-star"></button>
-            <button type="submit" class="fa fa-star fa-3x star-btn"
-                    id="third-star"></button>
-            <button type="submit" class="fa fa-star fa-3x star-btn"
-                    id="fourth-star"></button>
-            <button type="submit" class="fa fa-star fa-3x star-btn"
-                    id="fifth-star"></button>
-        </form>
-    </div>
     <!-- Button trigger modal -->
     <div class="container sectional-wrapper">
         <div class="row">
@@ -173,18 +158,18 @@
                                 </div>
                                 <div class="row mb-lg-5">
                                     <div class="col text-center">
-                                        <form class="rate-form" action="" method="post">
+                                        <form class="rate-form_{{ c.id }}" action="" method="post">
                                             {% csrf_token %}
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="first-star"></button>
+                                                    id="first-star_{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="second-star"></button>
+                                                    id="second-star_{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="third-star"></button>
+                                                    id="third-star_{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="fourth-star"></button>
+                                                    id="fourth-star_{{ c.id }}"></button>
                                             <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="fifth-star"></button>
+                                                    id="fifth-star_{{ c.id }}"></button>
                                         </form>
                                     </div>
                                 </div>
