@@ -49,7 +49,6 @@ $(document.querySelectorAll('.fa-star')).hover((event) => {
 
 $(document.querySelectorAll('.fa-star')).click((event) => {
     let id = $(event.target).data("id");
-    console.log(star_value)
     let data = {
         'rate_number': star_value,
         'Rating_course_ID': id,

@@ -67,10 +67,12 @@
                         <div class="ct-latest">
                             <div class="media-left">
                                 <p>{{ t_c.author }}</p>
-                                <input class="amount-likes" type='number' id='amount_{{ t_c.id }}' value="{{ t_c.amount_of_likes }}" readonly/>
+                                <input class="amount-likes" type='number' id='amount_{{ t_c.id }}'
+                                       value="{{ t_c.amount_of_likes }}" readonly/>
                                 <form method="post" id="heart-form_{{ t_c.id }}" data-id="{{ t_c.id }}">
                                     {% csrf_token %}
-                                    <button type="submit" class="fa fa-heart heart-btn" id="heart" name="heart-like"></button>
+                                    <button type="submit" class="fa fa-heart heart-btn" id="heart"
+                                            name="heart-like"></button>
                                 </form>
                             </div>
                             <div class="media-body">
@@ -150,11 +152,15 @@
                                     <span class="input-group-text"><i class="fas fa-book"></i></span>
                                 </div>
                                 <div class="input-group-append-data">
-                                    {% if c|length > 1 %}
-                                        <p> :שמות המרצים {{ c.teachers }}</p>
-                                    {% else %}
-                                        <p> :שם המרצה {{ c.teachers }}</p>
-                                    {% endif %}
+                                    {% for teacher in c.teachers.all %}
+                                        {% if c|length > 1 %}
+                                            <p> :שמות המרצים
+                                                {{ teacher.title_and_name }}
+                                            </p>
+                                        {% else %}
+                                            <p> שם המרצה {{ teacher.title_and_name }}:</p>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                                 <div class="row mb-lg-5">
                                     <div class="col text-center">
