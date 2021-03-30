@@ -1,0 +1,82 @@
+/* The side navigation menu */
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 250px; /* change with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: auto; /* Stay at the top */
+    left: 0;
+    background-color: rgba(198, 30, 30, 0.7);
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 30px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+.fa-caret-right {
+    height: auto;
+    color: white;
+}
+
+.open-btn {
+    display: none;
+    color: white;
+    left: auto;
+    font-size: 20px;
+    height: 100%;
+    width: auto;
+    float: left;
+    margin-left: 0;
+    background-color: rgba(84, 87, 90, 0.5);
+    cursor: pointer;
+    writing-mode: vertical-lr;
+    -webkit-writing-mode: vertical-lr;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+#results {
+    transition: margin-left .5s;
+    margin-left: 250px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
+}
+
+.btn-choice {
+    width: 45%;
+    color: white;
+    background-color: inherit;
+    border: none;
+    font-size: large;
+}
+
+.btn-choice:hover {
+    font-weight: bold;
+    color: white;
+}
+
+.clicked {
+    font-weight: bold;
+    border: none;
+    border-bottom: 3px solid white;
+}
+
+
+#teacher_search {
+    color: #111111;
+}

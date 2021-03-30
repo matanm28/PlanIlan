@@ -3,105 +3,132 @@
 {% block title %}חיפוש{% endblock %}
 
 {% block content %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+          integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
-    <div class="container">
-        <form method="get">
-            {% csrf_token %}
-            <div class="field">
-                <label>Department</label>
-                <div class="control">
-                    {% render_field course_filter.form.department class="selectpicker" data-show-subtext="true" data-live-search="true" %}
-                </div>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'PlanIlan/css/search_style.css' %}"/>
+    <div class="container" style="position: absolute">
+        <div class="sidenav" id="search_box">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeSearchBox()" style="color: white">&times;</a>
+            <div class="filter-by">
+                <button class="btn-choice" id="teacher_button" onclick="display_teacher_filter()">סגל</button>
+                <button class="btn-choice focus clicked" id="course_button" onclick="display_course_filter()">קורס
+                </button>
             </div>
-            <div class="field">
-                <label>Course name</label>
-                <div class="control">
-                    {% render_field course_filter.form.name class="input" placeholder="Enter name here" %}
-                </div>
+            <div id="course_filter">
+                <form method="get">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label>Department</label>
+                        <div class="control">
+                            {% render_field course_filter.form.department class="selectpicker" data-show-subtext="true" data-live-search="true" %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Course name</label>
+                        <div class="control">
+                            {% render_field course_filter.form.name class="input" placeholder="Enter name here" %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Teacher</label>
+                        <div class="control">
+                            {% render_field course_filter.form.teachers class="selectpicker" data-show-subtext="true" data-live-search="true" id="search-teacher" %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Online studies?</label>
+                        <div class="control">
+                            {% render_field course_filter.form.online %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Rating Between:</label>
+                        {% render_field course_filter.form.rating_from %}
+                        <label>And:</label>
+                        {% render_field course_filter.form.rating_to %}
+                    </div>
+                    <div class="field">
+                        <label>Start time</label>
+                        <div class="control">
+                            {% render_field course_filter.form.start_time type="time" %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>End time</label>
+                        <div class="control">
+                            {% render_field course_filter.form.end_time type="time" %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Day</label>
+                        <div class="control">
+                            {% render_field course_filter.form.day %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Semester</label>
+                        <div class="control">
+                            {% render_field course_filter.form.semester %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Session type</label>
+                        <div class="control">
+                            {% render_field course_filter.form.session_type %}
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" type="submit" name="form-search">חפש</button>
+                </form>
             </div>
-            <div class="field">
-                <label>Teacher</label>
-                <div class="control">
-                    {% render_field course_filter.form.teachers class="selectpicker" data-show-subtext="true" data-live-search="true" id="search-teacher" %}
-                </div>
+            <div id="teacher_filter" style="display: none">
+                <h2>
+                    Hello
+                </h2>
             </div>
-            <div class="field">
-                <label>Online studies?</label>
-                <div class="control">
-                    {% render_field course_filter.form.online %}
-                </div>
-            </div>
-            <div class="field">
-                <label>Rating Between:</label>
-                {% render_field course_filter.form.rating_from %}
-                <label>And:</label>
-                {% render_field course_filter.form.rating_to %}
-            </div>
-            <div class="field">
-                <label>Start time</label>
-                <div class="control">
-                    {% render_field course_filter.form.start_time type="time" %}
-                </div>
-            </div>
-            <div class="field">
-                <label>End time</label>
-                <div class="control">
-                    {% render_field course_filter.form.end_time type="time" %}
-                </div>
-            </div>
-            <div class="field">
-                <label>Day</label>
-                <div class="control">
-                    {% render_field course_filter.form.day %}
-                </div>
-            </div>
-            <div class="field">
-                <label>Semester</label>
-                <div class="control">
-                    {% render_field course_filter.form.semester %}
-                </div>
-            </div>
-            <div class="field">
-                <label>Session type</label>
-                <div class="control">
-                    {% render_field course_filter.form.session_type %}
-                </div>
-            </div>
-            <button class="btn btn-primary" type="submit" name="form-search">חפש</button>
-        </form>
+        </div>
+        <div id="results">
+            <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i
+                    class="fas fa-caret-right fa-2x"></i>חפש</span>>
+            {% if 'form-search' in request.GET %}
+                <table class="table table-sm" style="width: 95%; float: left">
+                    <tr>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Teachers</th>
+                        <th>Building Name</th>
+                        <th>Building Number</th>
+                        <th>Class Number</th>
+                        <th>Online Studies</th>
+                    </tr>
+                    {% for course in courses %}
+                        <tr>
+                            <td>{{ course.name }}</td>
+                            <td>{{ course.code }}</td>
+                            {% for teacher in course.teachers.all %}
+                                <td>{{ teacher.title_and_name }}</td>
+                            {% endfor %}
+                            {% for location in course.locations.all %}
+                                <td>{{ location.building_name }}</td>
+                                <td>{{ location.building_number }}</td>
+                                <td>{{ location.class_number }}</td>
+                                <td>{{ location.online }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+                <a href="{% url 'search' %}">ניקוי</a>
+            {% endif %}
+        </div>
     </div>
-    {% if 'form-search' in request.GET %}
-        <table class="table table-sm">
-            <tr>
-                <th>Name</th>
-                <th>Code</th>
-                <th>Teachers</th>
-                <th>Building Name</th>
-                <th>Building Number</th>
-                <th>Class Number</th>
-                <th>Online Studies</th>
-            </tr>
-            {% for course in courses %}
-                <tr>
-                    <td>{{ course.name }}</td>
-                    <td>{{ course.code }}</td>
-                    {% for teacher in course.teachers.all %}
-                        <td>{{ teacher.title_and_name }}</td>
-                    {% endfor %}
-                    {% for location in course.locations.all %}
-                        <td>{{ location.building_name }}</td>
-                        <td>{{ location.building_number }}</td>
-                        <td>{{ location.class_number }}</td>
-                        <td>{{ location.online }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
-        <a href="{% url 'search' %}">ניקוי</a>
-    {% endif %}
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'PlanIlan/js/search.js' %}"></script>
 {% endblock %}
