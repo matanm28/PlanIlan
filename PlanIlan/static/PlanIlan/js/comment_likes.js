@@ -16,16 +16,18 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
-(function () {
-    const heart = document.getElementById('heart');
-    heart.addEventListener('click', function () {
-        heart.classList.toggle('red');
-    });
-})();
+// (function () {
+//     const heart = document.getElementById('heart');
+//     heart.addEventListener('click', function () {
+//         heart.classList.toggle('red');
+//     });
+// })();
 
-
-$("[id^=form_]").click(function () {
-    let id = $(this).data("id");
+$(document.querySelectorAll('.fa-heart')).click((event) => {
+    event.target.classList.toggle('red');
+    const p = event.target.parentNode;
+    let id = $(p).data("id");
+    console.log(id)
     let data = {
         'PostID': id,
         'csrfmiddlewaretoken': csrftoken,
@@ -35,8 +37,7 @@ $("[id^=form_]").click(function () {
         type: 'POST',
         data: data,
         success: function (data) {
-            let amount = document.querySelector("[id^=amount_]");
-            amount.innerText += 1
+            p.parentNode.querySelector("[id^=amount_]").stepUp(1);
         },
         error: function (error) {
             alert('error; ' + eval(error));
@@ -44,4 +45,5 @@ $("[id^=form_]").click(function () {
     });
     return false;
 });
+
 

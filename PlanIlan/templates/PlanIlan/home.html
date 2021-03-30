@@ -67,10 +67,10 @@
                         <div class="ct-latest">
                             <div class="media-left">
                                 <p>{{ t_c.author }}</p>
-                                <input class="amount-likes" type='number' id='amount_{{ t_c.id }}' value="{{ t_c.amount_of_likes }}" readonly style="width: 40px; border: 0 !important;"/>
-                                <form method="post" action="{% url 'home' %}" id="form_{{ t_c.id }}" data-id="{{ t_c.id }}">
+                                <input class="amount-likes" type='number' id='amount_{{ t_c.id }}' value="{{ t_c.amount_of_likes }}" readonly/>
+                                <form method="post" action="{% url 'home' %}" id="heart-form_{{ t_c.id }}" data-id="{{ t_c.id }}">
                                     {% csrf_token %}
-                                    <button type="submit" class="fa fa-heart heart-btn" id="heart" name="heart-like"  ></button>
+                                    <button type="submit" class="fa fa-heart heart-btn" id="heart" name="heart-like"></button>
                                 </form>
                             </div>
                             <div class="media-body">
