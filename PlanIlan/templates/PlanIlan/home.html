@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     {% load static %}
     <link rel="stylesheet" href="{% static 'PlanIlan/css/rating_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'PlanIlan/css/latest-posts.css' %}"/>
+    <link rel="stylesheet" href="{% static 'PlanIlan/css/likes_style.css' %}"/>
     <style>
         .btn-primary {
             width: 50%;
@@ -60,6 +62,33 @@
     </style>
     <h1>ברוכים הבאים לאתר הסטודנטים של בר-אילן</h1>
     <!-- Button trigger modal -->
+    <div class="container sectional-wrapper">
+        <div class="row">
+            <div class="col-md-3 col-md-offset-1 aside-section">
+                <div class="widget blog-widget">
+                    <h2 class="widget-header">תגובות אחרונות</h2>
+                    {% for t_c in teacher_comments %}
+                        <div class="ct-latest">
+                            <div class="media-left">
+                                <p>{{ t_c.author }}</p>
+                                <input class="amount-likes" type='number' id='amount_{{ t_c.id }}' value="{{ t_c.amount_of_likes }}" readonly style="width: 40px; border: 0 !important;"/>
+                                <form method="post" action="{% url 'home' %}" id="form_{{ t_c.id }}" data-id="{{ t_c.id }}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="fa fa-heart heart-btn" id="heart" name="heart-like"  ></button>
+                                </form>
+                            </div>
+                            <div class="media-body">
+                                <h2 class="ct-latest-header media-heading">{{ t_c.headline }}</h2>
+                                <p>{{ t_c.text }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="teacher_post">
+    </div>
     <div id="teachers">
         {% for t in teachers %}
             <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -135,11 +164,16 @@
                                     <div class="col text-center">
                                         <form class="rate-form" action="" method="post">
                                             {% csrf_token %}
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="first-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="second-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="third-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="fourth-star"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn" id="fifth-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn"
+                                                    id="first-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn"
+                                                    id="second-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn"
+                                                    id="third-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn"
+                                                    id="fourth-star"></button>
+                                            <button type="submit" class="fa fa-star fa-3x star-btn"
+                                                    id="fifth-star"></button>
                                         </form>
                                     </div>
                                 </div>
@@ -158,4 +192,5 @@
 {% block js_block %}
     {% load static %}
     <script type="text/javascript" src="{% static 'PlanIlan/js/rating.js' %}"></script>
+    <script type="text/javascript" src="{% static 'PlanIlan/js/comment_likes.js' %}"></script>
 {% endblock %}

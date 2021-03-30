@@ -80,11 +80,25 @@
             <tr>
                 <th>Name</th>
                 <th>Code</th>
+                <th>Teachers</th>
+                <th>Building Name</th>
+                <th>Building Number</th>
+                <th>Class Number</th>
+                <th>Online Studies</th>
             </tr>
             {% for course in courses %}
                 <tr>
                     <td>{{ course.name }}</td>
                     <td>{{ course.code }}</td>
+                    {% for teacher in course.teachers.all %}
+                        <td>{{ teacher.title_and_name }}</td>
+                    {% endfor %}
+                    {% for location in course.locations.all %}
+                        <td>{{ location.building_name }}</td>
+                        <td>{{ location.building_number }}</td>
+                        <td>{{ location.class_number }}</td>
+                        <td>{{ location.online }}</td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
         </table>

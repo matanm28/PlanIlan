@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from .decorators import unauthenticated_user
-from .models import *
-from .filters import CourseInstanceFilter
-# @login_required(login_url='')
-from django.contrib.auth.decorators import login_required
 
+from .decorators import unauthenticated_user
+from .filters import CourseInstanceFilter
 from .forms import CreateUserForm
+from .models import *
+
+
+# @login_required(login_url='')
 
 
 def search(request):
@@ -24,14 +25,25 @@ def search(request):
 def home(request):
     # todo: get last teachers and courses
     # todo: save them in data structure
+    # TEACHER BEST RATINGS VIEW
+    teachers_obj = [Teacher.objects.get(name="ארז שיינר"),
+                    Teacher.objects.get(name="גל קמינקא")]
+    # COURSES BEST RATING VIEW
+    courses_obj = [CourseInstance.objects.get(course__name="מערכות בריאות בארץ ובעולם"),
+                   CourseInstance.objects.get(course__name="מבוא למדעי החיים")]
+    # LATEST COMMENTS
+    teacher_comments = TeacherPost.objects.all().order_by('date')
+    context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
+               'teacher_comments': teacher_comments}
     if request.method == 'GET':
-        # TEACHER BEST RATINGS VIEW
-        teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
-        # COURSES BEST RATING VIEW
-        courses_obj = [CourseInstance.objects.get(course__name="מערכות בריאות בארץ ובעולם"),
-                       CourseInstance.objects.get(course__name="מבוא למדעי החיים")]
-        context = {'teachers': teachers_obj, 'courses_obj': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
+    elif request.method == 'POST':
+        if request.POST.get('PostID', ''):
+            print(request.POST.get('PostID', ''))
+            teacher_post = TeacherPost.objects.get(id=request.POST.get('PostID', ''))
+            teacher_post.amount_of_likes += 1
+            teacher_post.save()
+            return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')
 
 
