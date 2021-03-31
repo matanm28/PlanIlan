@@ -1,8 +1,9 @@
 /* The side navigation menu */
 .sidenav {
     height: 100%; /* 100% Full-height */
-    width: 250px; /* change with JavaScript */
+    width: 25%; /* change with JavaScript */
     position: fixed; /* Stay in place */
+    /*position: relative; !* Stay in place *!*/
     z-index: 1; /* Stay on top */
     top: auto; /* Stay at the top */
     left: 0;
