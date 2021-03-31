@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
-from .decorators import unauthenticated_user
+from .decorators import unauthenticated_user, authenticated_user
 from .filters import CourseInstanceFilter
 from .forms import CreateUserForm
 from .models import *
@@ -88,3 +88,9 @@ def login_page(request):
 def logout_user(request):
     logout(request)
     return redirect('home')
+
+
+@authenticated_user
+def time_table(request):
+    return render(request, 'PlanIlan/timetable.html')
+
