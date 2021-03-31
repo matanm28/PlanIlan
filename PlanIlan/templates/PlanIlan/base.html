@@ -22,6 +22,11 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">בנה מערכת שעות</a>
+                </li>
+            {% endif %}
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'search' %}">חיפוש</a>
                 <li class="nav-item">
