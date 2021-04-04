@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 
 from .decorators import unauthenticated_user, authenticated_user
@@ -15,6 +16,7 @@ def search(request):
     if request.method == 'GET':
         # COURSE SEARCH ENGINE
         courses = CourseInstance.objects.all()
+        print(request.GET)
         course_filter = CourseInstanceFilter(request.GET, queryset=courses)
         courses = course_filter.qs
         context = {'course_filter': course_filter, 'courses': courses}
@@ -92,5 +94,23 @@ def logout_user(request):
 
 @authenticated_user
 def time_table(request):
+    if request.method == 'GET':
+        courses_list = CourseInstance.objects.all()
+        course_filter = CourseInstanceFilter(request.GET, queryset=courses_list)
+        courses_list = course_filter.qs
+        paginator = Paginator(courses_list, 10)
+        page = request.GET.get('page', 1)
+        try:
+            courses = paginator.page(page)
+        except PageNotAnInteger:
+            courses = paginator.page(1)
+        except EmptyPage:
+            courses = paginator.page(paginator.num_pages)
+        index = courses.number - 1  # edited to something easier without index
+        max_index = len(paginator.page_range)
+        start_index = index - 3 if index >= 3 else 0
+        end_index = index + 3 if index <= max_index - 3 else max_index
+        page_range = list(paginator.page_range)[start_index:end_index]
+        context = {'course_filter': course_filter, 'courses': courses, 'page_range': page_range}
+        return render(request, 'PlanIlan/timetable.html', context)
     return render(request, 'PlanIlan/timetable.html')
-
