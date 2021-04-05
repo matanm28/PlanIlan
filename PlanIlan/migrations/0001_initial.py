@@ -137,7 +137,7 @@ class Migration(migrations.Migration):
                 ('course', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='course_instances', to='PlanIlan.course')),
                 ('locations', models.ManyToManyField(related_name='courses', to='PlanIlan.Location')),
                 ('session_times', models.ManyToManyField(related_name='courses', to='PlanIlan.SessionTime')),
-                ('teachers', models.ManyToManyField(related_name='teaches_courses', to='PlanIlan.Teacher')),
+                ('staff', models.ManyToManyField(related_name='teaches_courses', to='PlanIlan.Teacher')),
             ],
             options={
                 'abstract': False,

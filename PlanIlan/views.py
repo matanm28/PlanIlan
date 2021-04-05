@@ -11,12 +11,12 @@ from .forms import CreateUserForm
 
 
 def home(request):
-    # todo: get last teachers and courses
+    # todo: get last staff and courses
     # todo: save them in data structure
     if request.method == 'GET':
         courses_obj = [Course.objects.get(code="75122"), Course.objects.get(code="99929")]
         teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
-        context = {'teachers': teachers_obj,
+        context = {'staff': teachers_obj,
                    'courses': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')

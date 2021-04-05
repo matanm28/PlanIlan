@@ -72,7 +72,7 @@ class CourseInstance(BaseModel):
                department: Union[Department, str, int], session_times: List[SessionTime], locations: List[Location],
                points: float = None, link: str = None, syllabus_link: str = None) -> 'CourseInstance':
         if not len(teachers) > 0:
-            raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "teachers list can't be empty")
+            raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "staff list can't be empty")
         if not len(session_times) > 0:
             raise cls.generate_cant_create_model_err(cls.__name__, session_times.__name__, "session_times list can't be empty")
         if not len(locations) > 0:

@@ -201,7 +201,7 @@ class ShohamCrawler:
             q.put((course_details_page, url))
         close_chrome_driver(driver)
 
-    def consume_courses_details_pages(self, products: queue.Queue, num_of_consumers: int = 5):
+    def consume_courses_details_pages(self, products: queue.Queue, num_of_consumers: int = 3):
         # builders = [CourseInstanceBuilder(self.year, self.base_url, self.logger) for _ in range(num_of_consumers)]
         # consumers = [threading.Thread() for i in range(num_of_consumers)]
         with concurrent.futures.ThreadPoolExecutor(max_workers=num_of_consumers) as executor:

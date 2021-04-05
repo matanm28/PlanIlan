@@ -142,6 +142,10 @@ class Department(LabeledIntegerEnum):
     TEODAT_HORAA = 68, _('תעודת הוראה')
 
 
+class Faculty(LabeledIntegerEnum):
+    NONE = 0, _("כלום")
+
+
 class Semester(LabeledIntegerEnum):
     FIRST = 1, _("סמסטר א'")
     SECOND = 2, _("סמסטר ב'")

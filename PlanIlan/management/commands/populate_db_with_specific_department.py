@@ -8,7 +8,7 @@ from PlanIlan.models import Department
 from PlanIlan.utils.letters import big_letters
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('PlanIlan.management.commands.populate_database')
 
 def Command():
     return PopulateDatabaseWithSpecificDepartment()

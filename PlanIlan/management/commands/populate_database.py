@@ -6,7 +6,7 @@ from typing import List
 from codetiming import Timer
 from django.core.management import BaseCommand
 
-from PlanIlan.data_mining.shoham_crawler import ShohamCrawler
+from PlanIlan.data_mining.courses.shoham_crawler import ShohamCrawler
 
 from PlanIlan.models import Course
 from PlanIlan.models.enums import Department
@@ -33,7 +33,7 @@ class PopulateDatabaseCommand(BaseCommand):
                             help='The url leading to Bar-Ilan Shoham site main page',
                             default='https://shoham.biu.ac.il/BiuCoursesViewer/')
         parser.add_argument('-num_of_crawlers', type=int, action='store',
-                            help='The number of crawlers to instantiate.', default=4)
+                            help='The number of crawlers to instantiate.', default=3)
         parser.add_argument('--run_with_single_thread', dest='run_with_threads', action='store_false', default=True)
         parser.add_argument('--run_without_thread_pool', dest='run_with_thread_pool', action='store_false', default=True)
 
@@ -49,6 +49,7 @@ class PopulateDatabaseCommand(BaseCommand):
                         continue
                     future = executor.submit(cls.run_single_crawler, base_url, department.label, run_with_threads)
                     futures[future] = department.label
+                    logger.info(f'sent {department.label} to executor')
                 for future in concurrent.futures.as_completed(futures.keys()):
                     if future.exception():
                         logger.error(f'Department {futures[future]} ended with exception')
