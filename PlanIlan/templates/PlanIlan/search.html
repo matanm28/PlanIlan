@@ -86,23 +86,37 @@
                                 {% render_field course_filter.form.session_type %}
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit" name="form-search">חפש</button>
+                        <button class="btn btn-primary" type="submit" name="form-search-course">חפש</button>
                         <a href="{% url 'search' %}" style="float: left">ניקוי</a>
 
                     </form>
                 </div>
             </div>
             <div id="teacher_filter" style="display: none">
-                <h2>
-                    Hello
-                </h2>
+                <form method="get">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label>Teacher Name</label>
+                        <div class="control">
+                            {% render_field teacher_filter.form.name %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Rating Between:</label>
+                        {% render_field teacher_filter.form.rating_from %}
+                        <label>And:</label>
+                        {% render_field teacher_filter.form.rating_to %}
+                    </div>
+                    <button class="btn btn-primary" type="submit" name="form-search-teacher">חפש</button>
+                    <a href="{% url 'search' %}" style="float: left">ניקוי</a>
+                </form>
             </div>
         </div>
         <div class="float-container" id="results">
             <span class="float-left open-btn" id="open_search_box" onclick="openSearchBox()"><i
                     class="fas fa-caret-right fa-2x"></i>חפש</span>
             <div class="float-child" id="courses_result" style="float: left">
-                {% if 'form-search' in request.GET %}
+                {% if 'form-search-course' in request.GET %}
                     <table class="table table-sm">
                         <tr>
                             <th>Name</th>
@@ -126,6 +140,18 @@
                                     <td>{{ location.class_number }}</td>
                                     <td>{{ location.online }}</td>
                                 {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                {% if 'form-search-teacher' in request.GET %}
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                        {% for teacher in teachers %}
+                            <tr>
+                                <td>{{ teacher.name }}</td>
                             </tr>
                         {% endfor %}
                     </table>

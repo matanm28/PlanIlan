@@ -32,3 +32,13 @@ class CourseInstanceFilter(django_filters.FilterSet):
     class Meta:
         model = CourseInstance
         fields = '__all__'
+
+
+class TeacherInstanceFilter(django_filters.FilterSet):
+    name = CharFilter(field_name='name', lookup_expr='icontains')
+    rating_from = ChoiceFilter(choices=RATING_CHOICES, field_name='rating__average', lookup_expr='gt')
+    rating_to = ChoiceFilter(choices=RATING_CHOICES, field_name='rating__average', lookup_expr='lt')
+
+    class Meta:
+        model = CourseInstance
+        fields = ['name', 'rating_from', 'rating_to']
