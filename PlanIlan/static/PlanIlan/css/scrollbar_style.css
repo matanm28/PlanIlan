@@ -1,19 +1,21 @@
 .scrollbar {
     float: left;
-    /*height: 450px;*/
-    height: 44rem;
-    width: 32rem;
+    /*!*height: 450px;*!*/
+    /*!*height: 44rem;*!*/
+    /*height: 80rem;*/
+    /*!*width: 32rem;*!*/
+    height: 81%;
+    width: 100%;
+    /*width: auto;*/
     background: rgb(214, 97, 97);
-
     /*background: #fff;*/
     overflow-y: auto;
     overflow-x: auto;
-    margin-bottom: 25px;
 }
 
-.force-overflow {
-    min-height: 45rem;
-}
+/*.force-overflow {*/
+/*    min-height: 70rem;*/
+/*}*/
 
 .scrollbar-primary::-webkit-scrollbar {
     width: 1.2rem;

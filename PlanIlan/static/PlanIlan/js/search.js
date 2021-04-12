@@ -14,8 +14,8 @@ function display_course_filter() {
 
 /* Set the width of the side navigation to 250px */
 function openSearchBox() {
-    document.getElementById("search_box").style.width = "25%";
     document.getElementById("results").style.marginLeft = "25%";
+    document.getElementById("search_box").style.width = "25%";
     document.getElementById("open_search_box").style.display = "none";
 }
 
