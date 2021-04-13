@@ -9,7 +9,7 @@ from django.core.management import BaseCommand
 from PlanIlan.data_mining.courses.shoham_crawler import ShohamCrawler
 
 from PlanIlan.models import Course
-from PlanIlan.models.enums import Department
+from PlanIlan.models.enums import DepartmentEnum
 from PlanIlan.utils.letters import big_letters
 
 logger = logging.getLogger(__name__)
@@ -41,21 +41,24 @@ class PopulateDatabaseCommand(BaseCommand):
     @Timer(text='Script finished after total of {:.4f} seconds', logger=logger.info)
     def run(cls, base_url: str, num_of_crawlers: int, run_with_threads: bool, run_with_thread_pool: bool):
         courses_list = []
+        departments_with_errors = []
         if run_with_thread_pool:
             with ThreadPoolExecutor(num_of_crawlers) as executor:
                 futures = {}
-                for department in Department:
-                    if department == Department.NULL_DEPARTMENT:
+                for department in DepartmentEnum:
+                    if department == DepartmentEnum.NULL_DEPARTMENT:
                         continue
                     future = executor.submit(cls.run_single_crawler, base_url, department.label, run_with_threads)
                     futures[future] = department.label
                     logger.info(f'sent {department.label} to executor')
                 for future in concurrent.futures.as_completed(futures.keys()):
                     if future.exception():
-                        logger.error(f'Department {futures[future]} ended with exception')
+                        failed_department = futures[future]
+                        logger.error(f'Department {failed_department} ended with exception')
                         logger.exception(f'{future.exception()}')
-                        rerun_future = executor.submit(cls.run_single_crawler(base_url, futures[future], run_with_threads))
-                        futures[rerun_future] = futures[future]
+                        # rerun_future = executor.submit(cls.run_single_crawler(base_url, futures[future], run_with_threads))
+                        # futures[rerun_future] = futures[future]
+                        departments_with_errors.append(failed_department)
                         continue
                     courses = future.result()
                     courses_list.extend(courses)

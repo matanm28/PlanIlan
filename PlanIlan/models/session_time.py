@@ -5,14 +5,14 @@ from typing import Union
 
 from django.db import models
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
-from PlanIlan.models import Day, BaseModel, Semester
+from PlanIlan.models import DayEnum, BaseModel, SemesterEnum
 from PlanIlan.utils.general import is_number
 from PlanIlan.utils.time import Time, TimeDelta
 
 
 class SessionTime(BaseModel):
-    _day = models.IntegerField(choices=Day.choices, db_column='day')
-    _semester = models.IntegerField(choices=Semester.choices, db_column='semester')
+    _day = models.IntegerField(choices=DayEnum.choices, db_column='day')
+    _semester = models.IntegerField(choices=SemesterEnum.choices, db_column='semester')
     start_time = models.TimeField()
     end_time = models.TimeField()
     year = models.PositiveSmallIntegerField()
@@ -21,29 +21,29 @@ class SessionTime(BaseModel):
         unique_together = ['_day', '_semester', 'start_time', 'end_time', 'year']
 
     @classmethod
-    def create(cls, semester: Union[Semester, str, int], day: Union[Day, str, int], start_time: time,
+    def create(cls, semester: Union[SemesterEnum, str, int], day: Union[DayEnum, str, int], start_time: time,
                end_time: time, year: int) -> 'SessionTime':
         try:
-            if not isinstance(semester, (Semester, str, int)):
-                raise cls.generate_cant_create_model_err(cls.__name__, semester.__name__, (Semester, str, int),
+            if not isinstance(semester, (SemesterEnum, str, int)):
+                raise cls.generate_cant_create_model_err(cls.__name__, semester.__name__, (SemesterEnum, str, int),
                                                          type(semester))
             if isinstance(semester, str):
-                semester_enum = Semester.from_string(semester)
+                semester_enum = SemesterEnum.from_string(semester)
             elif isinstance(semester, int):
-                semester_enum = Semester.from_int(semester)
+                semester_enum = SemesterEnum.from_int(semester)
             else:
                 semester_enum = semester
 
-            if not isinstance(day, (Day, str, int)):
-                raise cls.generate_cant_create_model_err(cls.__name__, day.__name__, (Day, str, int),
+            if not isinstance(day, (DayEnum, str, int)):
+                raise cls.generate_cant_create_model_err(cls.__name__, day.__name__, (DayEnum, str, int),
                                                          type(day))
             if isinstance(day, str):
                 day_char = day
                 if len(day) > 1:
                     day_char = day[0]
-                day_enum = Day.from_string(day_char)
+                day_enum = DayEnum.from_string(day_char)
             elif isinstance(semester, int):
-                day_enum = Day.from_int(day)
+                day_enum = DayEnum.from_int(day)
             else:
                 day_enum = day
             lesson_time, created = SessionTime.objects.get_or_create(_day=day_enum, start_time=start_time,
@@ -98,11 +98,11 @@ class SessionTime(BaseModel):
 
     @property
     def day(self):
-        return Day.from_int(self._day)
+        return DayEnum.from_int(self._day)
 
     @property
     def semester(self):
-        return Semester.from_int(self._semester)
+        return SemesterEnum.from_int(self._semester)
 
     def __repr__(self):
         return f'semester: {self.semester.label}, day: {self.day}, time: {self.start_str}-{self.end_str}'

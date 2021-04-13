@@ -6,24 +6,22 @@ from PIL import Image
 from bs4 import BeautifulSoup
 from email_validator import validate_email, EmailNotValidError
 
-from PlanIlan.models.enums import Faculty, Department
+from PlanIlan.data_mining.staff.lookup_parameters import StaffLookup
+from PlanIlan.models.enums import FacultyEnum, DepartmentEnum
 
 
 class StaffCrawler:
-    """An interface that crawls over different staff members web pages according to their attributes."""
+    """An object that crawls over different staff members web pages according to their attributes."""
 
-    def __init__(self, url: Union[str, List[str]], faculty: Faculty, department: Department, items_class: str,
-                 key_to_class: Dict, **kwargs) -> None:
+    def __init__(self, url: Union[str, List[str]], faculty: FacultyEnum, department: DepartmentEnum, staff_lookup: StaffLookup,
+                 **kwargs) -> None:
         self._urls = url if isinstance(url, List) else [url]
         self._faculty = faculty
         self._department = department
-        self._items_class = items_class
-        self._has_photos = kwargs['has_photos'] if 'has_photos' in kwargs else False
-        self._email_suffix = kwargs['email_suffix'] if 'email_suffix' in kwargs else None
-        if not all(k in ['photo', 'title', 'name', 'office', 'phone', 'email', 'website'] for k in key_to_class):
-            raise ValueError(f"every key in key_to_class must be in "
-                             f"{['photo', 'title', 'name', 'office', 'phone', 'email', 'website']}")
-        self._key_to_class = key_to_class
+        self.staff_lookup = staff_lookup
+        self._has_photos = kwargs['has_photos'] if 'has_photos' in kwargs else True
+        self._email_suffix = kwargs['email_suffix'] if 'email_suffix' in kwargs else ''
+        self.__teachers_data = None
 
     @property
     def urls(self) -> List[str]:
@@ -31,7 +29,7 @@ class StaffCrawler:
         return self._urls
 
     @property
-    def faculty(self) -> Faculty:
+    def faculty(self) -> FacultyEnum:
         """Return the faculty of the crawled web page"""
         return self._faculty
 
@@ -40,42 +38,60 @@ class StaffCrawler:
         """Returns the department of the crawled web page"""
         return self._department
 
-    @property
-    def key_to_data(self):
-        return self._key_to_class
-
-    @property
-    def items_class(self):
-        return self._items_class
+    def get_teachers_data(self) -> List[Dict]:
+        if self.__teachers_data is None:
+            self.crawl()
+        return self.__teachers_data
 
     def crawl(self) -> List[Dict]:
         """"The main method for this interface, crawls over the staff members web page an return the data found."""
-        teachers_data = []
+        self.__teachers_data = []
         for url in self.urls:
             response = requests.get(url)
             if not response:
                 continue
             soup = BeautifulSoup(response.text, 'html.parser')
-            for item in soup.select(f'.{self._items_class}'):
-                item_data = {}
-                for key, value in self.key_to_data.items():
-                    if key == "photo" and self._has_photos:
-                        image_tag = item.find(class_=value).find('img')
-                        img_url = urljoin(url, image_tag['src'])
-                        img = Image.open(requests.get(img_url, stream=True).raw)
-                        # img.save(fr'images\img1.jpg')
-                        item_data[key] = img
-                    else:
-                        tag = item.find(class_=value)
-                        data = tag.text
-                        item_data[key] = data
-                teachers_data.append(item_data)
-        return teachers_data
+            persons = self.staff_lookup.persons.get_tags(soup)
+            for person in persons:
+                teacher_data = {}
+                details_url = self.staff_lookup.details_url.get_single_tag(person)
+                if details_url is None:
+                    continue
+                details_url = details_url['href'].strip()
+                title = self.staff_lookup.params.title.get_values_from_tag(person)
+                name = self.staff_lookup.params.name.get_values_from_tag(person)
+                if title is None or name is None:
+                    continue
+                teacher_data['title'] = title
+                teacher_data['name'] = name
+                teacher_response = requests.get(details_url)
+                if not teacher_response:
+                    continue
+                teacher_web_page = BeautifulSoup(teacher_response.text, 'html.parser')
+                email = self.staff_lookup.params.email.get_values_from_tag(teacher_web_page)
+                if not email:
+                    email = ''
+                mail_valid, value = self._validate_email(email)
+                if mail_valid:
+                    email = value
+                else:
+                    # todo: add logging
+                    print(email, value)
+                phone = self.staff_lookup.params.phone.get_values_from_tag(teacher_web_page)
+                website = self.staff_lookup.params.website.get_values_from_tag(teacher_web_page)
+                office = self.staff_lookup.params.office.get_values_from_tag(teacher_web_page)
+                image_tag = self.staff_lookup.params.photo.get_single_tag(teacher_web_page)
+                image_url = urljoin(url, image_tag['src'])
+                photo = Image.open(requests.get(image_url, stream=True).raw)
+                photo.save(fr'images\img1.jpg')
 
-    def _add_email_suffix_to_mail(self, email: str):
-        if '@' not in email and self._email_suffix is not None:
-            return email.strip() + self._email_suffix
-        return email.strip()
+                teacher_data['email'] = email
+                teacher_data['phone'] = phone if phone else ''
+                teacher_data['website'] = website if website else ''
+                teacher_data['office'] = office if office else ''
+                teacher_data['photo'] = photo
+                self.__teachers_data.append(teacher_data)
+        return len(self.__teachers_data)
 
     def _validate_email(self, email: str) -> Tuple[bool, Union[Dict, str]]:
         """Validate the given email address
@@ -90,6 +106,8 @@ class StaffCrawler:
                            returns a human readable error message.
         """
         try:
+            if '@' not in email:
+                email = f'{email}{self._email_suffix}'
             valid = validate_email(email, timeout=10)
             outcome = True
             value = valid.email

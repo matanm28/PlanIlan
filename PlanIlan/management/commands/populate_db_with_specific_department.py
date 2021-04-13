@@ -4,7 +4,7 @@ from typing import Union
 from codetiming import Timer
 
 from PlanIlan.management.commands.populate_database import PopulateDatabaseCommand
-from PlanIlan.models import Department
+from PlanIlan.models import DepartmentEnum
 from PlanIlan.utils.letters import big_letters
 
 
@@ -24,9 +24,9 @@ class PopulateDatabaseWithSpecificDepartment(PopulateDatabaseCommand):
 
     def add_arguments(self, parser):
         super(PopulateDatabaseWithSpecificDepartment, self).add_arguments(parser)
-        parser.add_argument('-d', '--department', type=int, default=Department.COMPUTER_SCIENCE)
+        parser.add_argument('-d', '--department', type=int, default=DepartmentEnum.COMPUTER_SCIENCE)
 
     @Timer(text='Script finished after total of {:.4f} seconds', logger=logger.info)
     def run_single_department(self, base_url: str, run_with_threads: bool, department: int):
-        courses = self.run_single_crawler(base_url, Department.from_int(department).label, run_with_threads)
+        courses = self.run_single_crawler(base_url, DepartmentEnum.from_int(department).label, run_with_threads)
         print(big_letters('finished', 2, 4))

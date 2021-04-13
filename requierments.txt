@@ -13,3 +13,4 @@ mapper
 gekko
 Pillow
 email-validator
+aiohttp

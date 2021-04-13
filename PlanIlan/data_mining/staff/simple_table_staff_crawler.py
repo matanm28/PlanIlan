@@ -6,12 +6,12 @@ from bs4 import BeautifulSoup
 from email_validator import validate_email, EmailNotValidError
 
 from PlanIlan.data_mining.staff.staff_crawler import StaffCrawler
-from PlanIlan.models import Department
-from PlanIlan.models.enums import Faculty
+from PlanIlan.models import DepartmentEnum
+from PlanIlan.models.enums import FacultyEnum
 
 
 class SimpleTableStaffCrawler(StaffCrawler):
-    def __init__(self, url: str, faculty: Faculty, department: Department, key_to_class: Dict, email_suffix: str = None,
+    def __init__(self, url: str, faculty: FacultyEnum, department: DepartmentEnum, key_to_class: Dict, email_suffix: str = None,
                  has_photos: bool = True) -> None:
         super().__init__(url, faculty, department, key_to_class)
         self._email_suffix = email_suffix

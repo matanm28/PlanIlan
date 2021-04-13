@@ -197,4 +197,6 @@ EMAIL_USE_TLS = (True if mail_data['EMAIL_USE_TLS'] == "True" else False)
 EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 
-
+#MEDIA Configurations
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
