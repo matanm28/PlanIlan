@@ -52,7 +52,7 @@ class LabeledIntegerEnum(models.IntegerChoices):
         raise EnumNotExistError(cls.__name__, search_value)
 
 
-class Day(LabeledIntegerEnum):
+class DayEnum(LabeledIntegerEnum):
     SUNDAY = 1, _('א')
     MONDAY = 2, _('ב')
     TUESDAY = 3, _('ג')
@@ -66,10 +66,10 @@ class Day(LabeledIntegerEnum):
 
     @property
     def full_label(self) -> str:
-        return Day.full_strings_labels()[Day.labels.indexof(self.label)]
+        return DayEnum.full_strings_labels()[DayEnum.labels.indexof(self.label)]
 
 
-class Department(LabeledIntegerEnum):
+class DepartmentEnum(LabeledIntegerEnum):
     NULL_DEPARTMENT = -1, _('לא קיים')
     HUMAN_STUDIES = 0, _('ב.א. רב תחומי במדעי הרוח')
     MULTI_DISCIPLINARY = 1, _('ב.א. רב-תחומי')
@@ -142,18 +142,35 @@ class Department(LabeledIntegerEnum):
     TEODAT_HORAA = 68, _('תעודת הוראה')
 
 
-class Faculty(LabeledIntegerEnum):
-    NONE = 0, _("כלום")
+class FacultyEnum(LabeledIntegerEnum):
+    GENERAL = 0, _("כללי")
+    LIFE_SCIENCES = 1, _("מדעי החיים ")
+    JUDAISM_SCIENCES = 2, _("מדעי היהדות")
+    LAW = 3, _("משפטים")
+    MED = 4, _("רפואה")
+    SOCIAL_SCIENCES = 5, _("מדעי החברה")
+    ENGINEERING = 6, _("הנדסה ")
+    EXACT_SCIENCES = 7, _("מדעים מדויקים")
+    MULTI_DISCIPLINARY_UNIT = 8, _("יחידה ללימודים בין תחומיים")
+    ARTS = 9, _("מדעי הרוח")
+    UNKNOWN = 10, _("לא ידוע")
+
+    @classmethod
+    def from_string(cls, search_value: str) -> 'LabeledIntegerEnum':
+        try:
+            return super().from_string(search_value)
+        except EnumNotExistError:
+            return cls.UNKNOWN
 
 
-class Semester(LabeledIntegerEnum):
+class SemesterEnum(LabeledIntegerEnum):
     FIRST = 1, _("סמסטר א'")
     SECOND = 2, _("סמסטר ב'")
     SUMMER = 3, _("סמסטר ק'")
     YEARLY = 4, _('שנתי')
 
 
-class ExamPeriod(LabeledIntegerEnum):
+class ExamPeriodEnum(LabeledIntegerEnum):
     FIRST = 1, _("מועד א'")
     SECOND = 2, _("מועד ב'")
     THIRD = 3, _("מועד ג'")
@@ -167,7 +184,7 @@ class ExamPeriod(LabeledIntegerEnum):
             return cls.SPECIAL
 
 
-class SessionType(LabeledIntegerEnum):
+class SessionTypeEnum(LabeledIntegerEnum):
     LECTURE = 0, _('הרצאה')
     TIRGUL = 1, _('תרגול')
     REINFORCING = 2, _('תגבור')
@@ -176,12 +193,12 @@ class SessionType(LabeledIntegerEnum):
     SADNA = 5, _('סדנה')
 
 
-class TeacherTitle(LabeledIntegerEnum):
-    BLANK = -1, _('')
-    DOC = 0, _('ד"ר')
-    PROF = 1, _("פרופ'")
-    MR = 2, _('מר')
-    MRS = 3, _('גברת')
-    RABBI = 4, _('הרב')
-    LAWYER = 5, _('עו"ד')
-    JUDGE = 6, _('השופט')
+class TeacherTitleEnum(LabeledIntegerEnum):
+    BLANK = 0, _('')
+    DOC = 1, _('ד"ר')
+    PROF = 2, _("פרופ'")
+    MR = 3, _('מר')
+    MRS = 4, _('גברת')
+    RABBI = 5, _('הרב')
+    LAWYER = 6, _('עו"ד')
+    JUDGE = 7, _('השופט')
