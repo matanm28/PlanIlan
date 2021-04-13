@@ -29,7 +29,7 @@ def search(request):
 
 
 def home(request):
-    # todo: get last teachers and courses
+    # todo: get last staff and courses
     # todo: save them in data structure
     # TEACHER BEST RATINGS VIEW
     teachers_obj = [Teacher.objects.get(name="ארז שיינר"),
@@ -42,6 +42,10 @@ def home(request):
     context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
                'teacher_comments': teacher_comments}
     if request.method == 'GET':
+        courses_obj = [Course.objects.get(code="75122"), Course.objects.get(code="99929")]
+        teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
+        context = {'staff': teachers_obj,
+                   'courses': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):

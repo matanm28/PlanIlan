@@ -3,7 +3,7 @@ from typing import List, Dict
 
 from PlanIlan.models import SessionTime, Course
 
-from PlanIlan.models.enums import SessionType, Day
+from PlanIlan.models.enums import SessionTypeEnum, DayEnum
 
 
 @dataclass(unsafe_hash=True)
@@ -11,7 +11,7 @@ class OptimizedCourse:
     code: str
     group: str
     teacher: str
-    session_type: SessionType
+    session_type: SessionTypeEnum
     times: List[SessionTime]
     ranking: float = field(default=0.0, hash=False, compare=False)
 
@@ -28,7 +28,7 @@ class OptimizedCourse:
         return f'{self.code}-{self.group}'
 
     @property
-    def days_list(self) -> List[Day]:
+    def days_list(self) -> List[DayEnum]:
         days = set()
         for time in self.times:
             days.add(time.day)
