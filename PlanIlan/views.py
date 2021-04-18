@@ -106,7 +106,7 @@ def logout_user(request):
 @authenticated_user
 def time_table(request):
     if request.method == 'GET':
-        courses_list = Course.objects.all()
+        courses_list = Lesson.objects.all()
         course_filter = CourseInstanceFilter(request.GET, queryset=courses_list)
         courses_list = course_filter.qs
         paginator = Paginator(courses_list, 10)
