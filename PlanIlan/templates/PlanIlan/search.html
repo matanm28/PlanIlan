@@ -92,8 +92,7 @@
 
                     </form>
                 </div>
-            </div>
-            <div id="teacher_filter" style="display: none">
+                <div id="teacher_filter" style="display: none">
                 <form method="get">
                     {% csrf_token %}
                     <div class="field">
@@ -111,6 +110,7 @@
                     <button class="btn btn-primary" type="submit" name="form-search-teacher">חפש</button>
                     <a href="{% url 'search' %}" style="float: left">ניקוי</a>
                 </form>
+            </div>
             </div>
         </div>
         <div id="results" style="position:absolute; right: 0; height: 100%; width: 75%">
