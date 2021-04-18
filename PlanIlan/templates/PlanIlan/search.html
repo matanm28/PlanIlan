@@ -16,7 +16,8 @@
     <link rel="stylesheet" href="{% static 'PlanIlan/css/scrollbar_style.css' %}"/>
     <div class="container">
         <div class="sidenav" id="search_box">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeSearchBox()" style="color: white">&times;</a>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeSearchBox()"
+               style="color: white; margin-right: 0">&times;</a>
             <div class="filter-by">
                 <button class="btn-choice" id="teacher_button" onclick="display_teacher_filter()">סגל</button>
                 <button class="btn-choice focus clicked" id="course_button" onclick="display_course_filter()">קורס
@@ -112,51 +113,51 @@
                 </form>
             </div>
         </div>
-        <div id="results" style="position:absolute; left: 0; height: 100%; width: 75%">
+        <div id="results" style="position:absolute; right: 0; height: 100%; width: 75%">
             <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i
-                    class="fas fa-caret-right fa-2x"></i>חפש</span>
-{#            <div class="resize-box" id="courses_result">#}
-{#                {% if 'form-search-course' in request.GET %}#}
-{#                    <table class="table table-sm">#}
-{#                        <tr>#}
-{#                            <th>Name</th>#}
-{#                            <th>Code</th>#}
-{#                            <th>Teachers</th>#}
-{#                            <th>Building Name</th>#}
-{#                            <th>Building Number</th>#}
-{#                            <th>Class Number</th>#}
-{#                            <th>Online Studies</th>#}
-{#                        </tr>#}
-{#                        {% for course in courses %}#}
-{#                            <tr>#}
-{#                                <td>{{ course.name }}</td>#}
-{#                                <td>{{ course.code }}</td>#}
-{#                                {% for teacher in course.teachers.all %}#}
-{#                                    <td>{{ teacher.title_and_name }}</td>#}
-{#                                {% endfor %}#}
-{#                                {% for location in course.locations.all %}#}
-{#                                    <td>{{ location.building_name }}</td>#}
-{#                                    <td>{{ location.building_number }}</td>#}
-{#                                    <td>{{ location.class_number }}</td>#}
-{#                                    <td>{{ location.online }}</td>#}
-{#                                {% endfor %}#}
-{#                            </tr>#}
-{#                        {% endfor %}#}
-{#                    </table>#}
-{#                {% endif %}#}
-{#                {% if 'form-search-teacher' in request.GET %}#}
-{#                    <table class="table table-sm">#}
-{#                        <tr>#}
-{#                            <th>Name</th>#}
-{#                        </tr>#}
-{#                        {% for teacher in teachers %}#}
-{#                            <tr>#}
-{#                                <td>{{ teacher.name }}</td>#}
-{#                            </tr>#}
-{#                        {% endfor %}#}
-{#                    </table>#}
-{#                {% endif %}#}
-{#            </div>#}
+                    class="fas fa-caret-left fa-2x"></i>חפש</span>
+            {#            <div class="resize-box" id="courses_result">#}
+            {#                {% if 'form-search-course' in request.GET %}#}
+            {#                    <table class="table table-sm">#}
+            {#                        <tr>#}
+            {#                            <th>Name</th>#}
+            {#                            <th>Code</th>#}
+            {#                            <th>Teachers</th>#}
+            {#                            <th>Building Name</th>#}
+            {#                            <th>Building Number</th>#}
+            {#                            <th>Class Number</th>#}
+            {#                            <th>Online Studies</th>#}
+            {#                        </tr>#}
+            {#                        {% for course in courses %}#}
+            {#                            <tr>#}
+            {#                                <td>{{ course.name }}</td>#}
+            {#                                <td>{{ course.code }}</td>#}
+            {#                                {% for teacher in course.teachers.all %}#}
+            {#                                    <td>{{ teacher.title_and_name }}</td>#}
+            {#                                {% endfor %}#}
+            {#                                {% for location in course.locations.all %}#}
+            {#                                    <td>{{ location.building_name }}</td>#}
+            {#                                    <td>{{ location.building_number }}</td>#}
+            {#                                    <td>{{ location.class_number }}</td>#}
+            {#                                    <td>{{ location.online }}</td>#}
+            {#                                {% endfor %}#}
+            {#                            </tr>#}
+            {#                        {% endfor %}#}
+            {#                    </table>#}
+            {#                {% endif %}#}
+            {#                {% if 'form-search-teacher' in request.GET %}#}
+            {#                    <table class="table table-sm">#}
+            {#                        <tr>#}
+            {#                            <th>Name</th>#}
+            {#                        </tr>#}
+            {#                        {% for teacher in teachers %}#}
+            {#                            <tr>#}
+            {#                                <td>{{ teacher.name }}</td>#}
+            {#                            </tr>#}
+            {#                        {% endfor %}#}
+            {#                    </table>#}
+            {#                {% endif %}#}
+            {#            </div>#}
             <div class="resize-box" id="chosen_element">
                 course's details!!
             </div>
