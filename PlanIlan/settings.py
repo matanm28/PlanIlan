@@ -34,6 +34,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 INSTALLED_APPS = [
     'PlanIlan',
+    'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

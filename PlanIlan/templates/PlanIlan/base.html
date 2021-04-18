@@ -13,16 +13,24 @@
     <title>{% block title %}דף הבית{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e5f2fd;">
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e5f2fd; margin: 0 0 0; height: 10%">
     <div class="container">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
+            {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">בנה מערכת שעות</a>
+                </li>
+            {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'search' %}">חיפוש</a>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">דף הבית</a>
                 </li>
                 <li class="nav-item">
                     {% if user.is_authenticated %}
@@ -30,9 +38,6 @@
                     {% else %}
                         <a class="nav-link active" href="{% url 'login' %}">התחבר</a>
                     {% endif %}
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
@@ -54,6 +59,8 @@
 </nav>
 
 {% block content %}
+{% endblock %}
+{% block js_block %}
 {% endblock %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
