@@ -4,7 +4,7 @@ from .models import *
 admin.site.register(UserModel)
 admin.site.register(Teacher)
 admin.site.register(Course)
-admin.site.register(CourseInstance)
+admin.site.register(Lesson)
 admin.site.register(CoursePost)
 admin.site.register(TeacherPost)
 admin.site.register(Location)

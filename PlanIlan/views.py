@@ -15,7 +15,7 @@ from .models import *
 def search(request):
     if request.method == 'GET':
         # COURSE SEARCH ENGINE
-        courses = CourseInstance.objects.all()
+        courses = Lesson.objects.all()
         course_filter = CourseInstanceFilter(request.GET, queryset=courses)
         courses = course_filter.qs
         # TEACHER SEARCH ENGINE
@@ -33,17 +33,20 @@ def home(request):
     # todo: save them in data structure
     # TEACHER BEST RATINGS VIEW
     teachers_obj = [Teacher.objects.get(name="ארז שיינר"),
-                    Teacher.objects.get(name="גל קמינקא")]
+                    Teacher.objects.get(name="יורם לוזון")]
     # COURSES BEST RATING VIEW
-    courses_obj = [CourseInstance.objects.get(course__name="מערכות בריאות בארץ ובעולם"),
-                   CourseInstance.objects.get(course__name="מבוא למדעי החיים")]
+    # courses_obj = [Course.objects.get(name=""),
+    #                Course.objects.get(name="מבוא למדעי החיים")]
+    courses_obj = [Course.objects.get(code="76786"), Course.objects.get(code="77837")]
+
     # LATEST COMMENTS
     teacher_comments = TeacherPost.objects.all().order_by('date')
     context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
                'teacher_comments': teacher_comments}
     if request.method == 'GET':
-        courses_obj = [Course.objects.get(code="75122"), Course.objects.get(code="99929")]
-        teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
+        courses_obj = [Course.objects.get(code="76786"), Course.objects.get(code="77837")]
+        # teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
+        teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="יורם לוזון"), Teacher.objects.get(name="גיל אריאל")]
         context = {'staff': teachers_obj,
                    'courses': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
@@ -55,7 +58,7 @@ def home(request):
             return render(request, 'PlanIlan/home.html', context)
         elif request.POST.get('Rating_course_ID', ''):
             print(request.POST.get('rate_number'))
-            course_id = CourseInstance.objects.get(id=request.POST.get('Rating_course_ID', ''))
+            course_id = Lesson.objects.get(id=request.POST.get('Rating_course_ID', ''))
             course_id.course.rating.update_rating(int(request.POST.get('rate_number', '')))
     return render(request, 'PlanIlan/home.html')
 
@@ -103,7 +106,7 @@ def logout_user(request):
 @authenticated_user
 def time_table(request):
     if request.method == 'GET':
-        courses_list = CourseInstance.objects.all()
+        courses_list = Course.objects.all()
         course_filter = CourseInstanceFilter(request.GET, queryset=courses_list)
         courses_list = course_filter.qs
         paginator = Paginator(courses_list, 10)
