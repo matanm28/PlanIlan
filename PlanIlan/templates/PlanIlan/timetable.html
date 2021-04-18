@@ -24,7 +24,7 @@
         <input type="text" id="group-name">
         <br>
         <label class="label">בחר מחלקה</label>
-        {% render_field course_filter.form.department id="select-dep" %}
+        {% render_field course_filter.form.department id="select-dep" onChange="DepChange()" %}
         <br>
         <label class="label">בחר קורסים</label>
         <button id="pick-all">בחר הכל בעמוד זה</button>
@@ -41,7 +41,7 @@
                 <tr>
                     <td>{{ course.code }}</td>
                     <td>{{ course.name }}</td>
-                    <td><input type="checkbox" id="pick_{{ course.id }}"></td>
+                    <td><input type="checkbox" id="pick_{{ course.id }}" ></td>
                 </tr>
             {% endfor %}
             </tbody>

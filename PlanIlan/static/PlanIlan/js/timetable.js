@@ -19,16 +19,15 @@ function create_groups() {
     remove.setAttribute('id', 'remove-group_' + b.textContent)
     wrapper.appendChild(remove)
     let list_course = document.createElement('ol');
-    $checkboxes.filter(":checked").toArray().forEach(checked_item => {
-        let li = document.createElement("LI");
+    $checkboxes.filter(":checked").forEach(checked_item => {
+        let li = document.createElement('li');
         li.setAttribute('id', checked_item.id);
         li.appendChild(checked_item);
     })
     wrapper.appendChild(list_course)
     if (selected_option === 'חובה') {
         mandatory_courses.push($checkboxes.filter(":checked"));
-    }
-    else {
+    } else {
         elective_courses.push($checkboxes.filter(":checked"));
     }
 }
@@ -40,31 +39,6 @@ function removeGroup(item) {
     item.remove()
 }
 
-// TODO: not working
-// Filtering after picking from list
-let dep_drop = document.getElementById("select-dep");
-$(dep_drop).change((event) => {
-    formValues["selected-dep"] = dep_drop.options[dep_drop.selectedIndex].value;
-    let data = {
-        'department': dep_drop.options[dep_drop.selectedIndex].value,
-        'csrfmiddlewaretoken': csrftoken,
-    };
-    $.ajax({
-        url: '/timetable',
-        type: 'GET',
-        data: data,
-        success: function (data) {
-            const course_table = $(data).filter('#course-table');
-            $('#course-table').replaceWith(course_table);
-            formValues['page_number'] = $(data).filter('#current-page');
-            sessionStorage.setItem("formValues", JSON.stringify(formValues));
-        },
-        error: function (error) {
-            alert("בעיה בטעינת הטבלה");
-        }
-    });
-    return false;
-});
 
 const $checkboxes = $("#course-data :checkbox");
 const $button = $(document.getElementById("pick-all"));
@@ -94,19 +68,17 @@ $checkboxes.on("change", function () {
 });
 
 // On page load
-$.each(formValues, function (key, value) {
-    $("#" + key).prop('checked', value);
-});
-
-window.onload= function (){
+window.onload = function () {
     //window.location.href += "?page=" + formValues["page_number"];
     let selectedItem = formValues["selected-dep"];
     let dep_drop = document.getElementById("select-dep");
-
+    $.each(formValues, function (key, value) {
+        $("#" + key).prop('checked', value);
+    });
     if (selectedItem) {
         dep_drop.value = selectedItem;
     }
-        let data = {
+    let data = {
         'department': selectedItem,
         'csrfmiddlewaretoken': csrftoken,
     };
@@ -137,3 +109,29 @@ window.onload= function (){
 //         $('#course-table').html(course_table);
 //     }
 // });
+
+// TODO: not working
+// Filtering after picking from list
+function DepChange() {
+    let dep_drop = document.getElementById("select-dep");
+    formValues["selected-dep"] = dep_drop.options[dep_drop.selectedIndex].value;
+    let data = {
+        'department': dep_drop.options[dep_drop.selectedIndex].value,
+        'csrfmiddlewaretoken': csrftoken,
+    };
+    $.ajax({
+        url: '/timetable',
+        type: 'GET',
+        data: data,
+        success: function (data) {
+            const course_table = $(data).filter('#course-table');
+            $('#course-table').replaceWith(course_table);
+            formValues['page_number'] = $(data).filter('#current-page');
+            sessionStorage.setItem("formValues", JSON.stringify(formValues));
+        },
+        error: function (error) {
+            alert("בעיה בטעינת הטבלה");
+        }
+    });
+    return false;
+}
