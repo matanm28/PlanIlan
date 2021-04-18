@@ -18,13 +18,21 @@
     color: white;
 }
 
+.resize-box {
+    width: 100%;
+    height: 50%;
+    float: left;
+    border: 5px solid blue;
+    color: pink;
+}
+
 .open-btn {
     display: none;
     color: white;
     left: auto;
     font-size: 20px;
     height: 100%;
-    width: auto;
+    width: 4%;
     float: left;
     margin-left: 0;
     background-color: rgba(84, 87, 90, 0.5);

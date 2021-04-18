@@ -7,7 +7,7 @@ from codetiming import Timer
 from django.db.models import QuerySet
 from gekko import Gekko
 
-from PlanIlan.models import Course, Day, Semester
+from PlanIlan.models import Course, DayEnum, SemesterEnum
 from PlanIlan.timetable_optimizer.optimized_course import OptimizedCourse
 from PlanIlan.timetable_optimizer.utils import Interval
 

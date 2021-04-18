@@ -14,3 +14,5 @@ gekko
 Pillow
 django-filter
 django-widget-tweaks
+email-validator
+aiohttp

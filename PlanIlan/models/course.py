@@ -6,13 +6,13 @@ from django.db import models
 
 from PlanIlan.exceptaions import CantCreateModelError
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
-from PlanIlan.models import BaseModel, SessionTime, Location, Department, Teacher, Rating, SessionType
+from PlanIlan.models import BaseModel, SessionTime, Location, DepartmentEnum, Teacher, Rating, SessionTypeEnum
 
 
 class Course(BaseModel):
     code = models.CharField(primary_key=True, max_length=10, editable=False)
     name = models.CharField(max_length=100)
-    _department = models.IntegerField(choices=Department.choices, db_column='department')
+    _department = models.IntegerField(choices=DepartmentEnum.choices, db_column='department')
     syllabus_link = models.URLField(null=True)
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_course')
 
@@ -30,15 +30,15 @@ class Course(BaseModel):
         return course_id[:index]
 
     @classmethod
-    def create(cls, code: str, name: str, department: Union[Department, str, int], syllabus_link: str = None):
+    def create(cls, code: str, name: str, department: Union[DepartmentEnum, str, int], syllabus_link: str = None):
         try:
-            if not isinstance(department, (Department, str, int)):
-                raise cls.generate_cant_create_model_err(cls.__name__, department.__name__, (Department.__name__, str),
+            if not isinstance(department, (DepartmentEnum, str, int)):
+                raise cls.generate_cant_create_model_err(cls.__name__, department.__name__, (DepartmentEnum.__name__, str),
                                                          type(department))
             if isinstance(department, str):
-                department = Department.from_string(department)
+                department = DepartmentEnum.from_string(department)
             if isinstance(department, int):
-                department = Department.from_int(department)
+                department = DepartmentEnum.from_int(department)
             course, created = Course.objects.get_or_create(code=code, name=name,
                                                            defaults={'syllabus_link': syllabus_link,
                                                                      '_department': department,
@@ -49,18 +49,18 @@ class Course(BaseModel):
             raise err
 
     @property
-    def department(self) -> Department:
-        return Department.from_int(self._department)
+    def department(self) -> DepartmentEnum:
+        return DepartmentEnum.from_int(self._department)
 
     def get_instances(self):
         return self.course_instances.all()
 
 
-class CourseInstance(BaseModel):
+class Lesson(BaseModel):
     id = models.CharField(primary_key=True, max_length=20, editable=False)
     course = models.ForeignKey(Course, on_delete=models.RESTRICT, related_name='course_instances')
     group = models.CharField(max_length=3)
-    _session_type = models.IntegerField(choices=SessionType.choices, db_column='session_type')
+    _session_type = models.IntegerField(choices=SessionTypeEnum.choices, db_column='session_type')
     details_link = models.URLField(null=True)
     teachers = models.ManyToManyField(Teacher, related_name='teaches_courses')
     session_times = models.ManyToManyField(SessionTime, related_name='courses')
@@ -68,11 +68,11 @@ class CourseInstance(BaseModel):
     locations = models.ManyToManyField(Location, related_name='courses')
 
     @classmethod
-    def create(cls, code: str, group: str, name: str, teachers: List[Teacher], session_type: SessionType,
-               department: Union[Department, str, int], session_times: List[SessionTime], locations: List[Location],
-               points: float = None, link: str = None, syllabus_link: str = None) -> 'CourseInstance':
+    def create(cls, code: str, group: str, name: str, teachers: List[Teacher], session_type: SessionTypeEnum,
+               department: Union[DepartmentEnum, str, int], session_times: List[SessionTime], locations: List[Location],
+               points: float = None, link: str = None, syllabus_link: str = None) -> 'Lesson':
         if not len(teachers) > 0:
-            raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "teachers list can't be empty")
+            raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "staff list can't be empty")
         if not len(session_times) > 0:
             raise cls.generate_cant_create_model_err(cls.__name__, session_times.__name__, "session_times list can't be empty")
         if not len(locations) > 0:
@@ -80,8 +80,8 @@ class CourseInstance(BaseModel):
         try:
             course = Course.create(code, name, department, syllabus_link)
             course_instance_id = f'{code}_{group}_{session_times[0].year}'
-            course_instance, created = CourseInstance.objects.get_or_create(id=course_instance_id, course=course,
-                                                                            defaults={'group': group,
+            course_instance, created = Lesson.objects.get_or_create(id=course_instance_id, course=course,
+                                                                    defaults={'group': group,
                                                                                       '_session_type': session_type,
                                                                                       'details_link': link,
                                                                                       'points': points})
@@ -96,16 +96,16 @@ class CourseInstance(BaseModel):
             raise e
 
     @property
-    def session_type(self) -> SessionType:
-        return SessionType.from_int(self._session_type)
+    def session_type(self) -> SessionTypeEnum:
+        return SessionTypeEnum.from_int(self._session_type)
 
     @property
-    def department(self) -> Department:
+    def department(self) -> DepartmentEnum:
         return self.course.department
 
-    def get_course_session_types(self) -> List[SessionType]:
+    def get_course_session_types(self) -> List[SessionTypeEnum]:
         session_types = set()
-        for course_instance in CourseInstance.objects.filter(code=self.course.code):
+        for course_instance in Lesson.objects.filter(code=self.course.code):
             session_types.add(course_instance.session_type)
         return list(session_types)
 

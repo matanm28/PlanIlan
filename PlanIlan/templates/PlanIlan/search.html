@@ -112,55 +112,56 @@
                 </form>
             </div>
         </div>
-        <div id="results" style="position:absolute; left: 0;">
+        <div id="results" style="position:absolute; left: 0; height: 93%; width: 100%">
             <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i
                     class="fas fa-caret-right fa-2x"></i>חפש</span>
-            <div id="courses_result" style="float: left">
-                {% if 'form-search-course' in request.GET %}
-                    <table class="table table-sm">
-                        <tr>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Teachers</th>
-                            <th>Building Name</th>
-                            <th>Building Number</th>
-                            <th>Class Number</th>
-                            <th>Online Studies</th>
-                        </tr>
-                        {% for course in courses %}
-                            <tr>
-                                <td>{{ course.name }}</td>
-                                <td>{{ course.code }}</td>
-                                {% for teacher in course.teachers.all %}
-                                    <td>{{ teacher.title_and_name }}</td>
-                                {% endfor %}
-                                {% for location in course.locations.all %}
-                                    <td>{{ location.building_name }}</td>
-                                    <td>{{ location.building_number }}</td>
-                                    <td>{{ location.class_number }}</td>
-                                    <td>{{ location.online }}</td>
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% endif %}
-                {% if 'form-search-teacher' in request.GET %}
-                    <table class="table table-sm">
-                        <tr>
-                            <th>Name</th>
-                        </tr>
-                        {% for teacher in teachers %}
-                            <tr>
-                                <td>{{ teacher.name }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% endif %}
+{#            <div class="resize-box" id="courses_result">#}
+{#                {% if 'form-search-course' in request.GET %}#}
+{#                    <table class="table table-sm">#}
+{#                        <tr>#}
+{#                            <th>Name</th>#}
+{#                            <th>Code</th>#}
+{#                            <th>Teachers</th>#}
+{#                            <th>Building Name</th>#}
+{#                            <th>Building Number</th>#}
+{#                            <th>Class Number</th>#}
+{#                            <th>Online Studies</th>#}
+{#                        </tr>#}
+{#                        {% for course in courses %}#}
+{#                            <tr>#}
+{#                                <td>{{ course.name }}</td>#}
+{#                                <td>{{ course.code }}</td>#}
+{#                                {% for teacher in course.teachers.all %}#}
+{#                                    <td>{{ teacher.title_and_name }}</td>#}
+{#                                {% endfor %}#}
+{#                                {% for location in course.locations.all %}#}
+{#                                    <td>{{ location.building_name }}</td>#}
+{#                                    <td>{{ location.building_number }}</td>#}
+{#                                    <td>{{ location.class_number }}</td>#}
+{#                                    <td>{{ location.online }}</td>#}
+{#                                {% endfor %}#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                    </table>#}
+{#                {% endif %}#}
+{#                {% if 'form-search-teacher' in request.GET %}#}
+{#                    <table class="table table-sm">#}
+{#                        <tr>#}
+{#                            <th>Name</th>#}
+{#                        </tr>#}
+{#                        {% for teacher in teachers %}#}
+{#                            <tr>#}
+{#                                <td>{{ teacher.name }}</td>#}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                    </table>#}
+{#                {% endif %}#}
+{#            </div>#}
+            <div class="resize-box" id="chosen_element">
+                course's details!!
             </div>
-            {#            <a href="javascript:void(0)" id="dragbar"#}
-            {#               style="width: 5px; top: 138px; left: 607px; height: 429px; cursor: col-resize;"></a>#}
-            <div class="float-child" id="chosen_element" style="float: left; border: 3px solid blue">
-                <h1>course's details!!</h1>
+            <div class="resize-box" id="chosen_element">
+                chosen course!
             </div>
         </div>
     </div>
