@@ -4,21 +4,19 @@ import uuid
 from typing import List, Union
 from django.db import models
 
-from PlanIlan.exceptaions import CantCreateModelError
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
-from PlanIlan.models import BaseModel, SessionTime, Location, DepartmentEnum, Teacher, Rating, SessionTypeEnum
+from PlanIlan.models import BaseModel, SessionTime, Location, Teacher, Rating, LessonTypeEnum, Exam
+from PlanIlan.models.enums import Day, Department, Faculty, LessonType
 
 
 class Course(BaseModel):
     code = models.CharField(primary_key=True, max_length=10, editable=False)
     name = models.CharField(max_length=100)
-    _department = models.IntegerField(choices=DepartmentEnum.choices, db_column='department')
+    department = models.ForeignKey(Day, on_delete=models.CASCADE)
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
     syllabus_link = models.URLField(null=True)
     rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_course')
-
-    @property
-    def id(self):
-        return self.code
+    exams = models.ManyToManyField(Exam)
 
     @staticmethod
     def get_faculty_code_from_course_id(course_id: str) -> str:
@@ -30,37 +28,29 @@ class Course(BaseModel):
         return course_id[:index]
 
     @classmethod
-    def create(cls, code: str, name: str, department: Union[DepartmentEnum, str, int], syllabus_link: str = None):
-        try:
-            if not isinstance(department, (DepartmentEnum, str, int)):
-                raise cls.generate_cant_create_model_err(cls.__name__, department.__name__, (DepartmentEnum.__name__, str),
-                                                         type(department))
-            if isinstance(department, str):
-                department = DepartmentEnum.from_string(department)
-            if isinstance(department, int):
-                department = DepartmentEnum.from_int(department)
-            course, created = Course.objects.get_or_create(code=code, name=name,
-                                                           defaults={'syllabus_link': syllabus_link,
-                                                                     '_department': department,
-                                                                     'rating': Rating.create})
-            cls.log_created(cls.__name__, course.id, created)
-            return course
-        except EnumNotExistError as err:
-            raise err
+    def create(cls, code: str, name: str, department: Department, faculty: Faculty, exams: List[Exam],
+               syllabus_link: str = None):
+        course, created = Course.objects.get_or_create(code=code, name=name,
+                                                       defaults={'syllabus_link': syllabus_link,
+                                                                 'department': department,
+                                                                 'faculty': faculty,
+                                                                 'rating': Rating.create})
+        course.exams.set(exams)
+        cls.log_created(cls.__name__, course.id, created)
+        if not created and not course.syllabus_link and syllabus_link:
+            course.syllabus_link = syllabus_link
+            course.save()
+        return course
 
-    @property
-    def department(self) -> DepartmentEnum:
-        return DepartmentEnum.from_int(self._department)
-
-    def get_instances(self):
-        return self.course_instances.all()
+    def get_lessons(self):
+        return self.lessons.all()
 
 
 class Lesson(BaseModel):
     id = models.CharField(primary_key=True, max_length=20, editable=False)
-    course = models.ForeignKey(Course, on_delete=models.RESTRICT, related_name='course_instances')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
     group = models.CharField(max_length=3)
-    _session_type = models.IntegerField(choices=SessionTypeEnum.choices, db_column='session_type')
+    lesson_type = models.ForeignKey(LessonType, on_delete=models.CASCADE)
     details_link = models.URLField(null=True)
     teachers = models.ManyToManyField(Teacher, related_name='teaches_courses')
     session_times = models.ManyToManyField(SessionTime, related_name='courses')
@@ -68,45 +58,38 @@ class Lesson(BaseModel):
     locations = models.ManyToManyField(Location, related_name='courses')
 
     @classmethod
-    def create(cls, code: str, group: str, name: str, teachers: List[Teacher], session_type: SessionTypeEnum,
-               department: Union[DepartmentEnum, str, int], session_times: List[SessionTime], locations: List[Location],
-               points: float = None, link: str = None, syllabus_link: str = None) -> 'Lesson':
+    def create(cls, code: str, group: str, name: str, teachers: List[Teacher], session_type: LessonType,
+               faculty: Faculty, department: Department, session_times: List[SessionTime], locations: List[Location],
+               exams: List[Exam], points: float = None, link: str = None, syllabus_link: str = None) -> 'Lesson':
         if not len(teachers) > 0:
             raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "staff list can't be empty")
         if not len(session_times) > 0:
-            raise cls.generate_cant_create_model_err(cls.__name__, session_times.__name__, "session_times list can't be empty")
+            raise cls.generate_cant_create_model_err(cls.__name__, session_times.__name__,
+                                                     "session_times list can't be empty")
         if not len(locations) > 0:
             raise cls.generate_cant_create_model_err(cls.__name__, locations.__name__, "locations list can't be empty")
         try:
-            course = Course.create(code, name, department, syllabus_link)
-            course_instance_id = f'{code}_{group}_{session_times[0].year}'
-            course_instance, created = Lesson.objects.get_or_create(id=course_instance_id, course=course,
-                                                                    defaults={'group': group,
-                                                                                      '_session_type': session_type,
-                                                                                      'details_link': link,
-                                                                                      'points': points})
-            course_instance.teachers.set(teachers)
-            course_instance.locations.set(locations)
-            course_instance.session_times.set(session_times)
-            cls.log_created(cls.__name__, course_instance.id, created)
-            return course_instance
+            course = Course.create(code, name, department, faculty, syllabus_link)
+            lesson_id = f'{code}_{group}_{session_times[0].year}'
+            lesson, created = Lesson.objects.get_or_create(id=lesson_id, course=course,
+                                                           defaults={'group': group,
+                                                                     'session_type': session_type,
+                                                                     'details_link': link,
+                                                                     'points': points})
+            lesson.teachers.set(teachers)
+            lesson.locations.set(locations)
+            lesson.session_times.set(session_times)
+            cls.log_created(cls.__name__, lesson.id, created)
+            return lesson
         except EnumNotExistError as err:
             raise err
         except Exception as e:
             raise e
 
-    @property
-    def session_type(self) -> SessionTypeEnum:
-        return SessionTypeEnum.from_int(self._session_type)
-
-    @property
-    def department(self) -> DepartmentEnum:
-        return self.course.department
-
-    def get_course_session_types(self) -> List[SessionTypeEnum]:
+    def get_course_session_types(self) -> List[LessonTypeEnum]:
         session_types = set()
         for course_instance in Lesson.objects.filter(code=self.course.code):
-            session_types.add(course_instance.session_type)
+            session_types.add(course_instance.lesson_type.enum)
         return list(session_types)
 
     @property
@@ -121,7 +104,7 @@ class Lesson(BaseModel):
     def name(self) -> str:
         return self.course.name
 
-    def get_teacher(self, index: int = 0):
+    def get_teacher(self, index):
         teachers_list = self.teachers.all()
         if len(teachers_list) - 1 > index:
             # todo: make special exception
@@ -139,7 +122,7 @@ class Lesson(BaseModel):
 
     @property
     def teacher(self):
-        return self.get_teacher()
+        return self.get_teacher(index=0)
 
     @property
     def semester(self):

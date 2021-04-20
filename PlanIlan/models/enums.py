@@ -1,9 +1,12 @@
-from typing import Tuple
+from typing import Tuple, Type
 
 from django.db import models
+from django.db.models.signals import pre_save
 from django.utils.translation import gettext_lazy as _
 
+from PlanIlan.decorators import receiver_subclasses
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
+from PlanIlan.models import BaseModel
 
 
 class LabeledTextEnum(models.TextChoices):
@@ -29,6 +32,7 @@ class LabeledTextEnum(models.TextChoices):
         raise EnumNotExistError(cls.__name__, search_value)
 
 
+# todo: change error to __empty__ or default enum
 class LabeledIntegerEnum(models.IntegerChoices):
     @classmethod
     def from_string(cls, search_value: str) -> 'LabeledIntegerEnum':
@@ -52,7 +56,7 @@ class LabeledIntegerEnum(models.IntegerChoices):
         raise EnumNotExistError(cls.__name__, search_value)
 
 
-class DayEnum(LabeledIntegerEnum):
+class DAYS(LabeledIntegerEnum):
     SUNDAY = 1, _('א')
     MONDAY = 2, _('ב')
     TUESDAY = 3, _('ג')
@@ -66,7 +70,50 @@ class DayEnum(LabeledIntegerEnum):
 
     @property
     def full_label(self) -> str:
-        return DayEnum.full_strings_labels()[DayEnum.labels.indexof(self.label)]
+        return DAYS.full_strings_labels()[self.value - 1]
+
+
+class EnumModel(BaseModel):
+    number = models.SmallIntegerField(primary_key=True, editable=False)
+    label = models.CharField(max_length=60, editable=False)
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        pass
+
+    @classmethod
+    def create(cls, number: int) -> 'EnumModel':
+        pass
+
+    @classmethod
+    def _get_enum_from_int(cls, num: int) -> LabeledIntegerEnum:
+        return cls.get_enum_class().from_int(num)
+
+    @property
+    def enum(self) -> LabeledIntegerEnum:
+        return self.get_enum_class().from_int(self.number)
+
+    class Meta:
+        abstract = True
+        unique_together = ['number', 'label']
+        default_permissions = ('add', 'view')
+        ordering = ['-number']
+
+
+class Day(EnumModel):
+    class Meta(EnumModel.Meta):
+        pass
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        return DAYS
+
+    @classmethod
+    def create(cls, number: int) -> 'Day':
+        enum = cls._get_enum_from_int(number)
+        instance, created = Day.objects.get_or_create(number=enum.value, label=enum.label)
+        cls.log_created(cls.__name__, instance.id, created)
+        return instance
 
 
 class DepartmentEnum(LabeledIntegerEnum):
@@ -142,6 +189,22 @@ class DepartmentEnum(LabeledIntegerEnum):
     TEODAT_HORAA = 68, _('תעודת הוראה')
 
 
+class Department(EnumModel):
+    class Meta(EnumModel.Meta):
+        pass
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        return DepartmentEnum
+
+    @classmethod
+    def create(cls, number: int) -> 'Department':
+        enum = cls._get_enum_from_int(number)
+        instance, created = Department.objects.get_or_create(number=enum.value, label=enum.label)
+        cls.log_created(cls.__name__, instance.id, created)
+        return instance
+
+
 class FacultyEnum(LabeledIntegerEnum):
     GENERAL = 0, _("כללי")
     LIFE_SCIENCES = 1, _("מדעי החיים ")
@@ -163,11 +226,43 @@ class FacultyEnum(LabeledIntegerEnum):
             return cls.UNKNOWN
 
 
+class Faculty(EnumModel):
+    class Meta(EnumModel.Meta):
+        pass
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        return FacultyEnum
+
+    @classmethod
+    def create(cls, number: int) -> 'Faculty':
+        enum = cls._get_enum_from_int(number)
+        instance, created = Faculty.objects.get_or_create(number=enum.value, label=enum.label)
+        cls.log_created(cls.__name__, instance.id, created)
+        return instance
+
+
 class SemesterEnum(LabeledIntegerEnum):
     FIRST = 1, _("סמסטר א'")
     SECOND = 2, _("סמסטר ב'")
     SUMMER = 3, _("סמסטר ק'")
     YEARLY = 4, _('שנתי')
+
+
+class Semester(EnumModel):
+    class Meta(EnumModel.Meta):
+        pass
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        return SemesterEnum
+
+    @classmethod
+    def create(cls, number: int) -> 'Semester':
+        enum = cls._get_enum_from_int(number)
+        instance, created = Semester.objects.get_or_create(number=enum.value, label=enum.label)
+        cls.log_created(cls.__name__, instance.id, created)
+        return instance
 
 
 class ExamPeriodEnum(LabeledIntegerEnum):
@@ -184,7 +279,23 @@ class ExamPeriodEnum(LabeledIntegerEnum):
             return cls.SPECIAL
 
 
-class SessionTypeEnum(LabeledIntegerEnum):
+class ExamPeriod(EnumModel):
+    class Meta(EnumModel.Meta):
+        pass
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        return ExamPeriodEnum
+
+    @classmethod
+    def create(cls, number: int) -> 'ExamPeriod':
+        enum = cls._get_enum_from_int(number)
+        instance, created = ExamPeriod.objects.get_or_create(number=enum.value, label=enum.label)
+        cls.log_created(cls.__name__, instance.id, created)
+        return instance
+
+
+class LessonTypeEnum(LabeledIntegerEnum):
     LECTURE = 0, _('הרצאה')
     TIRGUL = 1, _('תרגול')
     REINFORCING = 2, _('תגבור')
@@ -193,7 +304,23 @@ class SessionTypeEnum(LabeledIntegerEnum):
     SADNA = 5, _('סדנה')
 
 
-class TeacherTitleEnum(LabeledIntegerEnum):
+class LessonType(EnumModel):
+    class Meta(EnumModel.Meta):
+        pass
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        return LessonTypeEnum
+
+    @classmethod
+    def create(cls, number: int) -> 'LessonType':
+        enum = cls._get_enum_from_int(number)
+        instance, created = LessonType.objects.get_or_create(number=enum.value, label=enum.label)
+        cls.log_created(cls.__name__, instance.id, created)
+        return instance
+
+
+class TitleEnum(LabeledIntegerEnum):
     BLANK = 0, _('')
     DOC = 1, _('ד"ר')
     PROF = 2, _("פרופ'")
@@ -202,3 +329,28 @@ class TeacherTitleEnum(LabeledIntegerEnum):
     RABBI = 5, _('הרב')
     LAWYER = 6, _('עו"ד')
     JUDGE = 7, _('השופט')
+
+
+class Title(EnumModel):
+    class Meta(EnumModel.Meta):
+        pass
+
+    @classmethod
+    def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
+        return FacultyEnum
+
+    @classmethod
+    def create(cls, number: int) -> 'Title':
+        enum = cls._get_enum_from_int(number)
+        instance, created = Title.objects.get_or_create(number=enum.value, label=enum.label)
+        cls.log_created(cls.__name__, instance.id, created)
+        return instance
+
+
+@receiver_subclasses(pre_save, EnumModel, 'prevent_save_if_enum_not_valid', weak=False)
+def pre_save_handler(sender, instance, *args, **kwargs):
+    enum_class = sender.get_enum_class()
+    try:
+        enum_class.from_int(instance.number)
+    except EnumNotExistError:
+        raise Exception('enum is not defined')

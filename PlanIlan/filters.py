@@ -23,11 +23,11 @@ class CourseInstanceFilter(django_filters.FilterSet):
     start_time = TimeFilter(field_name='session_times__start_time', lookup_expr='gt')
     end_time = TimeFilter(field_name='session_times__end_time', lookup_expr='lt')
     teachers = ModelChoiceFilter(queryset=Teacher.objects.all())
-    day = MultipleChoiceFilter(field_name='session_times___day', choices=DayEnum.choices,
+    day = MultipleChoiceFilter(field_name='session_times___day', choices=DAYS.choices,
                                widget=forms.SelectMultiple(attrs={"class": "form-control"}))
     semester = MultipleChoiceFilter(field_name='session_times___semester', choices=SemesterEnum.choices,
                                     widget=forms.SelectMultiple(attrs={"class": "form-control"}))
-    session_type = ChoiceFilter(field_name='_session_type', choices=SessionTypeEnum.choices)
+    session_type = ChoiceFilter(field_name='_session_type', choices=LessonTypeEnum.choices)
 
     class Meta:
         model = Lesson

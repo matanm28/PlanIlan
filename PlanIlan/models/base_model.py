@@ -27,8 +27,13 @@ class BaseModel(models.Model):
     def generate_cant_create_model_err(cls, model_type: str, param_name: str, message: str):
         return CantCreateModelError(model_type, cls.INVALID_PARAMS_MSG.format(param_name, message))
 
+    # todo: change to send less args
     @classmethod
     def log_created(cls, type_name: str, id_str: str, created: bool):
         if not created:
             return
         logging.info(f'{type_name} instance created with id: {id_str}')
+
+    @property
+    def id(self):
+        return self.pk

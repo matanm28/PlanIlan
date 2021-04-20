@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import List, Dict
 
 from PlanIlan.models import SessionTime
-from PlanIlan.models.enums import SessionTypeEnum, DayEnum
+from PlanIlan.models.enums import LessonTypeEnum, DAYS
 from PlanIlan.timetable_optimizer.optimized_course import OptimizedCourse
 
 

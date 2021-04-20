@@ -76,14 +76,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PlanIlan.wsgi.application'
 
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-db_data = dict(os.environ)
+DB_HOST = 'LOCAL' if DEBUG else 'AWS'
+db_information = dict(os.environ)
+db_data = db_information
 db_data_file_name = 'db_data.json'
 if os.path.exists(db_data_file_name):
     with open(db_data_file_name, 'r') as json_file:
-        db_data = json.load(json_file)
+        db_json = json.load(json_file)
+        db_data = db_json[DB_HOST]
+
 
 DATABASES = {
     'default': {
