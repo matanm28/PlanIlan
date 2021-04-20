@@ -9,7 +9,7 @@ from typing import Dict
 from codetiming import Timer
 from django.core.management import BaseCommand
 
-from PlanIlan.models import SemesterEnum, DayEnum, Course
+from PlanIlan.models import SemesterEnum, DAYS, Course
 from PlanIlan.timetable_optimizer.optimizer import TimetableOptimizer
 from PlanIlan.timetable_optimizer.utils import Interval
 
@@ -127,7 +127,7 @@ class OptimizeTimetableCommand(BaseCommand):
         for semester in sorted(semester_to_day_to_hours_to_courses):
             print(f'Semester {semester}')
             for day in sorted(semester_to_day_to_hours_to_courses[semester]):
-                print(f'{DayEnum.from_int(day).name}:')
+                print(f'{DAYS.from_int(day).name}:')
                 for hour in sorted(semester_to_day_to_hours_to_courses[semester][day]):
                     print(f'{hour}: {semester_to_day_to_hours_to_courses[semester][day][hour]}')
 
@@ -139,7 +139,7 @@ class OptimizeTimetableCommand(BaseCommand):
             semester_name = SemesterEnum.from_int(semester).name
             timetable_dict[semester_name] = {}
             for day in sorted(res[semester]):
-                day_name = DayEnum.from_int(day).name
+                day_name = DAYS.from_int(day).name
                 timetable_dict[semester_name][day_name] = {}
                 for hour in sorted(res[semester][day]):
                     timetable_dict[semester_name][day_name][str(hour)] = str(res[semester][day][hour])

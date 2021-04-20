@@ -15,12 +15,12 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 
 from PlanIlan.exceptaions import EnumNotExistError, CantCreateModelError
-from PlanIlan.models import Course, Lesson, Location, DayEnum, SessionTime, Teacher, SessionTypeEnum, TeacherTitleEnum, \
+from PlanIlan.models import Course, Lesson, Location, DAYS, SessionTime, Teacher, LessonTypeEnum, TitleEnum, \
     DepartmentEnum, SemesterEnum, Exam, ExamPeriodEnum
-from PlanIlan.models.enums import FacultyEnum
+from PlanIlan.models.enums import FacultyEnum, Semester, ExamPeriod, Faculty, Title, Department, LessonType, Day
 from PlanIlan.utils.general import name_of, is_float, is_number
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
 from PlanIlan.utils.web import get_chrome_driver, close_chrome_driver
 
@@ -98,7 +98,9 @@ class ShohamCrawler:
     def __run(self, driver: WebDriver):
         self.parse_pages_to_soup_list(driver)
         self.fill_courses_details_pages_from_courses_table_page()
-        self.create_courses_from_details_pages()
+        q = queue.Queue()
+        self.create_courses_from_details_pages(q)
+        self.consume_courses_details_pages(q)
 
     def __start_search_and_get_drive(self, faculty_name: str) -> WebDriver:
         driver = get_chrome_driver(self.open_window)
@@ -119,17 +121,16 @@ class ShohamCrawler:
     def __run_with_threads(self, driver: WebDriver):
         self.logger.info('Instantiating threads')
         q = queue.Queue()
-        threads = [threading.Thread(target=self.parse_pages_to_soup_list, args=(driver,)),
-                   threading.Thread(target=self.fill_courses_details_pages_from_courses_table_page),
-                   threading.Thread(target=self.create_courses_from_details_pages, args=(q,)),
+        threads = [threading.Thread(target=self.create_courses_from_details_pages, args=(q,)),
                    threading.Thread(target=self.consume_courses_details_pages, args=(q,))]
+        self.parse_pages_to_soup_list(driver)
         self.running = True
         for thread in threads:
             thread.start()
         threads[0].join()
         self.running = False
-        for thread in threads[1:]:
-            thread.join()
+        # q.join()
+        threads[1].join()
         self.logger.info('All threads finished')
 
     def parse_pages_to_soup_list(self, driver: WebDriver):
@@ -169,17 +170,11 @@ class ShohamCrawler:
             last_page_number = page_number
         close_chrome_driver(driver)
         self.logger.info('Finished populating html pages from courses viewer')
+        self.fill_courses_details_pages_from_courses_table_page()
 
     def fill_courses_details_pages_from_courses_table_page(self):
-        consecutive_times_slept = 0
         amount_of_urls = 0
-        while self.running or len(self.soups_queue) > 0:
-            if not self.soups_queue:
-                self.logger.info(
-                    f'function {name_of(self.fill_courses_details_pages_from_courses_table_page)} going to sleep for 3.5 seconds')
-                time.sleep(3.5)
-                consecutive_times_slept += 1
-                continue
+        while self.soups_queue:
             soup = self.soups_queue.pop()
             urls = []
             for a in soup.find_all('a', class_='glyphicon'):
@@ -187,27 +182,25 @@ class ShohamCrawler:
                     urls.append(f'{self.base_url}{a["href"]}')
             self.course_detail_urls.extend(urls)
             amount_of_urls += len(urls)
-            consecutive_times_slept = 0
-        self.logger.info(f'Scrapped {amount_of_urls} of urls')
+        self.logger.info(f'Scrapped {amount_of_urls} urls')
 
     def create_courses_from_details_pages(self, q: queue.Queue):
         driver = get_chrome_driver(self.open_window)
-        while self.running or len(self.course_detail_urls) > 0:
-            if not self.course_detail_urls:
-                time.sleep(3.5)
-                continue
+        while self.course_detail_urls:
             url = self.course_detail_urls.popleft()
-            driver.get(url)
-            course_details_page = BeautifulSoup(driver.page_source, 'html.parser')
-            q.put((course_details_page, url))
+            try:
+                driver.get(url)
+                course_details_page = BeautifulSoup(driver.page_source, 'html.parser')
+                q.put((course_details_page, url))
+            except WebDriverException as e:
+                self.logger.error(e)
+                continue
         close_chrome_driver(driver)
 
     def consume_courses_details_pages(self, products: queue.Queue, num_of_consumers: int = 3):
-        # builders = [CourseInstanceBuilder(self.year, self.base_url, self.logger) for _ in range(num_of_consumers)]
-        # consumers = [threading.Thread() for i in range(num_of_consumers)]
         with concurrent.futures.ThreadPoolExecutor(max_workers=num_of_consumers) as executor:
             futures = []
-            while self.running or len(self.course_detail_urls) > 0:
+            while self.course_detail_urls or not products.empty():
                 builder = CourseInstanceBuilder(self.year, self.base_url, self.logger)
                 page, url = products.get()
                 args = [builder, page, url]
@@ -215,9 +208,9 @@ class ShohamCrawler:
             for future in concurrent.futures.as_completed(futures):
                 if future.exception() is not None:
                     self.logger.exception(future.exception())
-                    continue
-                if future.result() is not None:
+                elif future.result() is not None:
                     self.courses_list.append(future.result())
+                products.task_done()
 
 
 def send_data_to_pool_executor(builder: 'CourseInstanceBuilder', page, url):
@@ -254,7 +247,7 @@ class CourseInstanceBuilder:
     @classmethod
     def __all_days_valid(cls, days: List[str]):
         for day in days:
-            if day.strip("' ") not in DayEnum.labels:
+            if day.strip("' ") not in DAYS.labels:
                 return False
         return True
 
@@ -273,7 +266,7 @@ class CourseInstanceBuilder:
         code, group = self.__parse_course_id(soup.find(id=self.HTML_IDS['id']))
         department = self.__parse_course_department(soup.find(id=self.HTML_IDS['department']))
         faculty = self.__parse_course_faculty(soup.find(id=self.HTML_IDS['faculty']))
-        teachers = self.__parse_course_teacher(soup.find(id=self.HTML_IDS['teacher']))
+        teachers = self.__parse_course_teacher(soup.find(id=self.HTML_IDS['teacher']), faculty)
         session_times = self.__parse_course_session_times(soup.find(id=self.HTML_IDS['days']),
                                                           soup.find(id=self.HTML_IDS['session_times']),
                                                           soup.find(id=self.HTML_IDS['semester']))
@@ -283,19 +276,18 @@ class CourseInstanceBuilder:
         syllabus_link = self.__parse_course_syllabus(soup.find(id=self.HTML_IDS['syllabus']))
         course_instance = None
         if self.all_correct:
-            course_instance = Lesson.create(code, group, name, teachers, session_type, department,
-                                            session_times, locations, points, url, syllabus_link)
-            self.logger.info(f'Done processing course_instance with code: {course_instance.code},' +
+            exams = self.__parse_course_exams(soup.find(id=self.HTML_IDS['exams']))
+            course_instance = Lesson.create(code, group, name, teachers, session_type, faculty, department,
+                                            session_times, locations, exams, points, url, syllabus_link)
+            self.logger.info(f'Done processing {Lesson.__name__} with code: {course_instance.code},' +
                              f' group: {course_instance.group}, name: {course_instance.name}')
-
-            exams = self.__parse_course_exams(soup.find(id=self.HTML_IDS['exams']), course_instance)
         return course_instance
 
     def __parse_lesson_times(self, days: List[str], hours: List[str]):
         hours_per_day = int(len(hours) / len(days))
         lesson_time_list = []
         for i, day in enumerate(days):
-            day_object = DayEnum.from_string(day.strip("'"))
+            day_object = DAYS.from_string(day.strip("'"))
             date = f'{str(18 + day_object.value - 1)}-10-2020 -- '
             for j in range(0, hours_per_day):
                 times = hours[i * hours_per_day + j].split(' - ')
@@ -306,7 +298,7 @@ class CourseInstanceBuilder:
                 lesson_time_list.append(class_time)
         return lesson_time_list
 
-    def __parse_course_name_and_session_type(self, name_td: Tag, session_type_td: Tag) -> Tuple[str, SessionTypeEnum]:
+    def __parse_course_name_and_session_type(self, name_td: Tag, session_type_td: Tag) -> Tuple[str, LessonTypeEnum]:
         if not self.all_correct:
             return
         name, session_type = None, None
@@ -320,7 +312,8 @@ class CourseInstanceBuilder:
         if session_type_str == 'תרגיל':
             session_type_str = 'תרגול'
         try:
-            session_type = SessionTypeEnum.from_string(session_type_str)
+            session_type_enum = LessonTypeEnum.from_string(session_type_str)
+            session_type = LessonType.objects.get(number=session_type_enum.value)
         except EnumNotExistError as err:
             self.logger.warning(f'course: {name}, {err}')
             self.all_correct = False
@@ -346,21 +339,17 @@ class CourseInstanceBuilder:
         if not department_td:
             self.all_correct = False
             return None
-        department = None
         department_str = department_td.text.strip()
-        try:
-            department = DepartmentEnum.from_string(department_str)
-        except EnumNotExistError as err:
-            self.logger.warning(f'{err}')
-            self.all_correct = False
-        return department
+        department_enum = DepartmentEnum.from_string(department_str)
+        return Department.objects.get(number=department_enum)
 
     def __parse_course_faculty(self, faculty_td: Tag) -> str:
         if not self.all_correct:
             return ''
-        return FacultyEnum.from_string(faculty_td.text.strip()) if faculty_td else FacultyEnum.UNKNOWN
+        faculty_enum = FacultyEnum.from_string(faculty_td.text.strip()) if faculty_td else FacultyEnum.UNKNOWN
+        return Faculty.objects.get(number=faculty_enum.value)
 
-    def __parse_course_teacher(self, teacher_td: Tag) -> List[Teacher]:
+    def __parse_course_teacher(self, teacher_td: Tag, faculty: Faculty) -> List[Teacher]:
         if not self.all_correct:
             return []
         if not teacher_td:
@@ -374,15 +363,16 @@ class CourseInstanceBuilder:
                 continue
             if name in self.BAD_TEACHER_TITLES:
                 continue
-            title, full_name = name.strip().split(maxsplit=1)
+            title_string, full_name = name.strip().split(maxsplit=1)
             try:
-                title = TeacherTitleEnum.from_string(title.strip("'"))
+                title_enum = TitleEnum.from_string(title_string.strip("'"))
             except EnumNotExistError:
-                full_name = f'{title} {full_name}'
-                title = TeacherTitleEnum.BLANK
+                full_name = f'{title_string} {full_name}'
+                title_enum = TitleEnum.BLANK
             try:
+                title = Title.objects.get(number=title_enum)
                 # todo: check problem with 	80801-01 for example, teacher name to long.
-                teacher = Teacher.create(title=title, name=full_name)
+                teacher = Teacher.create(title=title, name=full_name, faculty=faculty)
                 teachers_list.append(teacher)
             except (EnumNotExistError, CantCreateModelError) as err:
                 self.logger.warning(f'{err}')
@@ -390,7 +380,7 @@ class CourseInstanceBuilder:
             self.all_correct = False
         return teachers_list
 
-    def __parse_course_semester(self, semester_td: Tag) -> SemesterEnum:
+    def __parse_course_semester(self, semester_td: Tag) -> Semester:
         if not self.all_correct:
             return None
         semesters = [semester_name.split('-')[0].strip(" '") for semester_name in semester_td.text.strip().split('\n')]
@@ -402,12 +392,11 @@ class CourseInstanceBuilder:
                 if SemesterEnum.FIRST.label and SemesterEnum.SECOND.label in semesters:
                     semester = SemesterEnum.YEARLY
             else:
-                semester = None
                 self.all_correct = False
         except EnumNotExistError as err:
             self.logger.warning(f'{err}')
             self.all_correct = False
-        return semester
+        return Semester.objects.get(number=semester.value) if self.all_correct else None
 
     def __parse_course_session_times(self, days_td: Tag, session_times_td: Tag, semester_td: Tag) -> List[SessionTime]:
         if not self.all_correct:
@@ -418,9 +407,9 @@ class CourseInstanceBuilder:
         semester = self.__parse_course_semester(semester_td)
         if not self.all_correct:
             return []
-        day_chars_list = days_td.text.strip().split(',')
+        day_chars_list = [day_char.strip("'") for day_char in days_td.text.strip().split(',')]
         session_times_list = re.findall(self.hour_regex, session_times_td.text.strip())
-        if semester == semester.YEARLY and len(session_times_list) == 2:
+        if semester.number == SemesterEnum.YEARLY and len(session_times_list) == 2:
             if session_times_list[0].strip() == session_times_list[1].strip():
                 session_times_list.pop(1)
         if len(session_times_list) != len(day_chars_list):
@@ -429,10 +418,12 @@ class CourseInstanceBuilder:
         session_start_and_end_times = [session_time.strip().split('-') for session_time in
                                        session_times_list]
         session_times = []
-        for (start_time_str, end_time_str), day in zip(session_start_and_end_times, day_chars_list):
+        for (start_time_str, end_time_str), day_char in zip(session_start_and_end_times, day_chars_list):
             date = '18-10-2020 -- '
             start_time = datetime.strptime(date + start_time_str.strip(), self.time_format)
             end_time = datetime.strptime(date + end_time_str.strip(), self.time_format)
+            day_enum = DAYS.from_string(day_char)
+            day = Day.objects.get(number=day_enum)
             session_time = SessionTime.create(semester=semester, day=day, start_time=start_time, end_time=end_time,
                                               year=self.year)
             session_times.append(session_time)
@@ -484,7 +475,7 @@ class CourseInstanceBuilder:
             return None
         return float(points_td.text.strip()) if is_float(points_td.text.strip()) else None
 
-    def __parse_course_exams(self, exam_table: Tag, course_instance: Lesson) -> List[Exam]:
+    def __parse_course_exams(self, exam_table: Tag) -> List[Exam]:
         if not self.all_correct:
             return []
         if not exam_table:
@@ -505,7 +496,8 @@ class CourseInstanceBuilder:
             try:
                 date_time_data = datetime.strptime(f'{date} {time_str}', '%d/%m/%Y %H:%M')
                 period_enum = ExamPeriodEnum.from_string(period)
-                exams_list.append(Exam.create(period=period_enum, date=date_time_data, course=course_instance))
+                exams_list.append(
+                    Exam.create(period=ExamPeriod.objects.get(number=period_enum.value), date=date_time_data))
             except EnumNotExistError as err:
                 self.logger.warning(f'{err}')
                 self.all_correct = False

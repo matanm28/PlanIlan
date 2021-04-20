@@ -56,8 +56,6 @@ class PopulateDatabaseCommand(BaseCommand):
                         failed_department = futures[future]
                         logger.error(f'Department {failed_department} ended with exception')
                         logger.exception(f'{future.exception()}')
-                        # rerun_future = executor.submit(cls.run_single_crawler(base_url, futures[future], run_with_threads))
-                        # futures[rerun_future] = futures[future]
                         departments_with_errors.append(failed_department)
                         continue
                     courses = future.result()
@@ -71,6 +69,6 @@ class PopulateDatabaseCommand(BaseCommand):
     @classmethod
     def run_single_crawler(cls, base_url: str, department_name: str, run_with_threads: bool) -> List[Course]:
         # todo maybe add debug flag - check if implemented in django.
-        crawler = ShohamCrawler(base_url, True, logger)
+        crawler = ShohamCrawler(base_url, False, logger)
         crawler.start(department_name, run_with_threads)
         return crawler.courses_list

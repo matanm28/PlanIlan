@@ -1,0 +1,30 @@
+{
+  "lookup_setups": {
+    "table_rows": {
+      "params": {
+        "photo": ".field-person-picture img",
+        "title": "views-td--field-person-title",
+        "name": "views-td--title",
+        "office": "field-person-office",
+        "phone": ".field--field-person-phone .field__item",
+        "email": "div.field__item--field-text-email, div.field__item--field-person-email",
+        "website": "field__item--field-person-website"
+      },
+      "persons": "views-tr",
+      "details_url": ".views-td--title a"
+    }
+  },
+  "configurations": [
+    {
+      "faculty": "EXACT_SCIENCES",
+      "department": "MATHEMATICS",
+      "lookup": "table_rows",
+      "urls": [
+        "https://math.biu.ac.il/senior-faculty",
+        "https://math.biu.ac.il/index.php/adjunct_faculty",
+        "https://math.biu.ac.il/node/269"
+      ],
+      "parser": "FieldItemStaffParser"
+    }
+  ]
+}

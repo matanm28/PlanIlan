@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 
 from PlanIlan.data_mining.staff.staff_crawler import StaffCrawler
 from PlanIlan.models import DepartmentEnum, Teacher
-from PlanIlan.models.enums import FacultyEnum, TeacherTitleEnum
+from PlanIlan.models.enums import FacultyEnum, TitleEnum
 from PlanIlan.data_mining.staff.lookup_parameters import *
 
 
@@ -49,7 +49,7 @@ class PopulateStaffCommand(BaseCommand):
             print(data)
         teachers_query_set = Teacher.objects.all()
         for data in teachers_data:
-            title_enum = TeacherTitleEnum.from_string(data['title'])
+            title_enum = TitleEnum.from_string(data['title'])
             teacher, created = teachers_query_set.get_or_create(name=data['name'], _title=title_enum.value)
             if not teacher:
                 # todo: add logging

@@ -107,7 +107,7 @@ class Lookup:
                 tags = web_element.find_all(self.__tags)
         return tags
 
-    def get_single_tag(self, web_element: Tag) -> Tag:
+    def get_single_tag(self, web_element) -> Tag:
         if self._selector_method == SelectorMethod.SELECT:
             tag = web_element.select_one(self.key)
         else:

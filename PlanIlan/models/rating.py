@@ -11,7 +11,7 @@ VALIDATORS = [MinValueValidator(MIN_RATING, f'Value should not fall short of {MI
 class Rating(BaseModel):
     average = models.FloatField(null=True, default=None, validators=VALIDATORS)
     amount_of_raters = models.IntegerField(default=0,
-                                           validators=[MinValueValidator(0, 'Value has to be a natural number')])
+                                           validators=[MinValueValidator(0, f'amount of raters should be a natural number')])
 
     @classmethod
     def create(cls, average: float = None, amount_of_raters: int = 0) -> 'Rating':
@@ -22,19 +22,6 @@ class Rating(BaseModel):
     def __str__(self):
         return str(self.average)
 
-        # class Meta:
-
-    #     abstract = True
-
-    # @classmethod
-    # def create_without_save(cls, rated_instance) -> 'Rating':
-    #     if isinstance(rated_instance, Teacher):
-    #         return TeacherRating(average=None, teacher=rated_instance)
-    #     elif isinstance(rated_instance, Course):
-    #         return CourseRating(average=None, course=rated_instance)
-    #     else:
-    #         return None
-
     def update_rating(self, new_rating: int, save=True):
         if self.amount_of_raters == 0:
             self.average = new_rating
@@ -43,10 +30,3 @@ class Rating(BaseModel):
         self.amount_of_raters += 1
         if save:
             self.save()
-
-# class TeacherRating(Rating):
-#     teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
-#
-#
-# class CourseRating(Rating):
-#     course = models.ForeignKey('Course', on_delete=models.CASCADE)
