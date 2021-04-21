@@ -17,11 +17,28 @@ function create_groups() {
     let remove = '<button class="fas fa-trash close-btn-groups" onclick="removeGroup(this)" id="remove-group_'
         + div_name +'"></button>'
     div_result.innerHTML += remove;
-    div_result.innerHTML += '<br><button class="button btn-primary">הוסף קורסים</button>';
-    let modal = document.querySelector(".modal-content");
-    let this_div_modal = modal.cloneNode(true);
-    div_result.innerHTML += this_div_modal.setAttribute('id', 'modal_' + div_name);
+    let create_course_btn = '<br><button class="button btn-primary" id="btn-modal_' + div_name +
+        '" onclick="openModal(this)">הוסף קורסים</button>';
+    div_result.innerHTML += create_course_btn;
     wrapper.append(div_result);
+}
+
+let modal = document.querySelector('.modal');
+let span = document.getElementsByClassName("close")[0];
+function openModal() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
 }
 
 function removeGroup(item) {
