@@ -23,7 +23,7 @@ def construct_lookup(v: Union[Dict, str]):
     else:
         key = v
         selector = SelectorMethod.FIND
-    return Lookup(key=key, selector_method=selector)
+    return Lookup(key=key)
 
 
 @unique

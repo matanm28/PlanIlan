@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'widget_tweaks',
+    'django_admin_multiple_choice_list_filter',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'PlanIlan.wsgi.application'
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Database
@@ -91,7 +91,6 @@ if os.path.exists(db_data_file_name):
     with open(db_data_file_name, 'r') as json_file:
         db_json = json.load(json_file)
         db_data = db_json[DB_HOST]
-
 
 DATABASES = {
     'default': {
@@ -123,6 +122,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': './logs/debug.log',
             'mode': 'w',
@@ -138,7 +138,6 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'level': 'DEBUG',
             'handlers': ['file', 'console'],
         },
         'django.db.backends': {
@@ -207,6 +206,6 @@ EMAIL_USE_TLS = (True if mail_data['EMAIL_USE_TLS'] == "True" else False)
 EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 
-#MEDIA Configurations
+# MEDIA Configurations
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

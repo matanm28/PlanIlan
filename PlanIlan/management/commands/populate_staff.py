@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 
 from PlanIlan.data_mining.staff.staff_crawler import StaffCrawler
 from PlanIlan.models import DepartmentEnum, Teacher
-from PlanIlan.models.enums import FacultyEnum, TitleEnum
+from PlanIlan.models.enums import FacultyEnum, TitleEnum, Title, Faculty
 from PlanIlan.data_mining.staff.lookup_parameters import *
 
 
@@ -42,26 +42,22 @@ class PopulateStaffCommand(BaseCommand):
                       }
                       }
         staff_lookup = StaffLookup.from_dict(staff_dict)
-        crawler = StaffCrawler(url, faculty, department, staff_lookup, email_suffix='@math.biu.ac.il')
+        crawler = StaffCrawler(url, department, staff_lookup, email_suffix='@math.biu.ac.il')
         l = crawler.crawl()
         teachers_data = crawler.get_teachers_data()
+        faculty = Faculty.get_from_enum(faculty)
         for data in teachers_data:
-            print(data)
-        teachers_query_set = Teacher.objects.all()
-        for data in teachers_data:
-            title_enum = TitleEnum.from_string(data['title'])
-            teacher, created = teachers_query_set.get_or_create(name=data['name'], _title=title_enum.value)
-            if not teacher:
-                # todo: add logging
-                continue
-            teacher._faculty = faculty.value
-            teacher.phone = data['phone']
-            teacher.office = data['office']
-            teacher.email = data['email']
-            teacher.website_url = data['website']
+            title_enum = TitleEnum.from_string(data.title)
+            title = Title.get_from_enum(title_enum)
+            teacher = Teacher.create(data.name, title, faculty)
+            
+            teacher.phone = data.phone
+            teacher.office = data.office
+            teacher.email = data.email
+            teacher.website_url = data.website
 
             buffer = BytesIO()
-            data['photo'].save(buffer, format='jpeg')
+            data.photo.save(buffer, format='jpeg')
             pic = ContentFile(buffer.getvalue())
 
             teacher.image.save('profile.jpg',

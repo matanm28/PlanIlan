@@ -126,7 +126,7 @@ class Lesson(BaseModel):
 
     @property
     def teacher(self):
-        return self.get_teacher(index=0)
+        return self.teachers.first()
 
     @property
     def semester(self):

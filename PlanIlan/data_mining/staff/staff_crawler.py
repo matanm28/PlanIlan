@@ -13,10 +13,9 @@ from PlanIlan.models.enums import FacultyEnum, DepartmentEnum
 class StaffCrawler:
     """An object that crawls over different staff members web pages according to their attributes."""
 
-    def __init__(self, url: Union[str, List[str]], faculty: FacultyEnum, department: DepartmentEnum, staff_lookup: StaffLookup,
+    def __init__(self, url: Union[str, List[str]], department: DepartmentEnum, staff_lookup: StaffLookup,
                  **kwargs) -> None:
         self._urls = url if isinstance(url, List) else [url]
-        self._faculty = faculty
         self._department = department
         self.staff_lookup = staff_lookup
         self._has_photos = kwargs['has_photos'] if 'has_photos' in kwargs else True
@@ -27,11 +26,6 @@ class StaffCrawler:
     def urls(self) -> List[str]:
         """Return the url of the crawled web page"""
         return self._urls
-
-    @property
-    def faculty(self) -> FacultyEnum:
-        """Return the faculty of the crawled web page"""
-        return self._faculty
 
     @property
     def department(self):

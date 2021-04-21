@@ -1,5 +1,6 @@
 from typing import Tuple, Type
 
+from django.contrib.admin import display
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.translation import gettext_lazy as _
@@ -89,18 +90,29 @@ class EnumModel(BaseModel):
     def _get_enum_from_int(cls, num: int) -> LabeledIntegerEnum:
         return cls.get_enum_class().from_int(num)
 
+    @classmethod
+    def get_from_enum(cls, enum: LabeledIntegerEnum):
+        return cls.objects.filter(pk=enum).first()
+
     @property
     def enum(self) -> LabeledIntegerEnum:
         return self.get_enum_class().from_int(self.number)
 
+    def __repr__(self):
+        return f'number:{self.number}, label:{self.label}'
+
+    def __str__(self):
+        return self.label
+
     class Meta:
         abstract = True
         unique_together = ['number', 'label']
-        default_permissions = ('add', 'view')
-        ordering = ['-number']
+        ordering = ['number']
 
 
 class Day(EnumModel):
+    FULL_STRINGS = ('ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי')
+
     class Meta(EnumModel.Meta):
         pass
 
@@ -114,6 +126,16 @@ class Day(EnumModel):
         instance, created = Day.objects.get_or_create(number=enum.value, label=enum.label)
         cls.log_created(cls.__name__, instance.pk, created)
         return instance
+
+    @property
+    def full_label(self):
+        return self.FULL_STRINGS[self.number - 1]
+
+    def __repr__(self):
+        return f'{super().__repr__()},full_label:{self.full_label}'
+
+    def __str__(self):
+        return self.full_label
 
 
 class DepartmentEnum(LabeledIntegerEnum):
@@ -344,7 +366,7 @@ class Title(EnumModel):
 
     @classmethod
     def get_enum_class(cls) -> Type[LabeledIntegerEnum]:
-        return FacultyEnum
+        return TitleEnum
 
     @classmethod
     def create(cls, number: int) -> 'Title':

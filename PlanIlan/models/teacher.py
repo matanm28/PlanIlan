@@ -36,15 +36,14 @@ class Teacher(BaseModel):
 
     @classmethod
     def create(cls, name: str, title: Title, faculty: Faculty) -> 'Teacher':
-        teacher, created = Teacher.objects.get_or_create(name=name, title=title,
-                                                         defaults={
-                                                             'rating': Rating.create,
-                                                             'faculty': faculty,
-                                                             'phone': None,
-                                                             'email': None,
-                                                             'office': None,
-                                                             'website_url': None,
-                                                             'image': None})
+        teacher, created = Teacher.objects.get_or_create(name=name, title=title, faculty=faculty,
+                                                          defaults={
+                                                              'rating': Rating.create,
+                                                              'phone': None,
+                                                              'email': None,
+                                                              'office': None,
+                                                              'website_url': None,
+                                                              'image': None})
         cls.log_created(cls.__name__, teacher.id, created)
         return teacher
 
