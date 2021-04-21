@@ -2,40 +2,32 @@ const mandatory_courses = []
 const elective_courses = []
 const formValues = JSON.parse(sessionStorage.getItem('formValues')) || {};
 
+
 function create_groups() {
     let x = document.getElementById("selected-option");
     let i = x.selectedIndex;
     let selected_option = x.options[i].text;
-    let name = document.getElementById("group-name")
-    let b = document.createElement('button');
-    b.setAttribute('class', 'btn btn-link');
-    b.textContent = name.value + '-' + selected_option;
-    b.setAttribute('id', 'btn-group_' + b.textContent)
     let wrapper = document.getElementById("wrapper-div");
-    wrapper.appendChild(b);
-    let remove = document.createElement('button');
-    remove.setAttribute('class', 'fas fa-trash close-btn-groups')
-    remove.setAttribute('onClick', 'removeGroup(this)')
-    remove.setAttribute('id', 'remove-group_' + b.textContent)
-    wrapper.appendChild(remove)
-    let list_course = document.createElement('ol');
-    $checkboxes.filter(":checked").forEach(checked_item => {
-        let li = document.createElement('li');
-        li.setAttribute('id', checked_item.id);
-        li.appendChild(checked_item);
-    })
-    wrapper.appendChild(list_course)
-    if (selected_option === 'חובה') {
-        mandatory_courses.push($checkboxes.filter(":checked"));
-    } else {
-        elective_courses.push($checkboxes.filter(":checked"));
-    }
+    let name = document.getElementById("group-name");
+    let div_name = name.value + '-' + selected_option;
+    let div_result = document.createElement('div');
+    div_result.setAttribute('id', "div-group_" + div_name);
+    let title = "<lable>" + div_name + "</lable>";
+    div_result.innerHTML += title;
+    let remove = '<button class="fas fa-trash close-btn-groups" onclick="removeGroup(this)" id="remove-group_'
+        + div_name +'"></button>'
+    div_result.innerHTML += remove;
+    div_result.innerHTML += '<br><button class="button btn-primary">הוסף קורסים</button>';
+    let modal = document.querySelector(".modal-content");
+    let this_div_modal = modal.cloneNode(true);
+    div_result.innerHTML += this_div_modal.setAttribute('id', 'modal_' + div_name);
+    wrapper.append(div_result);
 }
 
 function removeGroup(item) {
     let group_name = item.id.split("_")[1]
-    let button_group = document.getElementById("btn-group_" + group_name)
-    button_group.remove()
+    let div_group = document.getElementById("div-group_" + group_name)
+    div_group.remove()
     item.remove()
 }
 
