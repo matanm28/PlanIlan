@@ -14,23 +14,24 @@ function display_course_filter() {
 
 /* Set the width of the side navigation to 250px */
 function openSearchBox() {
-    document.getElementById("results").style.marginLeft = "25%";
-    document.getElementById("results").style.width = "75%";
     document.getElementById("search_box").style.width = "25%";
+    document.getElementById("results").style.marginRight = "25%";
+    document.getElementById("results").style.width = "75%";
     document.getElementById("open_search_box").style.display = "none";
     const results = document.getElementsByClassName("resize-box");
     for (let i = 0; i < results.length; i++) {
-        results[i].style.width = "75%";
+        results[i].style.width = "100%";
     }
 }
 
 /* Set the width of the side navigation to 0 */
 function closeSearchBox() {
     document.getElementById("search_box").style.width = "0";
+    document.getElementById("results").style.marginRight = "0";
+    document.getElementById("results").style.width = "100%";
     document.getElementById("open_search_box").style.display = "block";
-    document.getElementById("results").style.marginLeft = "0";
     const results = document.getElementsByClassName("resize-box");
     for (let i = 0; i < results.length; i++) {
-        results[i].style.width = "90%";
+        results[i].style.width = "96%";
     }
 }
