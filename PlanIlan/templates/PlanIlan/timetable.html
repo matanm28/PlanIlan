@@ -23,7 +23,7 @@
         <input type="text" id="group-name">
         <br>
         <label class="label">בחר סמסטר</label>
-        {% render_field course_filter.form.semester %}
+        {% render_field course_filter.form.semester id="semester" %}
         <br>
         <button class="button btn-primary" id="create-group" onclick="create_groups()">צור קבוצה</button>
     </div>
@@ -34,10 +34,11 @@
                 <span class="close">&times;</span>
                 <div>
                     <label class="label">בחר מחלקה</label>
-                    {% render_field course_filter.form.department id="select-dep" onChange="DepChange()" %}
+                    {% render_field course_filter.form.department id="select-dep" name="dep-drop" onChange="DepChange()" %}
                     <br>
                     <label class="label">בחר קורסים</label>
                     <button id="pick-all">בחר הכל בעמוד זה</button>
+                {% if 'dep-drop' in request.GET %}
                     <table class="table table-bordered">
                         <thead>
                         <tr>
@@ -92,6 +93,7 @@
                                 {% endif %}
                             </ul>
                         {% endif %}
+                    {% endif %}
                     </nav>
                 </div>
             </div>

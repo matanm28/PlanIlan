@@ -119,6 +119,7 @@ window.onload = function () {
 //     }
 // });
 
+let values = $('#semester').val();
 // TODO: not working
 // Filtering after picking from list
 function DepChange() {
@@ -127,6 +128,7 @@ function DepChange() {
     let data = {
         'department': dep_drop.options[dep_drop.selectedIndex].value,
         'csrfmiddlewaretoken': csrftoken,
+        'semester': values,
     };
     $.ajax({
         url: '/timetable',

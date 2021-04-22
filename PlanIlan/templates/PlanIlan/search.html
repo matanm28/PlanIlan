@@ -40,52 +40,10 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label>Teacher</label>
-                            <div class="control">
-                                {% render_field course_filter.form.teachers class="selectpicker" data-show-subtext="true" data-live-search="true" id="search-teacher" %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Online studies?</label>
-                            <div class="control">
-                                {% render_field course_filter.form.online %}
-                            </div>
-                        </div>
-                        <div class="field">
                             <label>Rating Between:</label>
                             {% render_field course_filter.form.rating_from %}
                             <label>And:</label>
                             {% render_field course_filter.form.rating_to %}
-                        </div>
-                        <div class="field">
-                            <label>Start time</label>
-                            <div class="control">
-                                {% render_field course_filter.form.start_time type="time" %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>End time</label>
-                            <div class="control">
-                                {% render_field course_filter.form.end_time type="time" %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Day</label>
-                            <div class="control">
-                                {% render_field course_filter.form.day %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Semester</label>
-                            <div class="control">
-                                {% render_field course_filter.form.semester %}
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label>Session type</label>
-                            <div class="control">
-                                {% render_field course_filter.form.session_type %}
-                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit" name="form-search-course">חפש</button>
                         <a href="{% url 'search' %}" style="float: left">ניקוי</a>
