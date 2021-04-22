@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 
 from .decorators import unauthenticated_user, authenticated_user
-from .filters import CourseInstanceFilter, TeacherInstanceFilter
+from .filters import *
 from .forms import CreateUserForm
 from .models import *
 
@@ -15,8 +15,8 @@ from .models import *
 def search(request):
     if request.method == 'GET':
         # COURSE SEARCH ENGINE
-        courses = Lesson.objects.all()
-        course_filter = CourseInstanceFilter(request.GET, queryset=courses)
+        courses = Course.objects.all()
+        course_filter = CourseFilter(request.GET, queryset=courses)
         courses = course_filter.qs
         # TEACHER SEARCH ENGINE
         teachers = Teacher.objects.all()
