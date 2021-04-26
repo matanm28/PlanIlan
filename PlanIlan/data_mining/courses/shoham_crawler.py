@@ -15,7 +15,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 
 from PlanIlan.exceptaions import EnumNotExistError, CantCreateModelError
-from PlanIlan.models import Course, Lesson, Location, DAYS, SessionTime, Teacher, LessonTypeEnum, TitleEnum, \
+from PlanIlan.models import Course, Lesson, Location, DAYS, LessonTime, Teacher, LessonTypeEnum, TitleEnum, \
     DepartmentEnum, SemesterEnum, Exam, ExamPeriodEnum
 from PlanIlan.models.enums import FacultyEnum, Semester, ExamPeriod, Faculty, Title, Department, LessonType, Day
 from PlanIlan.utils.general import name_of, is_float, is_number
@@ -293,8 +293,8 @@ class CourseInstanceBuilder:
                 times = hours[i * hours_per_day + j].split(' - ')
                 start_time = datetime.strptime(date + times[0], self.time_format)
                 end_time = datetime.strptime(date + times[1], self.time_format)
-                class_time = SessionTime.create(day=day.strip("'"), start_time=start_time,
-                                                end_time=end_time)
+                class_time = LessonTime.create(day=day.strip("'"), start_time=start_time,
+                                               end_time=end_time)
                 lesson_time_list.append(class_time)
         return lesson_time_list
 
@@ -305,7 +305,7 @@ class CourseInstanceBuilder:
         if not name_td or not session_type_td:
             self.all_correct = False
             return name, session_type
-        title_list = name_td.text.replace('פרטי קורס :', '').strip().split(':')
+        title_list = name_td.text.replace('פרטי קורס', '').strip().split(':', maxsplit=1)
         if title_list:
             name = title_list[-1]
         session_type_str = session_type_td.text.strip()
@@ -398,7 +398,7 @@ class CourseInstanceBuilder:
             self.all_correct = False
         return Semester.objects.get(number=semester.value) if self.all_correct else None
 
-    def __parse_course_session_times(self, days_td: Tag, session_times_td: Tag, semester_td: Tag) -> List[SessionTime]:
+    def __parse_course_session_times(self, days_td: Tag, session_times_td: Tag, semester_td: Tag) -> List[LessonTime]:
         if not self.all_correct:
             return []
         if not semester_td or not days_td or not session_times_td:
@@ -424,8 +424,8 @@ class CourseInstanceBuilder:
             end_time = datetime.strptime(date + end_time_str.strip(), self.time_format)
             day_enum = DAYS.from_string(day_char)
             day = Day.objects.get(number=day_enum)
-            session_time = SessionTime.create(semester=semester, day=day, start_time=start_time, end_time=end_time,
-                                              year=self.year)
+            session_time = LessonTime.create(semester=semester, day=day, start_time=start_time, end_time=end_time,
+                                             year=self.year)
             session_times.append(session_time)
         if not session_times:
             self.all_correct = False

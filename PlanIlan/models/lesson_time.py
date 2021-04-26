@@ -1,17 +1,15 @@
-import sys
-import logging
 from datetime import datetime, time, timedelta
-from typing import Union
 
 from django.db import models
+
 from PlanIlan.models import BaseModel, Day, Semester
 from PlanIlan.utils.general import is_number
 from PlanIlan.utils.time import Time, TimeDelta
 
 
-class SessionTime(BaseModel):
-    day = models.ForeignKey(Day, on_delete=models.CASCADE)
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
+class LessonTime(BaseModel):
+    day = models.ForeignKey(Day, on_delete=models.CASCADE,related_name='lesson_times')
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE,related_name='lesson_times')
     start_time = models.TimeField()
     end_time = models.TimeField()
     year = models.PositiveSmallIntegerField()
@@ -21,10 +19,10 @@ class SessionTime(BaseModel):
 
     @classmethod
     def create(cls, semester: Semester, day: Day, start_time: time,
-               end_time: time, year: int) -> 'SessionTime':
-        lesson_time, created = SessionTime.objects.get_or_create(day=day, start_time=start_time,
-                                                                 end_time=end_time, semester=semester,
-                                                                 year=year)
+               end_time: time, year: int) -> 'LessonTime':
+        lesson_time, created = LessonTime.objects.get_or_create(day=day, start_time=start_time,
+                                                                end_time=end_time, semester=semester,
+                                                                year=year)
         cls.log_created(cls.__name__, lesson_time.id, created)
         return lesson_time
 
@@ -51,6 +49,9 @@ class SessionTime(BaseModel):
     def end_str(self) -> datetime:
         return self.format_time_to_string(self.end_time)
 
+    def time_str(self, delim='-'):
+        return f'{self.start_str}{delim}{self.end_str}'
+
     def get_hours_list(self, jump: int = 1, jump_by: str = 'hours'):
         jump_by_multiplier = {'hours': 3600, 'minutes': 60, 'seconds': 1}
         if not jump_by.lower() in jump_by_multiplier:
@@ -71,3 +72,6 @@ class SessionTime(BaseModel):
 
     def __repr__(self):
         return f'semester: {self.semester.label}, day: {self.day}, time: {self.start_str}-{self.end_str}'
+
+    def __str__(self) -> str:
+        return f'יום {self.day.full_label}, {self.time_str()} ({self.semester.label})'

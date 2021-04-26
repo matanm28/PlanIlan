@@ -1,7 +1,7 @@
 from datetime import time
 
 from PlanIlan.dtos.base_dto import BaseDto
-from PlanIlan.models import SessionTime
+from PlanIlan.models import LessonTime
 
 
 class LessonTimeDto(BaseDto):
@@ -17,7 +17,7 @@ class LessonTimeDto(BaseDto):
 
     @classmethod
     def maps_from(cls):
-        return SessionTime
+        return LessonTime
 
     @classmethod
     def maps_to(cls):

@@ -1,0 +1,29 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="makemigrations" type="PythonConfigurationType" factoryName="Python" folderName="migrations">
+    <module name="PlanIlan" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="DB_USER_NAME" value="admin" />
+      <env name="DB_USER_PASSWORD" value="V02G6zmHVIDLpdGqfEO8" />
+      <env name="DB_HOST_NAME" value="plan-ilan-db.ckiihycoqnns.eu-central-1.rds.amazonaws.com" />
+      <env name="DB_PORT" value="3306" />
+      <env name="DB_NAME" value="plan_ilan_dev" />
+    </envs>
+    <option name="SDK_HOME" value="C:\Users\mamalka\PlanIlan\Scripts\python.exe" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage.py" />
+    <option name="PARAMETERS" value="makemigrations" />
+    <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <option name="MODULE_MODE" value="false" />
+    <option name="REDIRECT_INPUT" value="false" />
+    <option name="INPUT_FILE" value="" />
+    <method v="2" />
+  </configuration>
+</component>

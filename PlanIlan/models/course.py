@@ -1,22 +1,24 @@
-import sys
 import logging
-import uuid
-from typing import List, Union
+from typing import List
+
 from django.db import models
 
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
-from PlanIlan.models import BaseModel, SessionTime, Location, Teacher, Rating, LessonTypeEnum, Exam
-from PlanIlan.models.enums import Day, Department, Faculty, LessonType
+from PlanIlan.models import BaseModel, LessonTime, Location, Teacher, Rating, LessonTypeEnum, Exam
+from PlanIlan.models.enums import Department, Faculty, LessonType
 
 
 class Course(BaseModel):
     code = models.CharField(primary_key=True, max_length=10, editable=False)
     name = models.CharField(max_length=100)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='courses')
+    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='courses')
     syllabus_link = models.URLField(null=True)
-    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='of_course')
-    exams = models.ManyToManyField(Exam)
+    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='course')
+    exams = models.ManyToManyField(Exam, related_name='courses')
+
+    class Meta:
+        ordering = ['name']
 
     @staticmethod
     def get_faculty_code_from_course_id(course_id: str) -> str:
@@ -47,22 +49,25 @@ class Course(BaseModel):
     def get_lessons(self):
         return self.lessons.all()
 
+    def __str__(self):
+        return f'{self.name} ({self.code})'
+
 
 class Lesson(BaseModel):
     id = models.CharField(primary_key=True, max_length=20, editable=False)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
     group = models.CharField(max_length=3)
-    lesson_type = models.ForeignKey(LessonType, on_delete=models.CASCADE)
+    lesson_type = models.ForeignKey(LessonType, on_delete=models.CASCADE, related_name='lessons')
     details_link = models.URLField(null=True)
-    teachers = models.ManyToManyField(Teacher, related_name='teaches_courses')
-    session_times = models.ManyToManyField(SessionTime, related_name='courses')
+    teachers = models.ManyToManyField(Teacher, related_name='lessons')
+    session_times = models.ManyToManyField(LessonTime, related_name='lessons')
     points = models.FloatField(null=True)
-    locations = models.ManyToManyField(Location, related_name='courses')
+    locations = models.ManyToManyField(Location, related_name='lessons')
 
     @classmethod
     def create(cls, code: str, group: str, name: str, teachers: List[Teacher], session_type: LessonType,
-               faculty: Faculty, department: Department, session_times: List[SessionTime], locations: List[Location],
-               exams: List[Exam], points: float = None, link: str = None, syllabus_link: str = None) -> 'Lesson':
+               faculty: Faculty, department: Department, session_times: List[LessonTime], locations: List[Location],
+               exams: List[Exam], points: float = None, details_link: str = None, syllabus_link: str = None) -> 'Lesson':
         if not len(teachers) > 0:
             raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "staff list can't be empty")
         if not len(session_times) > 0:
@@ -78,7 +83,7 @@ class Lesson(BaseModel):
                                                                'course': course,
                                                                'group': group,
                                                                'lesson_type': session_type,
-                                                               'details_link': link,
+                                                               'details_link': details_link,
                                                                'points': points})
             lesson.teachers.set(teachers)
             lesson.locations.set(locations)

@@ -71,7 +71,7 @@ def register(request):
         if form.is_valid():
             faculty = request.POST.get('faculty')
             user = form.save()
-            UserModel.objects.create(
+            User.objects.create(
                 user=user,
                 user_name=user.username,
                 email=user.email,

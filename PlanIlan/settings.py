@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 import json
+import socket
 import sys
 from pathlib import Path
 
@@ -82,8 +83,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DB_HOST = 'LOCAL' if DEBUG else 'AWS'
-DB_HOST = 'AWS'
+IS_MATAN_MACHINE = socket.gethostname() == 'MAMALKA-FSYX3'
+DB_HOST = 'LOCAL' if DEBUG and IS_MATAN_MACHINE else 'AWS'
 db_information = dict(os.environ)
 db_data = db_information
 db_data_file_name = 'db_data.json'

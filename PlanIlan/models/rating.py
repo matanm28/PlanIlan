@@ -19,9 +19,6 @@ class Rating(BaseModel):
         rating.save()
         return rating
 
-    def __str__(self):
-        return str(self.average)
-
     def update_rating(self, new_rating: int, save=True):
         if self.amount_of_raters == 0:
             self.average = new_rating
@@ -30,3 +27,6 @@ class Rating(BaseModel):
         self.amount_of_raters += 1
         if save:
             self.save()
+
+    def __str__(self) -> str:
+        return f'{self.average}({self.amount_of_raters})' if self.average is not None else 'No Rating'

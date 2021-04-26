@@ -1,6 +1,5 @@
 from typing import Tuple, Type
 
-from django.contrib.admin import display
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.translation import gettext_lazy as _
@@ -272,10 +271,14 @@ class Faculty(EnumModel):
 
 
 class SemesterEnum(LabeledIntegerEnum):
-    FIRST = 1, _("סמסטר א'")
-    SECOND = 2, _("סמסטר ב'")
-    SUMMER = 3, _("סמסטר ק'")
+    FIRST = 1, _("סמסטר א")
+    SECOND = 2, _("סמסטר ב")
+    SUMMER = 3, _("סמסטר ק")
     YEARLY = 4, _('שנתי')
+
+    @classmethod
+    def from_string(cls, search_value: str) -> 'LabeledIntegerEnum':
+        return super().from_string(search_value.strip("'"))
 
 
 class Semester(EnumModel):
@@ -295,15 +298,15 @@ class Semester(EnumModel):
 
 
 class ExamPeriodEnum(LabeledIntegerEnum):
-    FIRST = 1, _("מועד א'")
-    SECOND = 2, _("מועד ב'")
-    THIRD = 3, _("מועד ג'")
+    FIRST = 1, _("מועד א")
+    SECOND = 2, _("מועד ב")
+    THIRD = 3, _("מועד ג")
     SPECIAL = 4, _("מועד מיוחד")
 
     @classmethod
     def from_string(cls, search_value: str) -> 'LabeledIntegerEnum':
         try:
-            return super().from_string(search_value)
+            return super().from_string(search_value.strip("'"))
         except EnumNotExistError:
             return cls.SPECIAL
 
@@ -378,8 +381,7 @@ class Title(EnumModel):
 
 @receiver_subclasses(pre_save, EnumModel, 'prevent_save_if_enum_not_valid', weak=False)
 def pre_save_handler(sender, instance, *args, **kwargs):
-    enum_class = sender.get_enum_class()
     try:
-        enum_class.from_int(instance.number)
+        sender.get_enum_class().from_int(instance.number)
     except EnumNotExistError:
         raise Exception('enum is not defined')

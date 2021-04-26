@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import List, Dict
 
-from PlanIlan.models import SessionTime
+from PlanIlan.models import LessonTime
 from PlanIlan.models.enums import LessonTypeEnum, DAYS
 from PlanIlan.timetable_optimizer.optimized_course import OptimizedCourse
 
@@ -14,7 +14,7 @@ def cut_by_day(courses_list: List[OptimizedCourse]) -> List:
     return days_to_courses_dict
 
 
-def single_overlap(course_times: List[SessionTime], spec_time: SessionTime) -> bool:
+def single_overlap(course_times: List[LessonTime], spec_time: LessonTime) -> bool:
     for c_t in course_times:
         start = c_t.start_time
         end = c_t.end_time

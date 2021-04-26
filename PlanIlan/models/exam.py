@@ -6,7 +6,7 @@ from PlanIlan.models import BaseModel, ExamPeriod
 
 
 class Exam(BaseModel):
-    period = models.ForeignKey(ExamPeriod, on_delete=models.CASCADE)
+    period = models.ForeignKey(ExamPeriod, on_delete=models.CASCADE, related_name='exams')
     date = models.DateTimeField()
 
     class Meta:
@@ -17,3 +17,6 @@ class Exam(BaseModel):
         exam, created = Exam.objects.get_or_create(period=period, date=date)
         cls.log_created(cls.__name__, exam.id, created)
         return exam
+
+    def __str__(self) -> str:
+        return f'{self.date.strftime("%d.%m.%y, %H:%M")} ({self.period.label})'

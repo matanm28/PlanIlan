@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Dict
 
-from PlanIlan.models import SessionTime, Course
+from PlanIlan.models import LessonTime, Course
 
 from PlanIlan.models.enums import LessonTypeEnum, DAYS
 
@@ -12,7 +12,7 @@ class OptimizedCourse:
     group: str
     teacher: str
     session_type: LessonTypeEnum
-    times: List[SessionTime]
+    times: List[LessonTime]
     ranking: float = field(default=0.0, hash=False, compare=False)
 
     @classmethod

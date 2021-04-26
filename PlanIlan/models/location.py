@@ -20,3 +20,10 @@ class Location(BaseModel):
                                                            online=online)
         cls.log_created(cls.__name__, location.id, created)
         return location
+
+    def __str__(self) -> str:
+        return f'{self.building_name}, בניין{self.building_number}, כיתה {self.class_number}' if not self.is_zoom_class else "אונליין"
+
+    @property
+    def is_zoom_class(self):
+        return self.online or self.building_name in ['במודל', 'זום', 'נלמד בזום'] or self.building_number is None
