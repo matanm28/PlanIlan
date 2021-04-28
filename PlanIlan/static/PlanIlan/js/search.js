@@ -35,3 +35,11 @@ function closeSearchBox() {
         results[i].style.width = "98%";
     }
 }
+
+function chosenCourse() {
+    console.log("course");
+}
+
+function chosenTeacher() {
+    console.log("teacher");
+}
