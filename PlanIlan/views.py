@@ -7,7 +7,7 @@ from .decorators import unauthenticated_user, authenticated_user
 from .filters import *
 from .forms import CreateUserForm
 from .models import *
-
+from django.core import serializers
 
 # @login_required(login_url='')
 
@@ -111,7 +111,9 @@ def time_table(request):
         courses_list = course_filter.qs
         context = {'course_filter': course_filter, 'courses': courses_list}
         if request.is_ajax():
-            context = {'courses': list(courses_list)}
-            return JsonResponse(context)
+            json_course_list = serializers.serialize("json", courses_list)
+            json_course_names = [lesson.name for lesson in courses_list]
+            context = {'json_course_list': json_course_list, 'json_course_names': json_course_names}
+            return JsonResponse(context, safe=False)
         return render(request, 'PlanIlan/timetable.html', context)
     return render(request, 'PlanIlan/timetable.html')

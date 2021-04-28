@@ -1,7 +1,6 @@
 const mandatory_courses = []
 const elective_courses = []
 
-
 function create_groups() {
     let x = document.getElementById("selected-option");
     let i = x.selectedIndex;
@@ -66,16 +65,28 @@ function DepChange() {
         type: 'GET',
         data: data,
         success: function (data) {
-            data.courses.forEach(element => {
-                let line_checkbox = '<input type="checkbox" id="' + element.id + '" value="' + element.name + '">'
-                let line_lable = '<label for="' + element.id + '">' + element.name + '</label><br>'
-                $('#options').innerHTML += line_checkbox
-                $('#options').innerHTML += line_lable
-            });
+            let arr_from_json = JSON.parse(data.json_course_list);
+            let options_div = document.getElementById("options");
+            options_div.innerHTML = '';
+            for (let i = 0; i < arr_from_json.length; i++) {
+                let line_checkbox = '<input type="checkbox" id="check-course_' + arr_from_json[i]["pk"] + '" value="' + data.json_course_names[i] + '" onclick="showSaveButton(this)">'
+                let line_lable = '<label for="' + arr_from_json[i]["pk"] + '">' + data.json_course_names[i] + '</label><br>'
+                options_div.innerHTML += line_checkbox
+                options_div.innerHTML += line_lable
+            }
         },
         error: function (error) {
             alert("בעיה בטעינת הטבלה");
         }
     });
     return false;
+}
+
+function showSaveButton(checkbox) {
+    let buttn = document.getElementById("submit_prog");
+    if (checkbox.checked === true) {
+        buttn.style.display = "block";
+    } else {
+        buttn.style.display = "none";
+    }
 }
