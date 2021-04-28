@@ -76,38 +76,18 @@
             <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i
                     class="fas fa-caret-left fa-2x"></i>חפש</span>
             <div class="resize-box" id="courses_result">
-                {% if 'form-search-course' in request.GET %}
-                    <div class="scrollbar scrollbar-primary">
+                <div class="scrollbar scrollbar-primary">
+                    {% if 'form-search-course' in request.GET %}
                         {% for course in courses %}
-                            <button class="btn class_btn">{{ course.name }}<br>{{ course.code }}</button>
+                            <button class="btn class_btn" onclick="chosenCourse()">{{ course.name }}<br>{{ course.code }}</button>
                         {% endfor %}
-                        {#                        <table class="table table-sm">#}
-                        {#                            <tr>#}
-                        {#                                <th>Name</th>#}
-                        {#                                <th>Code</th>#}
-                        {#                            </tr>#}
-                        {#                            {% for course in courses %}#}
-                        {#                                <tr>#}
-                        {#                                    <td>{{ course.name }}</td>#}
-                        {#                                    <td>{{ course.code }}</td>#}
-                        {#                                </tr>#}
-                        {#                            {% endfor %}#}
-                        {##}
-                        {#                        </table>#}
-                    </div>
-                {% endif %}
-                {% if 'form-search-teacher' in request.GET %}
-                    <table class="table table-sm">
-                        <tr>
-                            <th>Name</th>
-                        </tr>
+                    {% endif %}
+                    {% if 'form-search-teacher' in request.GET %}
                         {% for teacher in teachers %}
-                            <tr>
-                                <td>{{ teacher.name }}</td>
-                            </tr>
+                            <button class="btn class_btn" onclick="chosenTeacher()">{{ teacher }}</button>
                         {% endfor %}
-                    </table>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
             <div class="resize-box" id="chosen_element">
                 chosen course!

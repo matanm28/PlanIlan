@@ -1,9 +1,11 @@
 .class_btn {
-    /*width: 100%;*/
+    float: right;
     background: rgba(255, 255, 255, 0.8);
     border-color: rgb(214, 97, 97);
     color: rgb(214, 97, 97);
-    margin: 1em auto 2em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    padding: 1%;
 }
 
 .class_btn:hover {
