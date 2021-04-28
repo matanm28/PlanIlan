@@ -57,3 +57,7 @@ class CourseFilter(django_filters.FilterSet):
     rating_to = ChoiceFilter(choices=RATING_CHOICES, field_name='rating__average', lookup_expr='lt')
     faculty = ChoiceFilter(field_name='faculty', choices=FacultyEnum.choices)
     code = CharFilter(field_name='code', lookup_expr='icontains')
+
+    class Meta:
+        model = Course
+        fields = '__all__'

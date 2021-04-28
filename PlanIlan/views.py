@@ -111,6 +111,7 @@ def time_table(request):
         courses_list = course_filter.qs
         context = {'course_filter': course_filter, 'courses': courses_list}
         if request.is_ajax():
+            context = {'courses': list(courses_list)}
             return JsonResponse(context)
         return render(request, 'PlanIlan/timetable.html', context)
     return render(request, 'PlanIlan/timetable.html')
