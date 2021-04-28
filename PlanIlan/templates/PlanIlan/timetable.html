@@ -38,63 +38,9 @@
                     <br>
                     <label class="label">בחר קורסים</label>
                     <button id="pick-all">בחר הכל בעמוד זה</button>
-                {% if 'dep-drop' in request.GET %}
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Pick</th>
-                        </tr>
-                        </thead>
-                        <tbody id="course-data">
-                        {% for course in courses %}
-                            <tr>
-                                <td>{{ course.code }}</td>
-                                <td>{{ course.name }}</td>
-                                <td><input type="checkbox" id="pick_{{ course.id }}"></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <nav aria-label="Page navigation example">
-                        {% if courses.has_other_pages %}
-                            <ul class="pagination">
-                                {% if courses.has_previous %}
-                                    <li class="page-item">
-                                        <a class="page-link" aria-label="Previous"
-                                           href="?page={{ courses.previous_page_number }}">&laquo;</a>
-                                        <span class="sr-only">Previous</span>
-                                    </li>
-                                {% else %}
-                                    <li class="page-link disabled" aria-label="Previous"><span>&laquo;</span></li>
-                                {% endif %}
-                                {% for i in page_range %}
-                                    {% if courses.number == i %}
-                                        <li class="page-item active">
-                                            <a class="page-link" href="#" id="current-page">
-                                                {{ i }} <span class="sr-only">(current)</span>
-                                            </a>
-                                        </li>
-                                    {% else %}
-                                        <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if courses.has_next %}
-                                    <li class="page-item">
-                                        <a class="page-link" aria-label="Next"
-                                           href="?page={{ courses.next_page_number }}">&raquo;</a>
-                                        <span class="sr-only">Next</span>
-                                    </li>
-                                {% else %}
-                                    <li class="page-link disabled">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        {% endif %}
-                    {% endif %}
-                    </nav>
+                    <div id="options" style="height:120px;width:120px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+                    </div>
+                    <button class="button btn-primary" id="submit_prog" value='Submit' style="display:none">הוסף</button>
                 </div>
             </div>
 
