@@ -32,6 +32,6 @@ function closeSearchBox() {
     document.getElementById("open_search_box").style.display = "block";
     const results = document.getElementsByClassName("resize-box");
     for (let i = 0; i < results.length; i++) {
-        results[i].style.width = "96%";
+        results[i].style.width = "98%";
     }
 }

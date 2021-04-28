@@ -24,7 +24,7 @@
     height: 50%;
     float: right;
     border: 5px solid blue;
-    color: pink;
+    padding: 2%;
 }
 
 .open-btn {
@@ -33,7 +33,7 @@
     right: auto;
     font-size: 20px;
     height: 100%;
-    width: 4%;
+    width: 2%;
     float: right;
     margin-right: 0;
     background-color: rgba(84, 87, 90, 0.5);

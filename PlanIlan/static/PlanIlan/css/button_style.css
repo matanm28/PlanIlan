@@ -1,0 +1,19 @@
+.class_btn {
+    /*width: 100%;*/
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgb(214, 97, 97);
+    color: rgb(214, 97, 97);
+    margin: 1em auto 2em;
+}
+
+.class_btn:hover {
+    background: rgb(214, 97, 97);
+    color: white !important;
+}
+
+.class_btn:focus {
+    box-shadow: none !important;
+    outline: 0 !important;
+    background: rgb(214, 97, 97);
+    color: white !important;
+}
