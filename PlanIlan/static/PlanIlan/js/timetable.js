@@ -87,6 +87,9 @@ function showSaveButton(checkbox) {
     if (checkbox.checked === true) {
         buttn.style.display = "block";
     } else {
-        buttn.style.display = "none";
+        let checked_boxes = $('#options input:checked');
+        if (checked_boxes.length === 0) {
+            buttn.style.display = "none";
+        }
     }
 }
