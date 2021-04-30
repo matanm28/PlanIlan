@@ -47,10 +47,6 @@ function removeGroup(item) {
     item.remove()
 }
 
-
-const $checkboxes = $("#course-data :checkbox");
-const $button = $(document.getElementById("pick-all"));
-
 let values = $('#semester').val();
 // TODO: not working
 // Filtering after picking from list
@@ -65,14 +61,27 @@ function DepChange() {
         type: 'GET',
         data: data,
         success: function (data) {
-            let arr_from_json = JSON.parse(data.json_course_list);
             let options_div = document.getElementById("options");
             options_div.innerHTML = '';
-            for (let i = 0; i < arr_from_json.length; i++) {
-                let line_checkbox = '<input type="checkbox" id="check-course_' + arr_from_json[i]["pk"] + '" value="' + data.json_course_names[i] + '" onclick="showSaveButton(this)">'
-                let line_lable = '<label for="' + arr_from_json[i]["pk"] + '">' + data.json_course_names[i] + '</label><br>'
-                options_div.innerHTML += line_checkbox
-                options_div.innerHTML += line_lable
+            let lessons_from_json = JSON.parse(data.json_lesson_list);
+            let courses_from_json = JSON.parse(data.json_course_list);
+            for (let i = 0; i < courses_from_json.length; i++) {
+                let course_line = '<button id="course_' + courses_from_json[i]["pk"] + '" type="button" ' +
+                    'class="collapsible" onclick="showCollapsible(this)">' + courses_from_json[i]["fields"]["name"] + '</button>'
+                let div_lessons = document.createElement('div');
+                div_lessons.setAttribute('class', 'content-coll')
+                for (let j = 0; j < lessons_from_json.length; j++) {
+                    if (lessons_from_json[j]["pk"].split("_")[0] === courses_from_json[j]["pk"]) {
+                        let line_checkbox = '<input type="checkbox" id="check-lesson_' +
+                            lessons_from_json[j]["pk"] + '" value="' + lessons_from_json[j]["fields"]["teachers"] + '" onclick="showSaveButton(this)">'
+                        let line_lable = '<label for="check-lesson_' + lessons_from_json[j]["pk"] + '">' +
+                            lessons_from_json[j]["fields"]["teachers"] + '</label><br>'
+                        div_lessons.innerHTML += line_checkbox
+                        div_lessons.innerHTML += line_lable
+                    }
+                }
+                options_div.innerHTML += course_line
+                options_div.append(div_lessons)
             }
         },
         error: function (error) {
@@ -91,5 +100,15 @@ function showSaveButton(checkbox) {
         if (checked_boxes.length === 0) {
             buttn.style.display = "none";
         }
+    }
+}
+
+function showCollapsible(coll) {
+    coll.classList.toggle("active-coll");
+    var content = coll.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
     }
 }
