@@ -100,7 +100,7 @@ class Lesson(BaseModel):
             lesson.teachers.set(teachers)
             lesson.locations.set(locations)
             lesson.session_times.set(session_times)
-            cls.log_created(cls.__name__, lesson.pk, created)
+            cls.log_created(lesson, created)
             return lesson
         except EnumNotExistError as err:
             raise err
