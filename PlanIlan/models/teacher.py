@@ -2,7 +2,7 @@ from typing import List
 
 from django.db import models
 
-from PlanIlan.models import BaseModel, Rating
+from PlanIlan.models import BaseModel
 from PlanIlan.models.enums import Title, Faculty, Department
 from PlanIlan.storage import OverwriteStorage
 
@@ -24,7 +24,7 @@ class Teacher(BaseModel):
     office = models.CharField(max_length=100, null=True)
     website_url = models.URLField(null=True)
     image = models.ImageField(upload_to=user_directory_path, storage=overwrite_storage, null=True)
-    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, related_name='teacher')
+
 
     class Meta:
         unique_together = ['name', 'title']
@@ -33,13 +33,12 @@ class Teacher(BaseModel):
     def create(cls, name: str, title: Title, faculty: Faculty) -> 'Teacher':
         teacher, created = Teacher.objects.get_or_create(name=name, title=title, faculty=faculty,
                                                          defaults={
-                                                             'rating': Rating.create,
                                                              'phone': None,
                                                              'email': None,
                                                              'office': None,
                                                              'website_url': None,
                                                              'image': None})
-        cls.log_created(cls.__name__, teacher.id, created)
+        cls.log_created(teacher, created)
         return teacher
 
     @property
@@ -50,6 +49,10 @@ class Teacher(BaseModel):
     @property
     def title_and_name(self):
         return f'{self.title.label} {self.name}'.strip()
+
+    @property
+    def slug(self):
+        return f'teacher-{self.pk}'
 
     def __repr__(self):
         return f'id: {self.pk} name: {self.title_and_name}'

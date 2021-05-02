@@ -18,7 +18,7 @@ class Location(BaseModel):
         location, created = Location.objects.get_or_create(building_name=building_name, building_number=building_number,
                                                            class_number=class_number,
                                                            online=online)
-        cls.log_created(cls.__name__, location.id, created)
+        cls.log_created(location, created)
         return location
 
     def __str__(self) -> str:

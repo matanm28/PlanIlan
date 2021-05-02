@@ -15,7 +15,7 @@ class Exam(BaseModel):
     @classmethod
     def create(cls, period: ExamPeriod, date: datetime) -> 'Exam':
         exam, created = Exam.objects.get_or_create(period=period, date=date)
-        cls.log_created(cls.__name__, exam.id, created)
+        cls.log_created(exam, created)
         return exam
 
     def __str__(self) -> str:

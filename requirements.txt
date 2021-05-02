@@ -8,8 +8,6 @@ codetiming
 selenium
 ipython
 webdriver_manager
-pulp
-mapper
 gekko
 Pillow
 django-filter
@@ -17,3 +15,4 @@ django-widget-tweaks
 email-validator
 aiohttp
 django-admin-multiple-choice-list-filter
+django-polymorphic

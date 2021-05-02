@@ -317,7 +317,7 @@ class CourseInstanceBuilder:
         except EnumNotExistError as err:
             self.logger.warning(f'course: {name}, {err}')
             self.all_correct = False
-        return name, session_type
+        return name.strip(), session_type
 
     def __parse_course_id(self, id_td: Tag) -> Tuple[str, str]:
         if not self.all_correct:
@@ -331,7 +331,7 @@ class CourseInstanceBuilder:
             code, group, *rest = id_list
         else:
             self.all_correct = False
-        return code, group
+        return code.strip(), group.strip()
 
     def __parse_course_department(self, department_td: Tag) -> DepartmentEnum:
         if not self.all_correct:
@@ -372,7 +372,7 @@ class CourseInstanceBuilder:
             try:
                 title = Title.objects.get(number=title_enum)
                 # todo: check problem with 	80801-01 for example, teacher name to long.
-                teacher = Teacher.create(title=title, name=full_name, faculty=faculty)
+                teacher = Teacher.create(title=title, name=full_name.strip(), faculty=faculty)
                 teachers_list.append(teacher)
             except (EnumNotExistError, CantCreateModelError) as err:
                 self.logger.warning(f'{err}')

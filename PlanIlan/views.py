@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, redirect
+from django.core import serializers
 from django.http import JsonResponse
+from django.shortcuts import render, redirect
+
 from .decorators import unauthenticated_user, authenticated_user
 from .filters import *
-from .forms import CreateUserForm
+from .forms import CreateAccountForm, CreateDjangoUserForm
 from .models import *
-from django.core import serializers
+
 
 # @login_required(login_url='')
 
@@ -37,22 +38,22 @@ def home(request):
     # COURSES BEST RATING VIEW
     # courses_obj = [Course.objects.get(name=""),
     #                Course.objects.get(name="מבוא למדעי החיים")]
-    courses_obj = [Course.objects.get(code="76786"), Course.objects.get(code="77837")]
+    courses_obj = [Course.objects.get(code="89550"), Course.objects.get(code="88218")]
 
     # LATEST COMMENTS
-    teacher_comments = TeacherPost.objects.all().order_by('date')
+    teacher_comments = TeacherReview.objects.all().order_by('date_modified')
     context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
                'teacher_comments': teacher_comments}
     if request.method == 'GET':
-        courses_obj = [Course.objects.get(code="76786"), Course.objects.get(code="77837")]
+        # courses_obj = [Course.objects.get(code="76786"), Course.objects.get(code="77837")]
         # teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
-        teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="יורם לוזון"), Teacher.objects.get(name="גיל אריאל")]
+        # teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="יורם לוזון"), Teacher.objects.get(name="גיל אריאל")]
         context = {'staff': teachers_obj,
                    'courses': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
-            teacher_post = TeacherPost.objects.get(id=request.POST.get('PostID', ''))
+            teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
             teacher_post.amount_of_likes += int(request.POST.get('to_add', ''))
             teacher_post.save()
             return render(request, 'PlanIlan/home.html', context)
@@ -65,22 +66,23 @@ def home(request):
 
 @unauthenticated_user
 def register(request):
-    form = CreateUserForm()
     if request.method == 'POST':
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            faculty = request.POST.get('faculty')
-            user = form.save()
-            User.objects.create(
-                user=user,
-                user_name=user.username,
-                email=user.email,
-                faculty=faculty
-            )
+        django_user_form = CreateDjangoUserForm(request.POST)
+        account_form = CreateAccountForm(request.POST)
+        if django_user_form.is_valid() and account_form.is_valid():
+            user = django_user_form.save()
+            account = account_form.save(commit=False)
+            account.user = user
+            account.save()
             # messages.success(request, 'ההרשמה נקלטה בהצלחה')
             login(request, user)
             return redirect('home')
-    context = {'form': form}
+        else:
+            context = {'form': django_user_form, 'account_form': account_form}
+            return render(request, 'PlanIlan/register.html', context)
+    django_user_form = CreateDjangoUserForm()
+    account_form = CreateAccountForm()
+    context = {'form': django_user_form, 'account_form': account_form}
     return render(request, 'PlanIlan/register.html', context)
 
 
