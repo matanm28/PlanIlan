@@ -23,7 +23,7 @@
         <input type="text" id="group-name">
         <br>
         <label class="label">בחר סמסטר</label>
-        {% render_field course_filter.form.semester id="semester" %}
+        {% render_field lesson_filter.form.semester id="semester" %}
         <br>
         <button class="button btn-primary" id="create-group" onclick="create_groups()">צור קבוצה</button>
     </div>
@@ -34,13 +34,14 @@
                 <span class="close">&times;</span>
                 <div>
                     <label class="label">בחר מחלקה</label>
-                    {% render_field course_filter.form.department id="select-dep" name="dep-drop" onChange="DepChange()" %}
+                    {% render_field lesson_filter.form.department id="select-dep" name="dep-drop" onChange="DepChange()" %}
+                    <label class="label" style="display: none" id="wait-msg">אנא המתן...</label>
                     <br>
                     <label class="label">בחר קורסים</label>
-                    <button id="pick-all">בחר הכל בעמוד זה</button>
-                    <div id="options" style="height:120px;width:120px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+                    <div id="options" class="result-div">
                     </div>
-                    <button class="button btn-primary" id="submit_prog" value='Submit' style="display:none">הוסף</button>
+                    <button class="button btn-primary" id="submit_prog" value='Submit' style="display:none">הוסף
+                    </button>
                 </div>
             </div>
 

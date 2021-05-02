@@ -106,14 +106,20 @@ def logout_user(request):
 @authenticated_user
 def time_table(request):
     if request.method == 'GET':
-        courses_list = Lesson.objects.all()
-        course_filter = CourseInstanceFilter(request.GET, queryset=courses_list)
-        courses_list = course_filter.qs
-        context = {'course_filter': course_filter, 'courses': courses_list}
+        lessons_list = Lesson.objects.all()
+        lesson_filter = CourseInstanceFilter(request.GET, queryset=lessons_list)
+        lessons_list = lesson_filter.qs
+        context = {'lesson_filter': lesson_filter}
         if request.is_ajax():
-            json_course_list = serializers.serialize("json", courses_list)
-            json_course_names = [lesson.name for lesson in courses_list]
-            context = {'json_course_list': json_course_list, 'json_course_names': json_course_names}
+            lessons_pk = list(map(lambda lesson: lesson.pk, lessons_list))
+            course_list = Course.objects.filter(lessons__pk__in=lessons_pk).distinct()
+            teacher_list = Teacher.objects.filter(lessons__pk__in=lessons_pk).distinct()
+            json_teacher_list = serializers.serialize("json", teacher_list)
+            json_course_list = serializers.serialize("json", course_list)
+            json_lesson_list = serializers.serialize("json", lessons_list)
+            context = {'json_lesson_list': json_lesson_list,
+                       'json_course_list': json_course_list,
+                       'json_teacher_list': json_teacher_list}
             return JsonResponse(context, safe=False)
         return render(request, 'PlanIlan/timetable.html', context)
     return render(request, 'PlanIlan/timetable.html')
