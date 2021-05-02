@@ -193,7 +193,7 @@ class ShohamCrawler:
                 course_details_page = BeautifulSoup(driver.page_source, 'html.parser')
                 q.put((course_details_page, url))
             except WebDriverException as e:
-                self.logger.error(e)
+                self.logger.exception(e)
                 continue
         close_chrome_driver(driver)
 
@@ -375,7 +375,7 @@ class CourseInstanceBuilder:
                 teacher = Teacher.create(title=title, name=full_name.strip(), faculty=faculty)
                 teachers_list.append(teacher)
             except (EnumNotExistError, CantCreateModelError) as err:
-                self.logger.warning(f'{err}')
+                self.logger.exception(err)
         if not teachers_list:
             self.all_correct = False
         return teachers_list
