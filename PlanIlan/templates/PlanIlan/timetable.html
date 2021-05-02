@@ -35,11 +35,13 @@
                 <div>
                     <label class="label">בחר מחלקה</label>
                     {% render_field lesson_filter.form.department id="select-dep" name="dep-drop" onChange="DepChange()" %}
+                    <label class="label" style="display: none" id="wait-msg">אנא המתן...</label>
                     <br>
                     <label class="label">בחר קורסים</label>
                     <div id="options" class="result-div">
                     </div>
-                    <button class="button btn-primary" id="submit_prog" value='Submit' style="display:none">הוסף</button>
+                    <button class="button btn-primary" id="submit_prog" value='Submit' style="display:none">הוסף
+                    </button>
                 </div>
             </div>
 

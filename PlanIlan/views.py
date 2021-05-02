@@ -113,12 +113,13 @@ def time_table(request):
         if request.is_ajax():
             lessons_pk = list(map(lambda lesson: lesson.pk, lessons_list))
             course_list = Course.objects.filter(lessons__pk__in=lessons_pk).distinct()
+            teacher_list = Teacher.objects.filter(lessons__pk__in=lessons_pk).distinct()
+            json_teacher_list = serializers.serialize("json", teacher_list)
             json_course_list = serializers.serialize("json", course_list)
             json_lesson_list = serializers.serialize("json", lessons_list)
-            json_lesson_names = [lesson.name for lesson in lessons_list]
             context = {'json_lesson_list': json_lesson_list,
-                       'json_lesson_names': json_lesson_names,
-                       'json_course_list': json_course_list}
+                       'json_course_list': json_course_list,
+                       'json_teacher_list': json_teacher_list}
             return JsonResponse(context, safe=False)
         return render(request, 'PlanIlan/timetable.html', context)
     return render(request, 'PlanIlan/timetable.html')

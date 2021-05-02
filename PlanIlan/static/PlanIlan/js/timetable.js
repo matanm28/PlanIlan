@@ -1,5 +1,7 @@
 const mandatory_courses = []
 const elective_courses = []
+// Because used by 2 functions
+let wait_msg = document.getElementById("wait-msg");
 
 function create_groups() {
     let x = document.getElementById("selected-option");
@@ -51,6 +53,7 @@ let values = $('#semester').val();
 // TODO: not working
 // Filtering after picking from list
 function DepChange() {
+    wait_msg.style.display = "block";
     let dep_drop = document.getElementById("select-dep");
     let data = {
         'department': dep_drop.options[dep_drop.selectedIndex].value,
@@ -61,21 +64,23 @@ function DepChange() {
         type: 'GET',
         data: data,
         success: function (data) {
+            wait_msg.style.display = "block";
             let options_div = document.getElementById("options");
             options_div.innerHTML = '';
             let lessons_from_json = JSON.parse(data.json_lesson_list);
             let courses_from_json = JSON.parse(data.json_course_list);
+            let teacher_from_json = JSON.parse(data.json_teacher_list);
             for (let i = 0; i < courses_from_json.length; i++) {
                 let course_line = '<button id="course_' + courses_from_json[i]["pk"] + '" type="button" ' +
                     'class="collapsible" onclick="showCollapsible(this)">' + courses_from_json[i]["fields"]["name"] + '</button>'
                 let div_lessons = document.createElement('div');
                 div_lessons.setAttribute('class', 'content-coll')
                 for (let j = 0; j < lessons_from_json.length; j++) {
-                    if (lessons_from_json[j]["pk"].split("_")[0] === courses_from_json[j]["pk"]) {
+                    if (lessons_from_json[j]["pk"].split("_")[0] === courses_from_json[i]["pk"]) {
                         let line_checkbox = '<input type="checkbox" id="check-lesson_' +
                             lessons_from_json[j]["pk"] + '" value="' + lessons_from_json[j]["fields"]["teachers"] + '" onclick="showSaveButton(this)">'
                         let line_lable = '<label for="check-lesson_' + lessons_from_json[j]["pk"] + '">' +
-                            lessons_from_json[j]["fields"]["teachers"] + '</label><br>'
+                            createLine(teacher_from_json, lessons_from_json[j]) + '</label><br>'
                         div_lessons.innerHTML += line_checkbox
                         div_lessons.innerHTML += line_lable
                     }
@@ -107,8 +112,19 @@ function showCollapsible(coll) {
     coll.classList.toggle("active-coll");
     var content = coll.nextElementSibling;
     if (content.style.display === "block") {
-      content.style.display = "none";
+        content.style.display = "none";
     } else {
-      content.style.display = "block";
+        content.style.display = "block";
     }
+}
+
+function createLine(teachers, lesson) {
+    let teacher_name = "";
+    Object.keys(teachers).forEach(function (key) {
+        let value = teachers[key];
+        if (lesson["fields"]["teachers"].includes(value["pk"]) === true) {
+            teacher_name += value["fields"]["name"];
+        }
+    });
+    return "מרצה/מתרגל:" + teacher_name;
 }
