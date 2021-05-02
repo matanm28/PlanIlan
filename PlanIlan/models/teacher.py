@@ -8,8 +8,8 @@ from PlanIlan.storage import OverwriteStorage
 
 
 def user_directory_path(instance: 'Teacher', filename: str):
-    # file will be uploaded to MEDIA_ROOT/"<title> <full_name>"/<id>/"profile_pic.<extension>"
-    return fr'{instance.name}\profile.{filename.split(".")[-1]}'
+    # file will be uploaded to MEDIA_ROOT/teachers/<name>/profile_pic.<extension>
+    return fr'teachers\{instance.name}\profile.{filename.split(".")[-1]}'
 
 
 overwrite_storage = OverwriteStorage()

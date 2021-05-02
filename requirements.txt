@@ -16,3 +16,4 @@ email-validator
 aiohttp
 django-admin-multiple-choice-list-filter
 django-polymorphic
+django-debug-toolbar

@@ -42,16 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'widget_tweaks',
     'django_admin_multiple_choice_list_filter',
-
     'polymorphic',
-
     'rest_framework',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -215,3 +214,8 @@ EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 # MEDIA Configurations
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# used by debug-toolbar
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
