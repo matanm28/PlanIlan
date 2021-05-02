@@ -1,16 +1,21 @@
 from django.contrib import admin
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Avg
 from django.utils.translation import gettext_lazy as _
 from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
+from polymorphic.admin import PolymorphicChildModelAdmin, PolymorphicParentModelAdmin, PolymorphicChildModelFilter
 
 from .models import *
 
+
 # Register your models here.
 
-admin.site.register(User)
-admin.site.register(CoursePost)
-admin.site.register(TeacherPost)
-admin.site.register(Rating)
+
+class FacultyListFilter(MultipleChoiceListFilter):
+    title = _('Faculty')
+    parameter_name = 'faculty__in'
+
+    def lookups(self, request, model_admin: admin.ModelAdmin):
+        return FacultyEnum.choices
 
 
 class LessonTypeListFilter(MultipleChoiceListFilter):
@@ -70,6 +75,7 @@ class LessonHasSyllabusLinkFilter(admin.SimpleListFilter):
 class LessonAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'group', 'lesson_type', 'points', 'has_syllabus_link', 'has_details_link')
     sortable_by = ('name', 'group', 'lesson_type', 'points')
+    search_fields = ('course__name', 'course__code', 'group', 'lesson_type__label')
     list_filter = (LessonTypeListFilter, LessonDayListFilter, LessonHasSyllabusLinkFilter, LessonHasDetailsLinkFilter)
 
     @admin.display(description='Has Details', boolean=True)
@@ -84,7 +90,8 @@ class LessonAdmin(admin.ModelAdmin):
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'department', 'faculty', 'has_syllabus_link', 'rating_field')
-    sortable_by = ('pk', 'name', 'code', 'department', 'faculty', 'has_syllabus_link', 'rating')
+    sortable_by = ('name', 'code', 'department', 'faculty', 'has_syllabus_link', 'rating')
+    search_fields = ('name', 'code', 'department__label', 'faculty__label')
     exclude = ('exams', 'rating')
     list_filter = ('faculty',)
 
@@ -93,16 +100,16 @@ class CourseAdmin(admin.ModelAdmin):
         return obj.syllabus_link is not None
 
     @admin.display(description='Rating', empty_value='-Not-Rated-')
-    def rating_field(self, obj: Course) -> Rating:
-        return obj.rating
+    def rating_field(self, obj: Course) -> float:
+        return obj.ratings.aggregate(average_value=Avg('value'))['average_value']
 
 
 @admin.register(Exam)
 class ExamAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'exam_date', 'exam_time', 'period', 'number_of_courses')
-    sortable_by = ('pk',)
+    list_display = ('id', 'exam_date', 'exam_time', 'period', 'number_of_courses')
+    sortable_by = ('id', 'exam_date',)
     list_filter = ('period',)
-    ordering = ['pk']
+    ordering = ['id']
 
     @admin.display(description='Number of Courses')
     def number_of_courses(self, obj: Exam) -> int:
@@ -119,8 +126,9 @@ class ExamAdmin(admin.ModelAdmin):
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'building_name', 'building_number', 'class_number', 'is_online_location', 'lessons_in_location')
-    sortable_by = ('pk', 'building_name', 'building_number', 'class_number')
+    list_display = ('id', 'building_name', 'building_number', 'class_number', 'is_online_location', 'lessons_in_location')
+    sortable_by = ('id', 'building_name', 'building_number', 'class_number')
+    search_fields = ('building_name', 'building_number', 'class_number')
     ordering = ['building_number', 'class_number']
 
     @admin.display(description='Online', boolean=True)
@@ -134,8 +142,8 @@ class LocationAdmin(admin.ModelAdmin):
 
 @admin.register(LessonTime)
 class LessonTimeAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'day', 'start_time', 'end_time', 'semester', 'year', 'lessons_using_time')
-    sortable_by = ('pk', 'day', 'start_time', 'end_time', 'semester', 'year')
+    list_display = ('id', 'day', 'start_time', 'end_time', 'semester', 'year', 'lessons_using_time')
+    sortable_by = ('id', 'day', 'start_time', 'end_time', 'semester', 'year')
     list_filter = ('day', 'semester')
     ordering = ['day', 'start_time', 'end_time', 'year']
 
@@ -146,10 +154,15 @@ class LessonTimeAdmin(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'title', 'faculty', 'phone', 'email', 'office', 'website_url', 'rating')
-    sortable_by = ('pk', 'name', 'title', 'faculty')
-    list_filter = ('title', 'faculty')
-    ordering = ('name', 'faculty', 'pk')
+    list_display = ('id', 'name', 'title', 'faculty', 'phone', 'email', 'office', 'website_url', 'rating_field')
+    sortable_by = ('id', 'name', 'title', 'faculty')
+    search_fields = ('name', 'faculty__label')
+    list_filter = ('title', FacultyListFilter)
+    ordering = ('name', 'faculty', 'id')
+
+    @admin.display(description='Rating', empty_value='-Not-Rated-')
+    def rating_field(self, obj: Teacher) -> Rating:
+        return obj.ratings.aggregate(average_value=Avg('value'))['average_value']
 
 
 # Enums
@@ -160,5 +173,73 @@ class EnumAdmin(admin.ModelAdmin):
 
 
 @admin.register(Day)
-class DayAdmin(admin.ModelAdmin):
+class DayAdmin(EnumAdmin):
     list_display = ('number', 'label', 'full_label')
+
+
+class ReviewChildAdmin(PolymorphicChildModelAdmin):
+    base_model = Review
+    list_display = ('id', 'author', 'headline', 'slug', 'date_created', 'date_modified', 'likes_count')
+    sortable_by = ('id', 'date_created', 'date_modified')
+    search_fields = ('author__username', 'headline')
+    ordering = ('date_modified', 'date_created')
+
+    @admin.display(description='likes')
+    def likes_count(self, obj: Review) -> int:
+        return obj.likes.count()
+
+
+@admin.register(CourseReview)
+class CourseReviewAdmin(ReviewChildAdmin):
+    base_model = CourseReview
+
+
+@admin.register(TeacherReview)
+class TeacherReviewAdmin(ReviewChildAdmin):
+    base_model = TeacherReview
+
+
+@admin.register(Review)
+class ReviewAdmin(PolymorphicParentModelAdmin):
+    base_model = Review
+    child_models = (CourseReview, TeacherReview)
+    list_filter = (PolymorphicChildModelFilter,)
+
+
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'first_name', 'last_name', 'email', 'faculty', 'date_joined', 'last_login')
+    sortable_by = ('id', 'faculty',)
+    ordering = ('user__date_joined', 'user__last_login')
+    list_filter = (FacultyListFilter,)
+
+
+@admin.register(Reply)
+class ReplyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'review_id', 'date_created', 'date_modified')
+    sortable_by = ('id', 'date_created', 'date_modified')
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'text')
+    ordering = ('date_modified', 'date_created')
+
+    @admin.display(description='review id')
+    def review_id(self, obj: Reply) -> int:
+        return obj.review.pk
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_id', 'review_id')
+
+    @admin.display(description='user id')
+    def user_id(self, obj: Like) -> int:
+        return obj.user.pk
+
+    @admin.display(description='review id')
+    def review_id(self, obj: Like) -> int:
+        return obj.review.pk
+
+
+@admin.register(TeacherRating, CourseRating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'value')
+    sortable_by = ('id', 'user', 'value')

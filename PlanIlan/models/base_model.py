@@ -29,8 +29,14 @@ class BaseModel(models.Model):
 
     # todo: change to send less args
     @classmethod
-    def log_created(cls, type_name: str, id_str: str, created: bool):
+    def log_created(cls, obj: 'BaseModel', created: bool):
         if not created:
             return
-        logging.info(f'{type_name} instance created with id: {id_str}')
+        logging.info(f'{type(obj).__name__} instance created with id: {obj.pk}')
 
+    def __repr__(self):
+        fields = self._meta.fields
+        fields_str = []
+        for field in fields:
+            fields_str.append(f'{field.attname}: {getattr(self, field.attname)}')
+        return ', '.join(fields_str)

@@ -42,9 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+
     'widget_tweaks',
     'django_admin_multiple_choice_list_filter',
+
+    'polymorphic',
+
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

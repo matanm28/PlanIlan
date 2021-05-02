@@ -2,9 +2,10 @@ import logging
 from typing import List
 
 from django.db import models
+from django.db.models import Avg
 
 from PlanIlan.exceptaions.enum_not_exist_error import EnumNotExistError
-from PlanIlan.models import BaseModel, LessonTime, Location, Teacher, Rating, LessonTypeEnum, Exam
+from PlanIlan.models import BaseModel, LessonTime, Location, Teacher, LessonTypeEnum, Exam
 from PlanIlan.models.enums import Department, Faculty, LessonType
 
 
@@ -14,7 +15,6 @@ class Course(BaseModel):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='courses')
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='courses')
     syllabus_link = models.URLField(null=True)
-    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, null=True, related_name='course')
     exams = models.ManyToManyField(Exam, related_name='courses')
 
     class Meta:
@@ -37,10 +37,10 @@ class Course(BaseModel):
                                                            'name': name,
                                                            'syllabus_link': syllabus_link,
                                                            'department': department,
-                                                           'faculty': faculty,
-                                                           'rating': Rating.create})
+                                                           'faculty': faculty
+                                                       })
         course.exams.set(exams)
-        cls.log_created(cls.__name__, course.pk, created)
+        cls.log_created(course, created)
         if not created and not course.syllabus_link and syllabus_link:
             course.syllabus_link = syllabus_link
             course.save()
@@ -48,6 +48,18 @@ class Course(BaseModel):
 
     def get_lessons(self):
         return self.lessons.all()
+
+    @property
+    def slug(self):
+        return self.code
+
+    @property
+    def average_rating(self) -> float:
+        return self.ratings.aggregate(average_value=Avg('value'))['average_value']
+
+    @property
+    def amount_of_ratings(self) -> int:
+        return self.ratings.count()
 
     def __str__(self):
         return f'{self.name} ({self.code})'

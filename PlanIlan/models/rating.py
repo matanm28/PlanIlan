@@ -1,7 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from PlanIlan.models import BaseModel
+from PlanIlan.models import BaseModel, Account, Course, Teacher
 
 MIN_RATING, MAX_RATING = 0, 5
 VALIDATORS = [MinValueValidator(MIN_RATING, f'Value should not fall short of {MIN_RATING}'),
@@ -9,24 +9,43 @@ VALIDATORS = [MinValueValidator(MIN_RATING, f'Value should not fall short of {MI
 
 
 class Rating(BaseModel):
-    average = models.FloatField(null=True, default=None, validators=VALIDATORS)
-    amount_of_raters = models.IntegerField(default=0,
-                                           validators=[MinValueValidator(0, f'amount of raters should be a natural number')])
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    value = models.PositiveSmallIntegerField(validators=VALIDATORS)
 
-    @classmethod
-    def create(cls, average: float = None, amount_of_raters: int = 0) -> 'Rating':
-        rating = Rating(average=average, amount_of_raters=amount_of_raters)
-        rating.save()
-        return rating
+    class Meta:
+        ordering = ['value']
+        abstract = True
 
-    def update_rating(self, new_rating: int, save=True):
-        if self.amount_of_raters == 0:
-            self.average = new_rating
-        else:
-            self.average = ((self.average * self.amount_of_raters) + new_rating) / (self.amount_of_raters + 1)
-        self.amount_of_raters += 1
-        if save:
-            self.save()
+    def edit_rating(self, edited_value: int = None) -> bool:
+        if edited_value is None:
+            return False
+        self.value = edited_value
+        self.save()
+        return True
 
     def __str__(self) -> str:
-        return f'{self.average}({self.amount_of_raters})' if self.average is not None else 'No Rating'
+        return f'{self.value}'
+
+
+class TeacherRating(Rating):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='ratings')
+
+    @classmethod
+    def create(cls, user: Account, value: int, teacher: Teacher) -> 'Rating':
+        created, rating = TeacherRating.objects.get_or_create(user=user, teacher=teacher, defaults={'value': value})
+        cls.log_created(rating, created)
+        if not created:
+            rating.edit_rating(value)
+        return rating
+
+
+class CourseRating(Rating):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='ratings')
+
+    @classmethod
+    def create(cls, user: Account, value: int, course: Course) -> 'Rating':
+        rating, created = CourseRating.objects.get_or_create(user=user, course=course, defaults={'value': value})
+        cls.log_created(rating, created)
+        if not created:
+            rating.edit_rating(value)
+        return rating

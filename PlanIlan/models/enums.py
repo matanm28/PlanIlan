@@ -123,7 +123,7 @@ class Day(EnumModel):
     def create(cls, number: int) -> 'Day':
         enum = cls._get_enum_from_int(number)
         instance, created = Day.objects.get_or_create(number=enum.value, label=enum.label)
-        cls.log_created(cls.__name__, instance.pk, created)
+        cls.log_created(instance, created)
         return instance
 
     @property
@@ -229,7 +229,7 @@ class Department(EnumModel):
     def create(cls, number: int) -> 'Department':
         enum = cls._get_enum_from_int(number)
         instance, created = Department.objects.get_or_create(number=enum.value, label=enum.label)
-        cls.log_created(cls.__name__, instance.pk, created)
+        cls.log_created(instance, created)
         return instance
 
 
@@ -266,8 +266,12 @@ class Faculty(EnumModel):
     def create(cls, number: int) -> 'Faculty':
         enum = cls._get_enum_from_int(number)
         instance, created = Faculty.objects.get_or_create(number=enum.value, label=enum.label)
-        cls.log_created(cls.__name__, instance.pk, created)
+        cls.log_created(instance, created)
         return instance
+
+    @classmethod
+    def forms_queryset(cls):
+        return Faculty.objects.exclude(pk=FacultyEnum.UNKNOWN)
 
 
 class SemesterEnum(LabeledIntegerEnum):
@@ -293,7 +297,7 @@ class Semester(EnumModel):
     def create(cls, number: int) -> 'Semester':
         enum = cls._get_enum_from_int(number)
         instance, created = Semester.objects.get_or_create(number=enum.value, label=enum.label)
-        cls.log_created(cls.__name__, instance.pk, created)
+        cls.log_created(instance, created)
         return instance
 
 
@@ -323,7 +327,7 @@ class ExamPeriod(EnumModel):
     def create(cls, number: int) -> 'ExamPeriod':
         enum = cls._get_enum_from_int(number)
         instance, created = ExamPeriod.objects.get_or_create(number=enum.value, label=enum.label)
-        cls.log_created(cls.__name__, instance.pk, created)
+        cls.log_created(instance, created)
         return instance
 
 
@@ -372,7 +376,7 @@ class LessonType(EnumModel):
     def create(cls, number: int) -> 'LessonType':
         enum = cls._get_enum_from_int(number)
         instance, created = LessonType.objects.get_or_create(number=enum.value, label=enum.label)
-        cls.log_created(cls.__name__, instance.pk, created)
+        cls.log_created(instance, created)
         return instance
 
 
@@ -399,7 +403,7 @@ class Title(EnumModel):
     def create(cls, number: int) -> 'Title':
         enum = cls._get_enum_from_int(number)
         instance, created = Title.objects.get_or_create(number=enum.value, label=enum.label)
-        cls.log_created(cls.__name__, instance.pk, created)
+        cls.log_created(instance, created)
         return instance
 
 

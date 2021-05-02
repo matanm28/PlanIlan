@@ -30,7 +30,7 @@
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
                             </div>
-                            {{ form.email }}
+                            {{ account_form.email }}
                         </div>
                         <div class="input-group mb-2">
                             <div class="input-group-append">
@@ -60,7 +60,7 @@
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-book"></i></span>
                             </div>
-                            <input type="text" name="faculty" placeholder="Faculty..." class="form-control">
+                            {{ account_form.faculty }}
                         </div>
                         <div class="d-flex justify-content-center mt-3 login_container">
                             <input class="btn login_btn" type="submit" value="Register Account">

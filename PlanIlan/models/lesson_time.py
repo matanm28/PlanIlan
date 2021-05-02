@@ -23,7 +23,7 @@ class LessonTime(BaseModel):
         lesson_time, created = LessonTime.objects.get_or_create(day=day, start_time=start_time,
                                                                 end_time=end_time, semester=semester,
                                                                 year=year)
-        cls.log_created(cls.__name__, lesson_time.id, created)
+        cls.log_created(lesson_time, created)
         return lesson_time
 
     @property

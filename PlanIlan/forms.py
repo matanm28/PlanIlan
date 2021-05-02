@@ -1,13 +1,19 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import User
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User as DjangoUser
+
+from PlanIlan.models import Faculty, Account
 
 
-class CreateUserForm(UserCreationForm):
-    faculty = forms.CharField(required=True, label='Faculty')
-    first_name = forms.CharField(required=True, label='First Name')
-    last_name = forms.CharField(required=True, label='Last Name')
+class CreateDjangoUserForm(UserCreationForm):
+    class Meta:
+        model = DjangoUser
+        fields = ['username', 'password1', 'password2', 'first_name', 'last_name']
+
+
+class CreateAccountForm(forms.ModelForm):
+    faculty = forms.ModelChoiceField(queryset=Faculty.objects, required=True, label='Faculty', to_field_name='label')
 
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'faculty']
+        model = Account
+        fields = ['faculty', 'email']
