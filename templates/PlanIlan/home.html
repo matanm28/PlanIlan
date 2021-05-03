@@ -1,13 +1,5 @@
 {% extends 'PlanIlan/base.html' %}
-{% block title %}דף הבית{% endblock %}
-
-{% block content %}
-    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-    {#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>#}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+{% block css_block %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -56,6 +48,19 @@
         }
 
     </style>
+{% endblock %}
+{% block js_block %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'PlanIlan/js/csrf_token_script.js' %}"></script>
+    <script type="text/javascript" src="{% static 'PlanIlan/js/rating.js' %}"></script>
+    <script type="text/javascript" src="{% static 'PlanIlan/js/comment_likes.js' %}"></script>
+{% endblock %}
+{% block title %}דף הבית{% endblock %}
+{% block content %}
     <h1>ברוכים הבאים לאתר הסטודנטים של בר-אילן</h1>
     <!-- Button trigger modal -->
     <div class="container sectional-wrapper">
@@ -190,10 +195,4 @@
             </div>
 
         {% endfor %}
-{% endblock %}
-{% block js_block %}
-    {% load static %}
-    <script type="text/javascript" src="{% static 'PlanIlan/js/csrf_token_script.js' %}"></script>
-    <script type="text/javascript" src="{% static 'PlanIlan/js/rating.js' %}"></script>
-    <script type="text/javascript" src="{% static 'PlanIlan/js/comment_likes.js' %}"></script>
 {% endblock %}
