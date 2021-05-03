@@ -8,7 +8,7 @@ from PlanIlan.models import Faculty, Account
 class CreateDjangoUserForm(UserCreationForm):
     class Meta:
         model = DjangoUser
-        fields = ['username', 'password1', 'password2', 'first_name', 'last_name']
+        fields = ['username', 'password1', 'password2', 'first_name', 'last_name', 'email']
 
 
 class CreateAccountForm(forms.ModelForm):
