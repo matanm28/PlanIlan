@@ -1,20 +1,25 @@
 {% extends 'PlanIlan/base.html' %}
 {% load widget_tweaks %}
-{% block title %}חיפוש{% endblock %}
-
-{% block content %}
+{% block css_block %}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
           integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet"
           href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
     {% load static %}
     <link rel="stylesheet" href="{% static 'PlanIlan/css/search_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'PlanIlan/css/scrollbar_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'PlanIlan/css/button_style.css' %}"/>
+{% endblock %}
+{% block js_block %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'PlanIlan/js/search.js' %}"></script>
+{% endblock %}
+{% block title %}חיפוש{% endblock %}
+{% block content %}
     <div class="container">
         <div class="sidenav" id="search_box">
             <a href="javascript:void(0)" class="closebtn" onclick="closeSearchBox()"
@@ -79,7 +84,8 @@
                 <div class="scrollbar scrollbar-primary">
                     {% if 'form-search-course' in request.GET %}
                         {% for course in courses %}
-                            <button class="btn class_btn" onclick="chosenCourse()">{{ course.name }}<br>{{ course.code }}</button>
+                            <button class="btn class_btn"
+                                    onclick="chosenCourse()">{{ course.name }}<br>{{ course.code }}</button>
                         {% endfor %}
                     {% endif %}
                     {% if 'form-search-teacher' in request.GET %}
@@ -94,8 +100,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-{% block js_block %}
-    {% load static %}
-    <script type="text/javascript" src="{% static 'PlanIlan/js/search.js' %}"></script>
 {% endblock %}
