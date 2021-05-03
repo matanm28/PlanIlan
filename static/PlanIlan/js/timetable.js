@@ -64,12 +64,13 @@ function DepChange() {
         type: 'GET',
         data: data,
         success: function (data) {
-            wait_msg.style.display = "block";
+            wait_msg.style.display = "none";
             let options_div = document.getElementById("options");
             options_div.innerHTML = '';
             let lessons_from_json = JSON.parse(data.json_lesson_list);
             let courses_from_json = JSON.parse(data.json_course_list);
             let teacher_from_json = JSON.parse(data.json_teacher_list);
+            let session_time_from_json = JSON.parse(data.json_session_list);
             for (let i = 0; i < courses_from_json.length; i++) {
                 let course_line = '<button id="course_' + courses_from_json[i]["pk"] + '" type="button" ' +
                     'class="collapsible" onclick="showCollapsible(this)">' + courses_from_json[i]["fields"]["name"] + '</button>'
@@ -80,7 +81,7 @@ function DepChange() {
                         let line_checkbox = '<input type="checkbox" id="check-lesson_' +
                             lessons_from_json[j]["pk"] + '" value="' + lessons_from_json[j]["fields"]["teachers"] + '" onclick="showSaveButton(this)">'
                         let line_lable = '<label for="check-lesson_' + lessons_from_json[j]["pk"] + '">' +
-                            createLine(teacher_from_json, lessons_from_json[j]) + '</label><br>'
+                            createLine(teacher_from_json, lessons_from_json[j], session_time_from_json) + '</label><br>'
                         div_lessons.innerHTML += line_checkbox
                         div_lessons.innerHTML += line_lable
                     }
@@ -118,13 +119,28 @@ function showCollapsible(coll) {
     }
 }
 
-function createLine(teachers, lesson) {
+function createLine(teachers, lesson, session_times) {
     let teacher_name = "";
+    let day = "";
+    let semester = "";
+    let start_hour = "";
+    let end_hour = "";
     Object.keys(teachers).forEach(function (key) {
         let value = teachers[key];
         if (lesson["fields"]["teachers"].includes(value["pk"]) === true) {
             teacher_name += value["fields"]["name"];
         }
     });
-    return "מרצה/מתרגל:" + teacher_name;
+    Object.keys(session_times).forEach(function (key) {
+        let DAYS = [null, 'ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי']
+        let SEMESTERS = [null, 'סמסטר א', 'סמסטר ב', 'סמסטר ק', 'שנתי']
+        let value = session_times[key];
+        if (lesson["fields"]["session_times"].includes(value["pk"]) === true) {
+            day += DAYS[parseInt(value["fields"]["day"])];
+            semester += SEMESTERS[parseInt(value["fields"]["semester"])];
+            start_hour += value["fields"]["start_time"];
+            end_hour += value["fields"]["end_time"];
+        }
+    });
+    return "מרצה/מתרגל:" + teacher_name + ", " + semester + ",יום " + day + ",שעת התחלה: " + start_hour + ",שעת סיום: " + end_hour;
 }
