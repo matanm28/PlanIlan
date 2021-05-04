@@ -34,22 +34,58 @@
                     <form method="get">
                         {% csrf_token %}
                         <div class="field">
-                            <label>Department</label>
+                            <label>מחלקה</label>
                             <div class="control">
-                                {% render_field course_filter.form.department class="selectpicker" data-show-subtext="true" data-live-search="true" %}
+                                {% render_field lesson_filter.form.department class="selectpicker" data-show-subtext="true" data-live-search="true" %}
                             </div>
                         </div>
                         <div class="field">
-                            <label>Course name</label>
+                            <label>שם הקורס</label>
                             <div class="control">
-                                {% render_field course_filter.form.name class="input" placeholder="Enter name here" %}
+                                {% render_field lesson_filter.form.name class="input" placeholder="Enter name here" %}
+                            </div>
+                        </div>
+{#                        <div class="field">#}
+{#                            <label>דירוג בין:</label>#}
+{#                            {% render_field lesson_filter.form.rating_from %}#}
+{#                            <label>לבין:</label>#}
+{#                            {% render_field lesson_filter.form.rating_to %}#}
+{#                        </div>#}
+                        <div class="field">
+                            <label>שעת התחלה:</label>
+                            {% render_field lesson_filter.form.start_time type="time" %}
+                            <label>שעת סיום:</label>
+                            {% render_field lesson_filter.form.end_time type="time" %}
+                        </div>
+                        <div class="field">
+                            <label>קורס אונליין:</label>
+                            <div class="control">
+                                {% render_field lesson_filter.form.online %}
                             </div>
                         </div>
                         <div class="field">
-                            <label>Rating Between:</label>
-                            {% render_field course_filter.form.rating_from %}
-                            <label>And:</label>
-                            {% render_field course_filter.form.rating_to %}
+                            <label>יום:</label>
+                            <div class="control">
+                                {% render_field lesson_filter.form.day %}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>סמסטר:</label>
+                            <div class="control">
+                                {% render_field lesson_filter.form.semester %}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>סוג השיעור:</label>
+                            <div class="control">
+                                {% render_field lesson_filter.form.session_type %}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>סגל:</label>
+                            <div class="control">
+                                {% render_field lesson_filter.form.teachers %}
+                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit" name="form-search-course">חפש</button>
                         <a href="{% url 'search' %}" style="float: left">ניקוי</a>
@@ -60,16 +96,23 @@
                     <form method="get">
                         {% csrf_token %}
                         <div class="field">
-                            <label>Teacher Name</label>
+                            <label>שם המרצה/מתרגל:</label>
                             <div class="control">
                                 {% render_field teacher_filter.form.name %}
                             </div>
                         </div>
+{#                        <div class="field">#}
+{#                            <label>דירוג בין:</label>#}
+{#                            {% render_field teacher_filter.form.rating_from %}#}
+{#                            <label>לבין:</label>#}
+{#                            {% render_field teacher_filter.form.rating_to %}#}
+{#                        </div>#}
                         <div class="field">
-                            <label>Rating Between:</label>
-                            {% render_field teacher_filter.form.rating_from %}
-                            <label>And:</label>
-                            {% render_field teacher_filter.form.rating_to %}
+                            <div class="control">
+                                <label>מחלקה:
+                                    {% render_field teacher_filter.form.faculty %}
+                                </label>
+                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit" name="form-search-teacher">חפש</button>
                         <a href="{% url 'search' %}" style="float: left">ניקוי</a>
