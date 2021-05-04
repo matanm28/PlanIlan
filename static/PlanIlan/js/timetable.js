@@ -2,13 +2,19 @@ const mandatory_courses = []
 const elective_courses = []
 // Because used by 2 functions
 let wait_msg = document.getElementById("wait-msg");
+// For accessing the lessons from everywhere
+let lessons_from_json = "";
+let courses_from_json = "";
+let teacher_from_json = "";
+let session_time_from_json = "";
+let name = document.getElementById("group-name");
+let x = document.getElementById("selected-option");
+let buttn = document.getElementById("submit_prog");
 
 function create_groups() {
-    let x = document.getElementById("selected-option");
     let i = x.selectedIndex;
     let selected_option = x.options[i].text;
     let wrapper = document.getElementById("wrapper-div");
-    let name = document.getElementById("group-name");
     let div_name = name.value + '-' + selected_option;
     let div_result = document.createElement('div');
     div_result.setAttribute('id', "div-group_" + div_name);
@@ -17,6 +23,9 @@ function create_groups() {
     let remove = '<button class="fas fa-trash close-btn-groups" onclick="removeGroup(this)" id="remove-group_'
         + div_name + '"></button>'
     div_result.innerHTML += remove;
+    let selected_courses = document.createElement('ul');
+    selected_courses.setAttribute('id', "selected-courses_" + div_name);
+    div_result.append(selected_courses)
     let create_course_btn = '<br><button class="button btn-primary" id="btn-modal_' + div_name +
         '" onclick="openModal(this)">הוסף קורסים</button>';
     div_result.innerHTML += create_course_btn;
@@ -64,13 +73,14 @@ function DepChange() {
         type: 'GET',
         data: data,
         success: function (data) {
+            buttn.style.display = "none";
             wait_msg.style.display = "none";
             let options_div = document.getElementById("options");
             options_div.innerHTML = '';
-            let lessons_from_json = JSON.parse(data.json_lesson_list);
-            let courses_from_json = JSON.parse(data.json_course_list);
-            let teacher_from_json = JSON.parse(data.json_teacher_list);
-            let session_time_from_json = JSON.parse(data.json_session_list);
+            lessons_from_json = JSON.parse(data.json_lesson_list);
+            courses_from_json = JSON.parse(data.json_course_list);
+            teacher_from_json = JSON.parse(data.json_teacher_list);
+            session_time_from_json = JSON.parse(data.json_session_list);
             for (let i = 0; i < courses_from_json.length; i++) {
                 let course_line = '<button id="course_' + courses_from_json[i]["pk"] + '" type="button" ' +
                     'class="collapsible" onclick="showCollapsible(this)">' + courses_from_json[i]["fields"]["name"] + '</button>'
@@ -78,10 +88,11 @@ function DepChange() {
                 div_lessons.setAttribute('class', 'content-coll')
                 for (let j = 0; j < lessons_from_json.length; j++) {
                     if (lessons_from_json[j]["pk"].split("_")[0] === courses_from_json[i]["pk"]) {
+                        let checkbox_info = createLine(teacher_from_json, lessons_from_json[j], session_time_from_json)
                         let line_checkbox = '<input type="checkbox" id="check-lesson_' +
-                            lessons_from_json[j]["pk"] + '" value="' + lessons_from_json[j]["fields"]["teachers"] + '" onclick="showSaveButton(this)">'
+                            lessons_from_json[j]["pk"] + '" value="' + lessons_from_json[j]["pk"] + '" onclick="showSaveButton(this)">'
                         let line_lable = '<label for="check-lesson_' + lessons_from_json[j]["pk"] + '">' +
-                            createLine(teacher_from_json, lessons_from_json[j], session_time_from_json) + '</label><br>'
+                            checkbox_info + '</label><br>'
                         div_lessons.innerHTML += line_checkbox
                         div_lessons.innerHTML += line_lable
                     }
@@ -98,7 +109,6 @@ function DepChange() {
 }
 
 function showSaveButton(checkbox) {
-    let buttn = document.getElementById("submit_prog");
     if (checkbox.checked === true) {
         buttn.style.display = "block";
     } else {
@@ -119,12 +129,13 @@ function showCollapsible(coll) {
     }
 }
 
+let teacher_name = "";
+let day = "";
+let semester = "";
+let start_hour = "";
+let end_hour = "";
+
 function createLine(teachers, lesson, session_times) {
-    let teacher_name = "";
-    let day = "";
-    let semester = "";
-    let start_hour = "";
-    let end_hour = "";
     Object.keys(teachers).forEach(function (key) {
         let value = teachers[key];
         if (lesson["fields"]["teachers"].includes(value["pk"]) === true) {
@@ -143,4 +154,46 @@ function createLine(teachers, lesson, session_times) {
         }
     });
     return "מרצה/מתרגל:" + teacher_name + ", " + semester + ",יום " + day + ",שעת התחלה: " + start_hour + ",שעת סיום: " + end_hour;
+}
+
+$('#submit_prog').on("click", function () {
+    modal.style.display = "none";
+    let i = x.selectedIndex;
+    let selected_option = x.options[i].text;
+    let checked_boxes = $('#options input:checked');
+    Array.from(checked_boxes).forEach(function (checkbox) {
+        let lesson_pk = checkbox.value;
+        if (mandatory_courses.includes(lesson_pk.split("_")[0]) || elective_courses.includes(lesson_pk.split("_")[0])) {
+            return;
+        }
+        if (selected_option === "חובה") {
+            mandatory_courses.push(lesson_pk.split("_")[0])
+        } else {
+            elective_courses.push(lesson_pk.split("_")[0])
+        }
+    });
+    addLessonsToDiv(selected_option);
+});
+
+function addLessonsToDiv(selected_option) {
+    let group_name = name.value + '-' + selected_option;
+    let list = document.getElementById("selected-courses_" + group_name);
+    list.innerHTML = "";
+    if (selected_option === "חובה") {
+        mandatory_courses.forEach(function (course) {
+            let list_line = '<li>'
+            Object.keys(courses_from_json).forEach(function (key) {
+                let value = courses_from_json[key];
+                if (course === value["pk"]) {
+                    list_line += value["fields"]["name"]
+                }
+            });
+            list_line += '</li>'
+            list.innerHTML += list_line;
+        });
+    } else {
+        elective_courses.forEach(function (course) {
+
+        });
+    }
 }
