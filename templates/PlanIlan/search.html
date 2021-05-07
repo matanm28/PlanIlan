@@ -1,20 +1,15 @@
 {% extends 'PlanIlan/base.html' %}
 {% load widget_tweaks %}
 {% block css_block %}
-
-{#    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">#}
-{#    <link rel="stylesheet"#}
-{#          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css"/>#}
     {% load static %}
     <link rel="stylesheet" href="{% static 'PlanIlan/css/search_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'PlanIlan/css/scrollbar_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'PlanIlan/css/button_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
     {% load static %}
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery-ui/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'PlanIlan/js/search.js' %}"></script>
 {% endblock %}
 {% block title %}חיפוש{% endblock %}
