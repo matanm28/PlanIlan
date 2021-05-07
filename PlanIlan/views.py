@@ -49,11 +49,6 @@ def home(request):
     context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
                'teacher_comments': teacher_comments}
     if request.method == 'GET':
-        # courses_obj = [Course.objects.get(code="76786"), Course.objects.get(code="77837")]
-        # teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
-        # teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="יורם לוזון"), Teacher.objects.get(name="גיל אריאל")]
-        context = {'staff': teachers_obj,
-                   'courses': courses_obj}
         return render(request, 'PlanIlan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
@@ -62,7 +57,6 @@ def home(request):
             teacher_post.save()
             return render(request, 'PlanIlan/home.html', context)
         elif request.POST.get('Rating_course_ID', ''):
-            print(request.POST.get('rate_number'))
             course_id = Lesson.objects.get(id=request.POST.get('Rating_course_ID', ''))
             course_id.course.rating.update_rating(int(request.POST.get('rate_number', '')))
     return render(request, 'PlanIlan/home.html')
