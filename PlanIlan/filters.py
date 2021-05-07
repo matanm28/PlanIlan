@@ -13,15 +13,6 @@ RATING_CHOICES = [
     (5, '5')
 ]
 
-DAYS = [
-    ('ראשון', 1),
-    ('שני', 2),
-    ('שלישי', 3),
-    ('רביעי', 4),
-    ('חמישי', 5),
-    ('שישי', 6)
-]
-
 
 class CourseInstanceFilter(django_filters.FilterSet):
     department = ChoiceFilter(field_name='course__department', choices=DepartmentEnum.choices)
@@ -30,7 +21,7 @@ class CourseInstanceFilter(django_filters.FilterSet):
     start_time = TimeFilter(field_name='session_times__start_time', lookup_expr='gt')
     end_time = TimeFilter(field_name='session_times__end_time', lookup_expr='lt')
     teachers = CharFilter(field_name='teachers__name', lookup_expr='icontains')
-    day = MultipleChoiceFilter(field_name='session_times__day', choices=DAYS,
+    day = MultipleChoiceFilter(field_name='session_times__day', choices=DAYS.choices,
                                widget=forms.SelectMultiple(attrs={"class": "form-control"}))
     semester = MultipleChoiceFilter(field_name='session_times__semester', choices=SemesterEnum.choices,
                                     widget=forms.SelectMultiple(attrs={"class": "form-control"}))

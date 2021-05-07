@@ -35,7 +35,7 @@
                         <div class="field">
                             <label>מחלקה</label>
                             <div class="control">
-                                {% render_field lesson_filter.form.department class="selectpicker" data-show-subtext="true" data-live-search="true" %}
+                                {% render_field lesson_filter.form.department %}
                             </div>
                         </div>
                         <div class="field">
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label>סגל:</label>
+                            <label>שם המרצה\מתרגל:</label>
                             <div class="control">
                                 {% render_field lesson_filter.form.teachers %}
                             </div>
@@ -108,7 +108,7 @@
 {#                        </div>#}
                         <div class="field">
                             <div class="control">
-                                <label>מחלקה:
+                                <label>פקולטה:
                                     {% render_field teacher_filter.form.faculty %}
                                 </label>
                             </div>
