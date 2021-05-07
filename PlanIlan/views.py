@@ -16,15 +16,19 @@ from .models import *
 def search(request):
     if request.method == 'GET':
         # COURSE SEARCH ENGINE
-        courses = Course.objects.all()
-        course_filter = CourseFilter(request.GET, queryset=courses)
-        courses = course_filter.qs
+        lessons = Lesson.objects.all()
+        lesson_filter = CourseInstanceFilter(request.GET, queryset=lessons)
+        lessons = lesson_filter.qs
+        lessons_pk = list(map(lambda lesson: lesson.pk, lessons))
+        courses = Course.objects.filter(lessons__pk__in=lessons_pk).distinct()
         # TEACHER SEARCH ENGINE
         teachers = Teacher.objects.all()
         teacher_filter = TeacherInstanceFilter(request.GET, queryset=teachers)
         teachers = teacher_filter.qs
-        context = {'course_filter': course_filter, 'courses': courses,
-                   'teacher_filter': teacher_filter, 'teachers': teachers}
+
+        departments = Department.objects.all()
+        context = {'lesson_filter': lesson_filter, 'lessons': lessons, 'courses': courses,
+                   'teacher_filter': teacher_filter, 'teachers': teachers, 'departments': departments}
         return render(request, 'PlanIlan/search.html', context)
     return render(request, 'PlanIlan/search.html')
 
