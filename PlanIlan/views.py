@@ -40,21 +40,24 @@ def home(request):
     teachers_obj = [Teacher.objects.get(name="ארז שיינר"),
                     Teacher.objects.get(name="יורם לוזון")]
     # COURSES BEST RATING VIEW
-    # courses_obj = [Course.objects.get(name=""),
-    #                Course.objects.get(name="מבוא למדעי החיים")]
     courses_obj = [Course.objects.get(code="89550"), Course.objects.get(code="88218")]
-
     # LATEST COMMENTS
-    teacher_comments = TeacherReview.objects.all().order_by('date_modified')
+    teacher_comments = TeacherReview.objects.all().order_by('date_modified')[:5]
+    course_comments = CourseReview.objects.all().order_by('date_modified')[:5]
     context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
-               'teacher_comments': teacher_comments}
+               'teacher_comments': teacher_comments, 'course_comments': course_comments}
     if request.method == 'GET':
         return render(request, 'PlanIlan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
-            teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
-            teacher_post.amount_of_likes += int(request.POST.get('to_add', ''))
-            teacher_post.save()
+            if request.POST.get('type', '') == 'course':
+                course_post = CourseReview.objects.get(id=request.POST.get('PostID', ''))
+                course_post.like_review(Account.objects.get(user=request.user))
+                course_post.save()
+            else:
+                teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
+                teacher_post.like_review(request.user)
+                teacher_post.save()
             return render(request, 'PlanIlan/home.html', context)
         elif request.POST.get('Rating_course_ID', ''):
             course_id = Lesson.objects.get(id=request.POST.get('Rating_course_ID', ''))

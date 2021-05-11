@@ -22,7 +22,7 @@ class Review(PolymorphicModel, BaseModel):
 
     def like_review(self, user: Account) -> 'Like':
         query = self.likes.filter(user=user)
-        if not query.exsits():
+        if not query.exists():
             like = Like.create(user, self)
             return like
         return query.get()
