@@ -2,16 +2,16 @@
 {% load widget_tweaks %}
 {% block css_block %}
     {% load static %}
+    <link href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'PlanIlan/css/timetable_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     {% load static %}
+    <script type="text/javascript" src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery-ui/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'PlanIlan/js/csrf_token_script.js' %}" defer></script>
-    <script type="text/javascript" src="{% static 'PlanIlan/js/timetable.js' %}"defer></script>
+    <script type="text/javascript" src="{% static 'PlanIlan/js/timetable.js' %}" defer></script>
 {% endblock %}
 {% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
@@ -44,7 +44,7 @@
                     <label class="label">בחר קורסים</label>
                     <div id="options" class="result-div">
                     </div>
-                    <button class="button btn-primary add-courses" id="submit_prog" value='Submit' >הוסף
+                    <button class="button btn-primary add-courses" id="submit_prog" value='Submit'>הוסף
                     </button>
                 </div>
             </div>
