@@ -23,13 +23,13 @@ class Review(PolymorphicModel, BaseModel):
     def like_review(self, user: Account) -> 'Like':
         query = self.likes.filter(user=user)
         if not query.exists():
-            like = Like.create(user, self)
+            like = Like.objects.create(user=user, review=self)
             return like
         return query.get()
 
     def remove_like(self, user: Account) -> bool:
         query = self.likes.filter(user=user)
-        if query.exits():
+        if query.exists():
             try:
                 like = query.get()
                 like.delete()

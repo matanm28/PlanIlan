@@ -29,3 +29,20 @@ function changeHeart(pressed) {
     return false;
 }
 
+window.onload = function () {
+    $.ajax({
+        url: '/',
+        type: 'GET',
+        success: function (data) {
+            let likes_from_json = JSON.parse(data.json_likes_list);
+            for (let i = 0; i < likes_from_json.length; i++) {
+                let post = document.getElementById("heart_course_" + likes_from_json[i]["fields"]["review"]);
+                post.classList.add('red');
+            }
+        },
+        error: function (error) {
+            alert('error; ' + eval(error));
+        }
+    });
+}
+

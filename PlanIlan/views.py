@@ -47,12 +47,19 @@ def home(request):
     context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
                'teacher_comments': teacher_comments, 'course_comments': course_comments}
     if request.method == 'GET':
+        if request.is_ajax():
+            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
+            json_likes_list = serializers.serialize("json", all_likes)
+            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
         return render(request, 'PlanIlan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
             if request.POST.get('type', '') == 'course':
                 course_post = CourseReview.objects.get(id=request.POST.get('PostID', ''))
-                course_post.like_review(Account.objects.get(user=request.user))
+                if request.POST.get('to_add', '') == '1':
+                    course_post.like_review(Account.objects.get(user=request.user))
+                else:
+                    course_post.remove_like(Account.objects.get(user=request.user))
                 course_post.save()
             else:
                 teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
