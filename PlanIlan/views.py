@@ -40,29 +40,33 @@ def home(request):
     teachers_obj = [Teacher.objects.get(name="ארז שיינר"),
                     Teacher.objects.get(name="יורם לוזון")]
     # COURSES BEST RATING VIEW
-    # courses_obj = [Course.objects.get(name=""),
-    #                Course.objects.get(name="מבוא למדעי החיים")]
     courses_obj = [Course.objects.get(code="89550"), Course.objects.get(code="88218")]
-
     # LATEST COMMENTS
-    teacher_comments = TeacherReview.objects.all().order_by('date_modified')
+    teacher_comments = TeacherReview.objects.all().order_by('date_modified')[:5]
+    course_comments = CourseReview.objects.all().order_by('date_modified')[:5]
     context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
-               'teacher_comments': teacher_comments}
+               'teacher_comments': teacher_comments, 'course_comments': course_comments}
     if request.method == 'GET':
-        # courses_obj = [Course.objects.get(code="76786"), Course.objects.get(code="77837")]
-        # teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="גל קמינקא")]
-        # teachers_obj = [Teacher.objects.get(name="ארז שיינר"), Teacher.objects.get(name="יורם לוזון"), Teacher.objects.get(name="גיל אריאל")]
-        context = {'staff': teachers_obj,
-                   'courses': courses_obj}
+        if request.is_ajax():
+            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
+            json_likes_list = serializers.serialize("json", all_likes)
+            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
         return render(request, 'PlanIlan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
-            teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
-            teacher_post.amount_of_likes += int(request.POST.get('to_add', ''))
-            teacher_post.save()
+            if request.POST.get('type', '') == 'course':
+                course_post = CourseReview.objects.get(id=request.POST.get('PostID', ''))
+                if request.POST.get('to_add', '') == '1':
+                    course_post.like_review(Account.objects.get(user=request.user))
+                else:
+                    course_post.remove_like(Account.objects.get(user=request.user))
+                course_post.save()
+            else:
+                teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
+                teacher_post.like_review(request.user)
+                teacher_post.save()
             return render(request, 'PlanIlan/home.html', context)
         elif request.POST.get('Rating_course_ID', ''):
-            print(request.POST.get('rate_number'))
             course_id = Lesson.objects.get(id=request.POST.get('Rating_course_ID', ''))
             course_id.course.rating.update_rating(int(request.POST.get('rate_number', '')))
     return render(request, 'PlanIlan/home.html')
