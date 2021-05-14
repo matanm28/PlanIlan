@@ -36,12 +36,16 @@ function closeSearchBox() {
     }
 }
 
-function chosenCourse() {
-    console.log("course");
-}
-
-function chosenTeacher() {
-    console.log("teacher");
+function chosenElement(id) {
+    let former_chosen_course = document.getElementsByClassName("shown");
+    if (former_chosen_course != null && former_chosen_course.length > 0) {
+        former_chosen_course = former_chosen_course[0];
+        former_chosen_course.classList.remove("shown");
+        former_chosen_course.style.display = "none";
+    }
+    const chosen_course = document.getElementById(id);
+    chosen_course.classList.add("shown");
+    chosen_course.style.display = "block";
 }
 
 $(function () {
