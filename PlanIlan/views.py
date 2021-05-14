@@ -34,17 +34,18 @@ def search(request):
 
 
 def home(request):
-    # todo: get last staff and courses
-    # todo: save them in data structure
     # TEACHER BEST RATINGS VIEW
-    teachers_obj = [Teacher.objects.get(name="ארז שיינר"),
-                    Teacher.objects.get(name="יורם לוזון")]
+    teacher_best_rating = TeacherRating.objects.all().order_by('-value')[:5]
+    teachers_id = [t.teacher_id for t in teacher_best_rating]
+    teachers_obj = Teacher.objects.filter(pk__in=teachers_id)
     # COURSES BEST RATING VIEW
-    courses_obj = [Course.objects.get(code="89550"), Course.objects.get(code="88218")]
+    courses_best_rating = CourseRating.objects.all().order_by('-value')[:5]
+    courses_id = [c.course_id for c in courses_best_rating]
+    courses_obj = Course.objects.filter(pk__in=courses_id)
     # LATEST COMMENTS
     teacher_comments = TeacherReview.objects.all().order_by('date_modified')[:5]
     course_comments = CourseReview.objects.all().order_by('date_modified')[:5]
-    context = {'teachers': teachers_obj, 'courses_obj': courses_obj,
+    context = {'teachers': teachers_obj, 'courses': courses_obj,
                'teacher_comments': teacher_comments, 'course_comments': course_comments}
     if request.method == 'GET':
         if request.is_ajax():
