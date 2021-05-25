@@ -37,6 +37,8 @@ function closeSearchBox() {
 }
 
 function chosenElement(id) {
+    let spinner = document.getElementById("spinner")
+    spinner.style.display = "block";
     let former_chosen_course = document.getElementsByClassName("shown");
     if (former_chosen_course !== undefined && former_chosen_course.length > 0) {
         former_chosen_course = former_chosen_course[0];
@@ -60,6 +62,7 @@ function chosenElement(id) {
             let staff = JSON.parse(data.staff);
             document.getElementById("name_" + course_code).value = course_data[0]["fields"]["name"]
             document.getElementById("code_" + course_code).value = course_code
+            spinner.style.display = "none";
             const chosen_course = document.getElementById(id);
             chosen_course.classList.add("shown");
             chosen_course.style.display = "block";
