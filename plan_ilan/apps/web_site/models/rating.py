@@ -35,7 +35,7 @@ class TeacherRating(Rating):
 
     @classmethod
     def create(cls, user: Account, value: int, teacher: Teacher) -> 'Rating':
-        created, rating = TeacherRating.objects.get_or_create(user=user, teacher=teacher, defaults={'value': value})
+        rating, created = TeacherRating.objects.get_or_create(user=user, teacher=teacher, defaults={'value': value})
         cls.log_created(rating, created)
         if not created:
             rating.edit_rating(value)
