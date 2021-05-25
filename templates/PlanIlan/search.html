@@ -11,6 +11,7 @@
     {% load static %}
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'PlanIlan/js/csrf_token_script.js' %}"></script>
     <script type="text/javascript" src="{% static 'PlanIlan/js/search.js' %}"></script>
 {% endblock %}
 {% block title %}חיפוש{% endblock %}
@@ -114,23 +115,44 @@
         <div id="results" style="position:absolute; right: 0; height: 100%; width: 75%">
             <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i
                     class="fas fa-caret-left fa-2x"></i>חפש</span>
-            <div class="resize-box" id="courses_result">
+            <div class="resize-box" id="courses_results">
                 <div class="scrollbar scrollbar-primary">
                     {% if 'form-search-course' in request.GET %}
                         {% for course in courses %}
-                            <button class="btn class_btn"
-                                    onclick="chosenCourse()">{{ course.name }}<br>{{ course.code }}</button>
+                            <button type="button" id="course_result_{{ course.code }}" class="btn class_btn"
+                                    onclick="chosenElement('chosen_course_{{ course.code }}')">{{ course.name }}<br>{{ course.code }}
+                            </button>
                         {% endfor %}
                     {% endif %}
                     {% if 'form-search-teacher' in request.GET %}
                         {% for teacher in teachers %}
-                            <button class="btn class_btn" onclick="chosenTeacher()">{{ teacher }}</button>
+                            <button type="button" id="teacher_result_{{ forloop.counter0 }}" class="btn class_btn"
+                                    onclick="chosenElement('chosen_teacher_{{ forloop.counter0 }}')">{{ teacher }}
+                            </button>
                         {% endfor %}
                     {% endif %}
                 </div>
             </div>
-            <div class="ui-widget-content resize-box" id="chosen_element">
-                chosen course!
+            <div class="ui-widget-content resize-box" id="chosen_elements">
+                <div class="scrollbar scrollbar-primary">
+                    {% if 'form-search-course' in request.GET %}
+                        {% for course in courses %}
+                            <div class="chosen_course" id="chosen_course_{{ course.code }}" style="display: none">
+                                <label for="name_{{ course.code }}">שם:</label><input type="text" id="name_{{ course.code }}">
+                                <br>
+                                <label for="code_{{ course.code }}">קוד:</label><input type="text" id="code_{{ course.code }}">
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if 'form-search-teacher' in request.GET %}
+                        {% for teacher in teachers %}
+                            <div class="chosen_teacher" id="chosen_teacher_{{ forloop.counter0 }}"
+                                 style="display: none">
+                                {{ teacher }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

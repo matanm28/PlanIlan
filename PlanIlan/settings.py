@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os
 import json
+import os
 import socket
 import sys
 from pathlib import Path
@@ -100,6 +100,7 @@ if os.path.exists(db_data_file_name):
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'CONN_MAX_AGE': 3600,
         'NAME': db_data['DB_NAME'],
         'USER': db_data['DB_USER_NAME'],
         'PASSWORD': db_data['DB_USER_PASSWORD'],

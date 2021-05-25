@@ -84,9 +84,13 @@
                                 </label>
                                 <br>
                             </p>
-                            <button type="button" class="btn btn-link" onclick="openRateModal(this)"
-                                    id="rateBtn_{{ t.id }}">דרג
-                            </button>
+                            {% if request.user.is_authenticated %}
+                                <button type="button" class="btn btn-link" onclick="openRateModal(this)"
+                                        id="rateBtn_{{ t.id }}">דרג
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-link" disabled>דרג</button>
+                            {% endif %}
                             <button type="button" class="btn btn-link">פרטים נוספים</button>
                         </div>
                     </div>
@@ -134,9 +138,13 @@
                                 <br>
                                 <label>דירוג ממוצע: {{ c.average_rating }}</label>
                             </p>
-                            <button type="button" class="btn btn-link" onclick="openRateModal(this)"
-                                    id="rateBtn_{{ c.code }}">דרג
-                            </button>
+                            {% if request.user.is_authenticated %}
+                                <button type="button" class="btn btn-link" onclick="openRateModal(this)"
+                                        id="rateBtn_{{ c.code }}">דרג
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-link" disabled>דרג</button>
+                            {% endif %}
                             <button type="button" class="btn btn-link">פרטים נוספים</button>
                         </div>
                     </div>

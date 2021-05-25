@@ -10,11 +10,11 @@ from .forms import CreateAccountForm, CreateDjangoUserForm
 from .models import *
 
 
-# @login_required(login_url='')
-
-
 def search(request):
     if request.method == 'GET':
+        if request.is_ajax():
+            courses_dict = get_details(request.GET.get('code', ''))
+            return JsonResponse(courses_dict, safe=False)
         # COURSE SEARCH ENGINE
         lessons = Lesson.objects.all()
         lesson_filter = CourseInstanceFilter(request.GET, queryset=lessons)
@@ -25,12 +25,28 @@ def search(request):
         teachers = Teacher.objects.all()
         teacher_filter = TeacherInstanceFilter(request.GET, queryset=teachers)
         teachers = teacher_filter.qs
-
         departments = Department.objects.all()
         context = {'lesson_filter': lesson_filter, 'lessons': lessons, 'courses': courses,
                    'teacher_filter': teacher_filter, 'teachers': teachers, 'departments': departments}
         return render(request, 'PlanIlan/search.html', context)
     return render(request, 'PlanIlan/search.html')
+
+
+def get_details(code):
+    chosen_course = Course.objects.get(code=code)
+    lessons = Lesson.objects.filter(course=chosen_course)
+    lessons_pk = list(map(lambda lesson: lesson.pk, lessons))
+    teacher_list = Teacher.objects.filter(lessons__pk__in=lessons_pk).distinct()
+    json_teacher_details = serializers.serialize("json", teacher_list)
+    types = LessonType.objects.filter(lessons__pk__in=lessons_pk).distinct()
+    json_types_details = serializers.serialize("json", types)
+    lesson_times_list = LessonTime.objects.filter(lessons__pk__in=lessons_pk).distinct()
+    json_times_details = serializers.serialize("json", lesson_times_list)
+    course_details = {'שם': chosen_course.name, 'קוד': chosen_course.code, 'מחלקה': chosen_course.department,
+                      'פקולטה': chosen_course.faculty, 'תאריכי הבחינות': chosen_course.exams,
+                      'סילבוס': chosen_course.syllabus_link, 'זמני הקורס': json_times_details,
+                      'סוג מפגש': json_types_details, 'סגל': json_teacher_details}
+    return course_details
 
 
 def home(request):
@@ -84,14 +100,15 @@ def save_comment_and_rating(request):
     if request.POST.get('type', '') == 'course':
         course_rated = Course.objects.get(code=request.POST.get('Rating_object_ID', ''))
         rating_obj = CourseRating.create(user, value, course_rated)
-        review_object = CourseReview.objects.create(course=course_rated, author=user, headline=headline, text=comment_body)
+        review_object = CourseReview.objects.create(course=course_rated, author=user, headline=headline,
+                                                    text=comment_body)
     else:
         teacher_rated = Teacher.objects.get(id=request.POST.get('Rating_object_ID', ''))
         rating_obj = TeacherRating.create(user, value, teacher_rated)
-        review_object = CourseReview.objects.create(teacher=teacher_rated, author=user, headline=headline, text=comment_body)
+        review_object = CourseReview.objects.create(teacher=teacher_rated, author=user, headline=headline,
+                                                    text=comment_body)
     rating_obj.save()
     review_object.save()
-
 
 
 @unauthenticated_user
