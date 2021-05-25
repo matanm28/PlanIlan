@@ -21,16 +21,35 @@ def search(request):
         lessons = lesson_filter.qs
         lessons_pk = list(map(lambda lesson: lesson.pk, lessons))
         courses = Course.objects.filter(lessons__pk__in=lessons_pk).distinct()
+        courses_dict = {}
+        for course in courses:
+            courses_dict[course.code] = get_details(Lesson.objects.filter(course=course), course)
         # TEACHER SEARCH ENGINE
         teachers = Teacher.objects.all()
         teacher_filter = TeacherInstanceFilter(request.GET, queryset=teachers)
         teachers = teacher_filter.qs
-
         departments = Department.objects.all()
         context = {'lesson_filter': lesson_filter, 'lessons': lessons, 'courses': courses,
                    'teacher_filter': teacher_filter, 'teachers': teachers, 'departments': departments}
         return render(request, 'PlanIlan/search.html', context)
     return render(request, 'PlanIlan/search.html')
+
+def get_details(lessons, course):
+    course_details = {}
+    course_details['שם'] = course.name
+    course_details['קוד'] = course.code
+    course_details['מחלקה'] = course.department
+    course_details['פקולטה'] = course.faculty
+    teachers = [lesson.teachers for lesson in lessons]
+    course_details['סגל'] = set([t.model for t in teachers])
+    course_details['סוג מפגש'] = set([lesson.lesson_type for lesson in lessons])
+    time_dict = {}
+    for lesson in lessons:
+        time_dict[lesson.group] = [lesson.session_times]
+    course_details['זמני הקורס'] = time_dict
+    course_details['תאריכי הבחינות'] = course.exams
+    course_details['סילבוס'] = course.syllabus_link
+    return course_details
 
 
 def home(request):
