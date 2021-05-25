@@ -3,7 +3,7 @@ import logging
 from codetiming import Timer
 
 from plan_ilan.apps.web_site.management.commands.populate_database import PopulateDatabaseCommand
-from plan_ilan.apps.plan_ilan_site.models import DepartmentEnum
+from plan_ilan.apps.web_site.models import DepartmentEnum
 from plan_ilan.utils.letters import big_letters
 
 
