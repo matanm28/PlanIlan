@@ -136,11 +136,16 @@
             <div class="ui-widget-content resize-box" id="chosen_elements">
                 <div class="scrollbar scrollbar-primary">
                     {% if 'form-search-course' in request.GET %}
+                        <div class="spinner-border text-danger" role="status" id="spinner" style="display: none">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                         {% for course in courses %}
                             <div class="chosen_course" id="chosen_course_{{ course.code }}" style="display: none">
-                                <label for="name_{{ course.code }}">שם:</label><input type="text" id="name_{{ course.code }}">
+                                <label for="name_{{ course.code }}">שם:</label><input type="text"
+                                                                                      id="name_{{ course.code }}">
                                 <br>
-                                <label for="code_{{ course.code }}">קוד:</label><input type="text" id="code_{{ course.code }}">
+                                <label for="code_{{ course.code }}">קוד:</label><input type="text"
+                                                                                       id="code_{{ course.code }}">
                             </div>
                         {% endfor %}
                     {% endif %}

@@ -33,19 +33,20 @@ def search(request):
 
 
 def get_details(code):
-    chosen_course = Course.objects.get(code=code)
-    lessons = Lesson.objects.filter(course=chosen_course)
+    chosen_course = Course.objects.filter(code=code)
+    json_chosen_course = serializers.serialize("json", chosen_course)
+    lessons = Lesson.objects.filter(course__pk=code)
     lessons_pk = list(map(lambda lesson: lesson.pk, lessons))
     teacher_list = Teacher.objects.filter(lessons__pk__in=lessons_pk).distinct()
     json_teacher_details = serializers.serialize("json", teacher_list)
     types = LessonType.objects.filter(lessons__pk__in=lessons_pk).distinct()
+    exams = Exam.objects.filter(courses__pk=code)
+    json_exams_details = serializers.serialize("json", exams)
     json_types_details = serializers.serialize("json", types)
     lesson_times_list = LessonTime.objects.filter(lessons__pk__in=lessons_pk).distinct()
     json_times_details = serializers.serialize("json", lesson_times_list)
-    course_details = {'שם': chosen_course.name, 'קוד': chosen_course.code, 'מחלקה': chosen_course.department,
-                      'פקולטה': chosen_course.faculty, 'תאריכי הבחינות': chosen_course.exams,
-                      'סילבוס': chosen_course.syllabus_link, 'זמני הקורס': json_times_details,
-                      'סוג מפגש': json_types_details, 'סגל': json_teacher_details}
+    course_details = {'chosen_course': json_chosen_course, 'exams': json_exams_details, 'lesson_times': json_times_details,
+                      'lesson_types': json_types_details, 'staff': json_teacher_details}
     return course_details
 
 

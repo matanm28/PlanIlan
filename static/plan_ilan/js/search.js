@@ -37,17 +37,17 @@ function closeSearchBox() {
 }
 
 function chosenElement(id) {
+    let spinner = document.getElementById("spinner")
+    spinner.style.display = "block";
     let former_chosen_course = document.getElementsByClassName("shown");
     if (former_chosen_course !== undefined && former_chosen_course.length > 0) {
         former_chosen_course = former_chosen_course[0];
         former_chosen_course.classList.remove("shown");
         former_chosen_course.style.display = "none";
     }
-    const chosen_course = document.getElementById(id);
-    chosen_course.classList.add("shown");
-    chosen_course.style.display = "block";
+    const course_code = id.split("_")[2];
     let data = {
-        'code': id.split("_")[2],
+        'code': course_code,
         'csrfmiddlewaretoken': csrftoken,
     };
     $.ajax({
@@ -55,8 +55,17 @@ function chosenElement(id) {
         type: 'GET',
         data: data,
         success: function (data) {
-            let course_data = JSON.parse(data);
-            console.log(course_data)
+            let course_data = JSON.parse(data.chosen_course);
+            let exams = JSON.parse(data.exams);
+            let times = JSON.parse(data.lesson_times);
+            let types = JSON.parse(data.lesson_types);
+            let staff = JSON.parse(data.staff);
+            document.getElementById("name_" + course_code).value = course_data[0]["fields"]["name"]
+            document.getElementById("code_" + course_code).value = course_code
+            spinner.style.display = "none";
+            const chosen_course = document.getElementById(id);
+            chosen_course.classList.add("shown");
+            chosen_course.style.display = "block";
         },
         error: function (error) {
             alert('error; ' + eval(error));
