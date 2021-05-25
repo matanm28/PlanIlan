@@ -41,7 +41,7 @@ window.onload = function () {
             }
         },
         error: function (error) {
-            alert('error; ' + eval(error));
+            
         }
     });
 }

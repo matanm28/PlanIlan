@@ -2,7 +2,7 @@ var star_value = 0
 
 const handleStarSelect = (size, children) => {
     for (let i = 0; i < children.length; i++) {
-        if (i <= size) {
+        if (i < size) {
             children[i].classList.add('checked')
         } else {
             children[i].classList.remove('checked')
@@ -40,19 +40,24 @@ const handleSelect = (selection, children) => {
 
 }
 
-$(document.querySelectorAll('.fa-star')).hover((event) => {
-    const parent = event.target.parentNode;
-    const children = parent.children
-    const location = event.target.id.split("_")[0];
+function changeStar(star) {
+    const parent = star.parentNode;
+    const children = parent.children;
+    const location = star.id.split("_")[0];
     handleSelect(location, children)
-});
+}
 
-$(document.querySelectorAll('.fa-star')).click((event) => {
-    let id = $(event.target).data("id");
+function sendData(btn) {
+    let btn_info = btn.id.split("_")
+    let headline = document.getElementById("headline_" + btn_info[2]).value;
+    let comment = document.getElementById("commentArea_" + btn_info[2]).value;
     let data = {
+        'type': btn_info[0],
         'rate_number': star_value,
-        'Rating_course_ID': id,
+        'Rating_object_ID': btn_info[2],
         'csrfmiddlewaretoken': csrftoken,
+        'comment_body': comment,
+        'headline': headline
     };
     $.ajax({
         url: '/',
@@ -66,4 +71,4 @@ $(document.querySelectorAll('.fa-star')).click((event) => {
         }
     });
     return false;
-});
+}

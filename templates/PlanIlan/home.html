@@ -135,33 +135,44 @@
                                 <label>דירוג ממוצע: {{ c.average_rating }}</label>
                             </p>
                             <button type="button" class="btn btn-link" onclick="openRateModal(this)"
-                                    id="rateBtn_{{ c.id }}">דרג
+                                    id="rateBtn_{{ c.code }}">דרג
                             </button>
                             <button type="button" class="btn btn-link">פרטים נוספים</button>
                         </div>
                     </div>
                 </div>
-                <div id="rateModal_{{ c.id }}" class="modal">
+                <div id="rateModal_{{ c.code }}" class="modal">
                     <!-- Modal content -->
                     <div class="modal-content">
-                        <span class="close" id="closeRate_{{ c.id }}" onclick="closeRateModal(this)">&times;</span>
+                        <span class="close" id="closeRate_{{ c.code }}" onclick="closeRateModal(this)">&times;</span>
                         <div>
                             <form class="rate-form" method="post">
                                 {% csrf_token %}
-                                <label for="commentArea">הוסף תגובה:</label>
-                                <textarea class="form-control" id="commentArea" rows="3"></textarea>
+                                <label for="headline_{{ c.code }}">כותרת:
+                                    <input type="text" id="headline_{{ c.code }}">
+                                </label>
+                                <br>
+                                <label for="commentArea_{{ c.code }}">הוסף תגובה:
+                                    <textarea class="form-control" id="commentArea_{{ c.code }}" rows="3"></textarea>
+                                </label>
                                 <br>
                                 <label>דרג:</label>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="first-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="second-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="third-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="fourth-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="fifth-star_{{ c.id }}" data-id="{{ c.id }}"></button>
+                                <div>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="first-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="second-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="third-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="fourth-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="fifth-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                </div>
+                                <br>
+                                <button type="submit" id="course_review_{{ c.code }}" class="btn btn-outline-primary"
+                                        onclick="sendData(this)">שלח!
+                                </button>
                             </form>
                         </div>
                     </div>

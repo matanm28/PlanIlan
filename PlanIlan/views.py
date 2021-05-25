@@ -34,19 +34,7 @@ def search(request):
 
 
 def home(request):
-    # TEACHER BEST RATINGS VIEW
-    teacher_best_rating = TeacherRating.objects.all().order_by('-value')[:5]
-    teachers_id = [t.teacher_id for t in teacher_best_rating]
-    teachers_obj = Teacher.objects.filter(pk__in=teachers_id)
-    # COURSES BEST RATING VIEW
-    courses_best_rating = CourseRating.objects.all().order_by('-value')[:5]
-    courses_id = [c.course_id for c in courses_best_rating]
-    courses_obj = Course.objects.filter(pk__in=courses_id)
-    # LATEST COMMENTS
-    teacher_comments = TeacherReview.objects.all().order_by('date_modified')[:5]
-    course_comments = CourseReview.objects.all().order_by('date_modified')[:5]
-    context = {'teachers': teachers_obj, 'courses': courses_obj,
-               'teacher_comments': teacher_comments, 'course_comments': course_comments}
+    context = show_best_teacher_courses()
     if request.method == 'GET':
         if request.is_ajax():
             all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
@@ -66,11 +54,44 @@ def home(request):
                 teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
                 teacher_post.like_review(request.user)
                 teacher_post.save()
-            return render(request, 'PlanIlan/home.html', context)
-        elif request.POST.get('Rating_course_ID', ''):
-            course_id = Lesson.objects.get(id=request.POST.get('Rating_course_ID', ''))
-            course_id.course.rating.update_rating(int(request.POST.get('rate_number', '')))
+        elif request.POST.get('Rating_object_ID', ''):
+            save_comment_and_rating(request)
+        return render(request, 'PlanIlan/home.html', context)
     return render(request, 'PlanIlan/home.html')
+
+
+def show_best_teacher_courses():
+    # TEACHER BEST RATINGS VIEW
+    teacher_best_rating = TeacherRating.objects.all().order_by('-value')[:5]
+    teachers_id = [t.teacher_id for t in teacher_best_rating]
+    teachers_obj = Teacher.objects.filter(pk__in=teachers_id)
+    # COURSES BEST RATING VIEW
+    courses_best_rating = CourseRating.objects.all().order_by('-value')[:5]
+    courses_id = [c.course_id for c in courses_best_rating]
+    courses_obj = Course.objects.filter(pk__in=courses_id)
+    # LATEST COMMENTS
+    teacher_comments = TeacherReview.objects.all().order_by('date_modified')[:5]
+    course_comments = CourseReview.objects.all().order_by('date_modified')[:5]
+    return {'teachers': teachers_obj, 'courses': courses_obj,
+            'teacher_comments': teacher_comments, 'course_comments': course_comments}
+
+
+def save_comment_and_rating(request):
+    user = Account.objects.get(user=request.user)
+    value = int(request.POST.get('rate_number', ''))
+    headline = request.POST.get('headline', '')
+    comment_body = request.POST.get('comment_body', '')
+    if request.POST.get('type', '') == 'course':
+        course_rated = Course.objects.get(code=request.POST.get('Rating_object_ID', ''))
+        rating_obj = CourseRating.create(user, value, course_rated)
+        review_object = CourseReview.objects.create(course=course_rated, author=user, headline=headline, text=comment_body)
+    else:
+        teacher_rated = Teacher.objects.get(id=request.POST.get('Rating_object_ID', ''))
+        rating_obj = TeacherRating.create(user, value, teacher_rated)
+        review_object = CourseReview.objects.create(teacher=teacher_rated, author=user, headline=headline, text=comment_body)
+    rating_obj.save()
+    review_object.save()
+
 
 
 @unauthenticated_user
