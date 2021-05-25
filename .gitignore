@@ -1,17 +1,16 @@
-# private resources
-db.sqlite3
-db_data.json
-mail_data.json
-db_data_open_db.json
-db_config.txt
 3rd_party
 *.log
 .idea
-faculty_names_and_numbers.json
-label_to_param_name.json
-department_enums.txt
 logs
 /pickle_check
 /Images
 /media
 /static/node_modules
+
+/tmp/db_data.json
+/tmp/mail_data.json
+/tmp/db_data_open_db.json
+/tmp/db_config.txt
+/tmp/faculty_names_and_numbers.json
+/tmp/label_to_param_name.json
+/tmp/department_enums.txt

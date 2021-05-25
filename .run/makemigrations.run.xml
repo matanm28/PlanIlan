@@ -5,11 +5,6 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
-      <env name="DB_USER_NAME" value="admin" />
-      <env name="DB_USER_PASSWORD" value="V02G6zmHVIDLpdGqfEO8" />
-      <env name="DB_HOST_NAME" value="plan-ilan-db.ckiihycoqnns.eu-central-1.rds.amazonaws.com" />
-      <env name="DB_PORT" value="3306" />
-      <env name="DB_NAME" value="plan_ilan_dev" />
     </envs>
     <option name="SDK_HOME" value="C:\Users\mamalka\PlanIlan\Scripts\python.exe" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />

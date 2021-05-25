@@ -17,3 +17,6 @@ aiohttp
 django-admin-multiple-choice-list-filter
 django-polymorphic
 django-debug-toolbar
+beautifulsoup4
+PuLP
+requests
