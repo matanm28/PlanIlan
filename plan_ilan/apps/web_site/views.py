@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from .decorators import unauthenticated_user, authenticated_user
 from .filters import *
 from .forms import CreateAccountForm, CreateDjangoUserForm
-from plan_ilan.apps.web_site.models import *
+from .models import *
 
 
 def search(request):
@@ -28,8 +28,8 @@ def search(request):
         departments = Department.objects.all()
         context = {'lesson_filter': lesson_filter, 'lessons': lessons, 'courses': courses,
                    'teacher_filter': teacher_filter, 'teachers': teachers, 'departments': departments}
-        return render(request, 'PlanIlan/search.html', context)
-    return render(request, 'PlanIlan/search.html')
+        return render(request, 'plan_ilan/search.html', context)
+    return render(request, 'plan_ilan/search.html')
 
 
 def get_details(code):
@@ -52,11 +52,11 @@ def get_details(code):
 def home(request):
     context = show_best_teacher_courses()
     if request.method == 'GET':
-        if request.is_ajax():
+        if request.is_ajax() and request.user.is_authenticated:
             all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
             json_likes_list = serializers.serialize("json", all_likes)
             return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
-        return render(request, 'PlanIlan/home.html', context)
+        return render(request, 'plan_ilan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
             if request.POST.get('type', '') == 'course':
@@ -72,8 +72,8 @@ def home(request):
                 teacher_post.save()
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
-        return render(request, 'PlanIlan/home.html', context)
-    return render(request, 'PlanIlan/home.html')
+        return render(request, 'plan_ilan/home.html', context)
+    return render(request, 'plan_ilan/home.html')
 
 
 def show_best_teacher_courses():
@@ -126,11 +126,11 @@ def register(request):
             return redirect('home')
         else:
             context = {'form': django_user_form, 'account_form': account_form}
-            return render(request, 'PlanIlan/register.html', context)
+            return render(request, 'plan_ilan/register.html', context)
     django_user_form = CreateDjangoUserForm()
     account_form = CreateAccountForm()
     context = {'form': django_user_form, 'account_form': account_form}
-    return render(request, 'PlanIlan/register.html', context)
+    return render(request, 'plan_ilan/register.html', context)
 
 
 @unauthenticated_user
@@ -144,7 +144,7 @@ def login_page(request):
             return redirect('home')
         else:
             messages.info(request, 'Username or password is incorrect')
-    return render(request, 'PlanIlan/login.html')
+    return render(request, 'plan_ilan/login.html')
 
 
 def logout_user(request):
@@ -173,5 +173,5 @@ def time_table(request):
                        'json_teacher_list': json_teacher_list,
                        'json_session_list': json_session_list}
             return JsonResponse(context, safe=False)
-        return render(request, 'PlanIlan/timetable.html', context)
-    return render(request, 'PlanIlan/timetable.html')
+        return render(request, 'timetable_generator/timetable.html', context)
+    return render(request, 'timetable_generator/timetable.html')
