@@ -5,6 +5,7 @@ from django.db import models
 from . import BaseModel
 from .enums import Title, Faculty, Department
 from ..storage import OverwriteStorage
+from django.db.models import Avg
 
 
 def user_directory_path(instance: 'Teacher', filename: str):
@@ -53,6 +54,10 @@ class Teacher(BaseModel):
     @property
     def slug(self):
         return f'teacher-{self.pk}'
+
+    @property
+    def average_rating(self) -> float:
+        return self.ratings.aggregate(average_value=Avg('value'))['average_value']
 
     def __repr__(self):
         return f'id: {self.pk} name: {self.title_and_name}'

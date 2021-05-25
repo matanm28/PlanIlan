@@ -1,57 +1,23 @@
 {% extends 'PlanIlan/base.html' %}
 {% block css_block %}
     {% load static %}
+    <link href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/latest-posts.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/likes_style.css' %}"/>
-    <style>
-        .btn-primary {
-            width: 50%;
-            background: rgba(255, 255, 255, 0.8);
-            border-color: rgba(198, 30, 30, 0.7);
-            color: rgba(198, 30, 30, 0.7);
-        }
-
-        .btn-primary:hover {
-            background: rgba(198, 30, 30, 0.7);
-            color: white !important;
-        }
-
-        .modal-title {
-            color: black;
-            font-weight: bold;
-            font-style: italic;
-            text-align: center;
-        }
-
-        .input-group-text {
-            background: rgba(198, 30, 30, 0.7);
-            color: white !important;
-            border: 0 !important;
-            border-radius: 0.25rem 0 0 0.25rem !important;
-        }
-
-        .input-group-append-data {
-            position: absolute;
-            right: 50px;
-        }
-
-        .input-group-append-icon {
-            position: absolute;
-            right: 0;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{% static 'PlanIlan/css/home_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
     {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/rating.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/comment_likes.js' %}"></script>
+    <script type="text/javascript" src="{% static 'PlanIlan/js/home.js' %}"></script>
 {% endblock %}
 {% block title %}דף הבית{% endblock %}
 {% block content %}
@@ -62,17 +28,17 @@
             <div class="col-md-3 col-md-offset-1 aside-section">
                 <div class="widget blog-widget">
                     <h2 class="widget-header">תגובות אחרונות</h2>
+                    <h3>תגובות מורים</h3>
                     {% for t_c in teacher_comments %}
                         <div class="ct-latest">
                             <div class="media-left">
                                 <p>{{ t_c.author }}</p>
                                 <input class="amount-likes" type='number' id='amount_{{ t_c.id }}'
                                        value="{{ t_c.amount_of_likes }}" readonly/>
-                                <form method="post" id="heart-form_{{ t_c.id }}" data-id="{{ t_c.id }}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="fa fa-heart heart-btn" id="heart"
+                                {% if request.user.is_authenticated %}
+                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_teacher_{{ t_c.id }}"
                                             name="heart-like"></button>
-                                </form>
+                                {% endif %}
                             </div>
                             <div class="media-body">
                                 <h2 class="ct-latest-header media-heading">{{ t_c.headline }}</h2>
@@ -80,113 +46,146 @@
                             </div>
                         </div>
                     {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="teacher_post">
-    </div>
-    <div id="teachers">
-        {% for t in teachers %}
-            <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#teachers-{{ forloop.counter0 }}">
-                {{ t.title_and_name }}
-            </button>
-        {% endfor %}
-    </div>
-    {% for t in teachers %}
-        <!-- Modal -->
-        <div class="modal fade" id="teachers-{{ forloop.counter0 }}" tabindex="-1" role="dialog"
-             aria-labelledby="ModalLongTitle-{{ forloop.counter0 }}" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <h3 class="modal-title w-100"
-                            id="ModalLongTitle-{{ forloop.counter0 }}">{{ t.name_and_title }}</h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        {{ t.name }}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-    <div id="courses">
-        {% for c in courses_obj %}
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#courses-{{ forloop.counter0 }}">
-                {{ c.name }}
-            </button>
-            </div>
-            <!-- Modal -->
-            <div class="modal fade" id="courses-{{ forloop.counter0 }}" tabindex="-1" role="dialog"
-                 aria-labelledby="ModalLongTitle-{{ forloop.counter0 }}" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header text-center">
-                            <h3 class="modal-title w-100" id="ModalLongTitle-{{ forloop.counter0 }}">{{ c.name }}</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group mb-5" style="float: right">
-                                <div class="input-group-append-icon">
-                                    <span class="input-group-text"><i class="fas fa-book"></i></span>
-                                </div>
-                                <div class="input-group-append-data">
-                                    <p>{{ c.code }} :קוד </p>
-                                </div>
+                    <h3>תגובות קורסים</h3>
+                    {% for c_c in course_comments %}
+                        <div class="ct-latest">
+                            <div class="media-left">
+                                <p>{{ c_c.author }}</p>
+                                <input class="amount-likes" type='number' id='amount_{{ c_c.id }}'
+                                       value="{{ c_c.amount_of_likes }}" readonly/>
+                                {% if request.user.is_authenticated %}
+                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_course_{{ c_c.id }}"
+                                            name="heart-like" onclick="changeHeart(this)"></button>
+                                {% endif %}
                             </div>
-                            <div class="input-group mb-5">
-                                <div class="input-group-append-icon">
-                                    <span class="input-group-text"><i class="fas fa-book"></i></span>
-                                </div>
-                                <div class="input-group-append-data">
-                                    {% for teacher in c.teachers.all %}
-                                        {% if c|length > 1 %}
-                                            <p> :שמות המרצים
-                                                {{ teacher.title_and_name }}
-                                            </p>
-                                        {% else %}
-                                            <p> שם המרצה {{ teacher.title_and_name }}:</p>
-                                        {% endif %}
+                            <div class="media-body">
+                                <h2 class="ct-latest-header media-heading">{{ c_c.headline }}</h2>
+                                <p>{{ c_c.text }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="widget-header">מורים מובילים</h2>
+    <div class="container">
+        <div class="row">
+            {% for t in teachers %}
+                <div class="col col-md-3">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ t.title_and_name }}</h5>
+                            <p class="card-text">
+                                <label>מחלקות:
+                                    {% for dep in t.departments %}
+                                        {{ dep }},
                                     {% endfor %}
-                                </div>
-                                <div class="row mb-lg-5">
-                                    <div class="col text-center">
-                                        <form class="rate-form" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="first-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="second-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="third-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="fourth-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                            <button type="submit" class="fa fa-star fa-3x star-btn"
-                                                    id="fifth-star_{{ c.id }}" data-id="{{ c.id }}"></button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                                </label>
+                                <br>
+                            </p>
+                            {% if request.user.is_authenticated %}
+                                <button type="button" class="btn btn-link" onclick="openRateModal(this)"
+                                        id="rateBtn_{{ t.id }}">דרג
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-link" disabled>דרג</button>
+                            {% endif %}
+                            <button type="button" class="btn btn-link">פרטים נוספים</button>
                         </div>
                     </div>
                 </div>
-            </div>
-
-        {% endfor %}
+                <div id="rateModal_{{ t.id }}" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close" id="closeRate_{{ t.id }}" onclick="closeRateModal(this)">&times;</span>
+                        <div>
+                            <form class="rate-form" method="post">
+                                {% csrf_token %}
+                                <label for="commentArea">הוסף תגובה:</label>
+                                <textarea class="form-control" id="commentArea" rows="3"></textarea>
+                                <br>
+                                <label>דרג:</label>
+                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                        id="first-star_{{ t.id }}" data-id="{{ t.id }}"></button>
+                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                        id="second-star_{{ t.id }}" data-id="{{ t.id }}"></button>
+                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                        id="third-star_{{ t.id }}" data-id="{{ t.id }}"></button>
+                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                        id="fourth-star_{{ t.id }}" data-id="{{ t.id }}"></button>
+                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                        id="fifth-star_{{ t.id }}" data-id="{{ t.id }}"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <h2 class="widget-header">קורסים מובילים</h2>
+    <div class="container">
+        <div class="row">
+            {% for c in courses %}
+                <div class="col col-md-3">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ c.name }}</h5>
+                            <p class="card-text">
+                                <label>מחלקה: {{ c.department }}</label>
+                                <br>
+                                <label>קוד: {{ c.code }}</label>
+                                <br>
+                                <label>דירוג ממוצע: {{ c.average_rating }}</label>
+                            </p>
+                            {% if request.user.is_authenticated %}
+                                <button type="button" class="btn btn-link" onclick="openRateModal(this)"
+                                        id="rateBtn_{{ c.code }}">דרג
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-link" disabled>דרג</button>
+                            {% endif %}
+                            <button type="button" class="btn btn-link">פרטים נוספים</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="rateModal_{{ c.code }}" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close" id="closeRate_{{ c.code }}" onclick="closeRateModal(this)">&times;</span>
+                        <div>
+                            <form class="rate-form" method="post">
+                                {% csrf_token %}
+                                <label for="headline_{{ c.code }}">כותרת:
+                                    <input type="text" id="headline_{{ c.code }}">
+                                </label>
+                                <br>
+                                <label for="commentArea_{{ c.code }}">הוסף תגובה:
+                                    <textarea class="form-control" id="commentArea_{{ c.code }}" rows="3"></textarea>
+                                </label>
+                                <br>
+                                <label>דרג:</label>
+                                <div>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="first-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="second-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="third-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="fourth-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn"
+                                            id="fifth-star_{{ c.code }}" onmouseover="changeStar(this)"></button>
+                                </div>
+                                <br>
+                                <button type="submit" id="course_review_{{ c.code }}" class="btn btn-outline-primary"
+                                        onclick="sendData(this)">שלח!
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

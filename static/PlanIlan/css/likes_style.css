@@ -1,13 +1,10 @@
 .heart-btn {
     background-color: inherit !important;
     border: 0 !important;
+    color: grey;
+    font-size: 20px;
 }
 
-#heart {
-  color: grey;
-  font-size: 20px;
-}
-
-#heart.red {
-  color: red;
+.red {
+    color: red;
 }
