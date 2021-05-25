@@ -1,0 +1,19 @@
+{
+  "name": "plan_ilan",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "mdb-ui-kit": "^3.5.1",
+    "jquery": "^3.6.0",
+    "jquery-ui-dist": "^1.12.1",
+    "bootstrap": "^5.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
