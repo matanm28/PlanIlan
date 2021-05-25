@@ -38,7 +38,7 @@ function closeSearchBox() {
 
 function chosenElement(id) {
     let former_chosen_course = document.getElementsByClassName("shown");
-    if (former_chosen_course != null && former_chosen_course.length > 0) {
+    if (former_chosen_course !== undefined && former_chosen_course.length > 0) {
         former_chosen_course = former_chosen_course[0];
         former_chosen_course.classList.remove("shown");
         former_chosen_course.style.display = "none";
@@ -46,6 +46,23 @@ function chosenElement(id) {
     const chosen_course = document.getElementById(id);
     chosen_course.classList.add("shown");
     chosen_course.style.display = "block";
+    let data = {
+        'code': id.split("_")[2],
+        'csrfmiddlewaretoken': csrftoken,
+    };
+    $.ajax({
+        url: '/search',
+        type: 'GET',
+        data: data,
+        success: function (data) {
+            let course_data = JSON.parse(data);
+            console.log(course_data)
+        },
+        error: function (error) {
+            alert('error; ' + eval(error));
+        }
+    });
+    return false;
 }
 
 $(function () {

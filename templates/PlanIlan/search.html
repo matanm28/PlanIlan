@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="{% static 'PlanIlan/css/button_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
-    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>#}
-    {#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>#}
     {% load static %}
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'PlanIlan/js/csrf_token_script.js' %}"></script>
     <script type="text/javascript" src="{% static 'PlanIlan/js/search.js' %}"></script>
 {% endblock %}
 {% block title %}חיפוש{% endblock %}
@@ -139,7 +138,9 @@
                     {% if 'form-search-course' in request.GET %}
                         {% for course in courses %}
                             <div class="chosen_course" id="chosen_course_{{ course.code }}" style="display: none">
-                                {{ course.name }}
+                                <label for="name_{{ course.code }}">שם:</label><input type="text" id="name_{{ course.code }}">
+                                <br>
+                                <label for="code_{{ course.code }}">קוד:</label><input type="text" id="code_{{ course.code }}">
                             </div>
                         {% endfor %}
                     {% endif %}
