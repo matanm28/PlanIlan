@@ -43,3 +43,8 @@ function chosenCourse() {
 function chosenTeacher() {
     console.log("teacher");
 }
+
+$(function () {
+    $("#courses_result").resizable();
+    $("#chosen_element").resizable();
+});

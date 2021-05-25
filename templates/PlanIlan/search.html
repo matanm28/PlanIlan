@@ -2,6 +2,7 @@
 {% load widget_tweaks %}
 {% block css_block %}
     {% load static %}
+    <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'PlanIlan/css/search_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'PlanIlan/css/scrollbar_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'PlanIlan/css/button_style.css' %}"/>
@@ -9,7 +10,7 @@
 {% block js_block %}
     {% load static %}
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'node_modules/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'PlanIlan/js/search.js' %}"></script>
 {% endblock %}
 {% block title %}חיפוש{% endblock %}
@@ -39,12 +40,10 @@
                                 {% render_field lesson_filter.form.name class="input" placeholder="Enter name here" %}
                             </div>
                         </div>
-{#                        <div class="field">#}
-{#                            <label>דירוג בין:</label>#}
-{#                            {% render_field lesson_filter.form.rating_from %}#}
-{#                            <label>לבין:</label>#}
-{#                            {% render_field lesson_filter.form.rating_to %}#}
-{#                        </div>#}
+                        <div class="field">
+                            <label>טווח דירוג:</label>
+                            {% render_field lesson_filter.form.ratings %}
+                        </div>
                         <div class="field">
                             <label>שעת התחלה:</label>
                             {% render_field lesson_filter.form.start_time type="time" %}
@@ -95,12 +94,10 @@
                                 {% render_field teacher_filter.form.name %}
                             </div>
                         </div>
-{#                        <div class="field">#}
-{#                            <label>דירוג בין:</label>#}
-{#                            {% render_field teacher_filter.form.rating_from %}#}
-{#                            <label>לבין:</label>#}
-{#                            {% render_field teacher_filter.form.rating_to %}#}
-{#                        </div>#}
+                        <div class="field">
+                            <label>דירוג בין:</label>
+                            {% render_field teacher_filter.form.ratings %}
+                        </div>
                         <div class="field">
                             <div class="control">
                                 <label>פקולטה:
@@ -132,7 +129,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="resize-box" id="chosen_element">
+            <div class="ui-widget-content resize-box" id="chosen_element">
                 chosen course!
             </div>
         </div>
