@@ -36,7 +36,7 @@
                                 <input class="amount-likes" type='number' id='amount_{{ t_c.id }}'
                                        value="{{ t_c.amount_of_likes }}" readonly/>
                                 {% if request.user.is_authenticated %}
-                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_{{ t_c.id }}"
+                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_teacher_{{ t_c.id }}"
                                             name="heart-like"></button>
                                 {% endif %}
                             </div>
@@ -54,7 +54,7 @@
                                 <input class="amount-likes" type='number' id='amount_{{ c_c.id }}'
                                        value="{{ c_c.amount_of_likes }}" readonly/>
                                 {% if request.user.is_authenticated %}
-                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_{{ c_c.id }}"
+                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_course_{{ c_c.id }}"
                                             name="heart-like" onclick="changeHeart(this)"></button>
                                 {% endif %}
                             </div>
