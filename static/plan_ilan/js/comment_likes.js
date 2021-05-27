@@ -40,7 +40,9 @@ window.onload = function () {
                 if (post === null){
                     post = document.getElementById("heart_teacher_" + likes_from_json[i]["fields"]["review"]);
                 }
-                post.classList.add('red');
+                if (post !== null) {
+                    post.classList.add('red');
+                }
             }
         },
         error: function (error) {
