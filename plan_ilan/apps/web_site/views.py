@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.views import generic
 
 from .decorators import unauthenticated_user, authenticated_user
 from .filters import *
@@ -175,3 +176,16 @@ def time_table(request):
             return JsonResponse(context, safe=False)
         return render(request, 'timetable_generator/timetable.html', context)
     return render(request, 'timetable_generator/timetable.html')
+
+
+class TeacherDetailView(generic.DetailView):
+    model = Teacher
+    template_name = "plan_ilan/teacher_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(TeacherDetailView, self).get_context_data(**kwargs)
+        teacher_rating = TeacherRating.objects.filter(teacher=context['teacher'])
+        teacher_reviews = TeacherReview.objects.filter(teacher=context['teacher'])
+        context['teacher_rating'] = teacher_rating
+        context['teacher_reviews'] = teacher_reviews
+        return context

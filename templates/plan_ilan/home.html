@@ -91,7 +91,7 @@
                             {% else %}
                                 <button type="button" class="btn btn-link" disabled>דרג</button>
                             {% endif %}
-                            <button type="button" class="btn btn-link">פרטים נוספים</button>
+                            <a href="{% url 'teacher_detail' t.id %}" class="btn btn-link">פרטים נוספים</a>
                         </div>
                     </div>
                 </div>
