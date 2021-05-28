@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import generic
 
 from .decorators import unauthenticated_user, authenticated_user
@@ -62,19 +63,23 @@ def home(request):
         return render(request, 'plan_ilan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
-            if request.POST.get('type', '') == 'course':
-                post_obj = CourseReview.objects.get(id=request.POST.get('PostID', ''))
-            else:
-                post_obj = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
-            if request.POST.get('to_add', '') == '1':
-                post_obj.like_review(Account.objects.get(user=request.user))
-            else:
-                post_obj.remove_like(Account.objects.get(user=request.user))
-            post_obj.save()
+            add_or_remove_like(request)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
         return render(request, 'plan_ilan/home.html', context)
     return render(request, 'plan_ilan/home.html')
+
+
+def add_or_remove_like(request):
+    if request.POST.get('type', '') == 'course':
+        post_obj = CourseReview.objects.get(id=request.POST.get('PostID', ''))
+    else:
+        post_obj = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
+    if request.POST.get('to_add', '') == '1':
+        post_obj.like_review(Account.objects.get(user=request.user))
+    else:
+        post_obj.remove_like(Account.objects.get(user=request.user))
+    post_obj.save()
 
 
 def show_best_teacher_courses():
@@ -189,3 +194,19 @@ class TeacherDetailView(generic.DetailView):
         context['teacher_rating'] = teacher_rating
         context['teacher_reviews'] = teacher_reviews
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if request.POST.get('PostID', ''):
+            add_or_remove_like(request)
+        elif request.POST.get('Rating_object_ID', ''):
+            save_comment_and_rating(request)
+        return HttpResponseRedirect(reverse('teacher_detail', kwargs={'pk': self.object.pk}))
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax() and request.user.is_authenticated:
+            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
+            json_likes_list = serializers.serialize("json", all_likes)
+            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
+        else:
+            return super(TeacherDetailView, self).get(request, *args, **kwargs)

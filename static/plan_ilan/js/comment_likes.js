@@ -12,15 +12,10 @@ function changeHeart(pressed) {
         data['to_add'] = 1
     }
     $.ajax({
-        url: '/',
+        url: window.location.pathname,
         type: 'POST',
         data: data,
         success: function (data) {
-            // if (event.target.classList.contains('red')) {
-            //     p.parentNode.querySelector("[id^=amount_]").stepUp(1);
-            // } else {
-            //     p.parentNode.querySelector("[id^=amount_]").stepUp(-1);
-            // }
         },
         error: function (error) {
             alert('error; ' + eval(error));
@@ -31,7 +26,7 @@ function changeHeart(pressed) {
 
 window.onload = function () {
     $.ajax({
-        url: '/',
+        url: window.location.pathname,
         type: 'GET',
         success: function (data) {
             let likes_from_json = JSON.parse(data.json_likes_list);

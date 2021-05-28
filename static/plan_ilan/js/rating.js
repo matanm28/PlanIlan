@@ -60,14 +60,14 @@ function sendData(btn) {
         'headline': headline
     };
     $.ajax({
-        url: '/',
+        url:  window.location.pathname,
         type: 'POST',
         data: data,
         success: function (data) {
-            alert('successfully rated');
+            alert('התגובה התקבלה, תודה!');
         },
         error: function (error) {
-            alert('error; ' + eval(error));
+            alert('בעיה בדירוג');
         }
     });
     return false;

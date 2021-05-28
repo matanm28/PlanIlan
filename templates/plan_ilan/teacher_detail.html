@@ -63,11 +63,11 @@
                 <form class="rate-form" method="post">
                     {% csrf_token %}
                     <label for="headline_{{ t.id }}">כותרת:
-                        <input  class="form-control" type="text" id="headline_{{ t.id }}">
+                        <input  class="form-control" type="text" id="headline_{{ teacher.id }}">
                     </label>
                     <br>
                     <label for="commentArea">תוכן:
-                        <textarea class="form-control" id="commentArea_{{ t.id }}" rows="3"></textarea>
+                        <textarea class="form-control" id="commentArea_{{ teacher.id }}" rows="3"></textarea>
                     </label>
                     <br>
                     <label>דרג:</label>
