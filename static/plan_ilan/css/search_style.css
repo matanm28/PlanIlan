@@ -95,3 +95,12 @@
 #teacher_search {
     color: #111111;
 }
+
+.details {
+    color: black;
+}
+
+.details-title {
+    color: rgba(198, 30, 30, 0.7);
+    text-align: center;
+}

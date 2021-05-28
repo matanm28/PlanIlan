@@ -60,9 +60,16 @@ function chosenElement(id) {
             let times = JSON.parse(data.lesson_times);
             let types = JSON.parse(data.lesson_types);
             let staff = JSON.parse(data.staff);
-            document.getElementById("name_" + course_code).value = course_data[0]["fields"]["name"]
-            document.getElementById("code_" + course_code).value = course_code
+            staff = get_field(staff, 'name');
+            types = get_field(types, 'label');
             spinner.style.display = "none";
+            // adding details
+            document.getElementById("name_" + course_code).innerText = course_data[0]["fields"]["name"]
+            document.getElementById("code_" + course_code).innerText = "קוד: " + course_code
+            document.getElementById("exams_" + course_code).innerText = "בחינות: " + exams[0].fields
+            document.getElementById("type_" + course_code).innerText = "סוג מפגש: " + types
+            document.getElementById("staff_" + course_code).innerText = "סגל: " + staff
+            document.getElementById("times_" + course_code).innerText = "זמנים: " + times[0].fields
             const chosen_course = document.getElementById(id);
             chosen_course.classList.add("shown");
             chosen_course.style.display = "block";
@@ -73,6 +80,15 @@ function chosenElement(id) {
     });
     return false;
 }
+
+function get_field(arr, f) {
+    let staff_names = []
+    for (let i = 0; i < arr.length; i++) {
+        staff_names.push((arr[i].fields)[f])
+    }
+    return staff_names.toString()
+}
+
 
 $(function () {
     $("#courses_result").resizable();

@@ -136,16 +136,26 @@
             <div class="ui-widget-content resize-box" id="chosen_elements">
                 <div class="scrollbar scrollbar-primary">
                     {% if 'form-search-course' in request.GET %}
-                        <div class="spinner-border text-danger" role="status" id="spinner" style="display: none">
-                            <span class="visually-hidden">Loading...</span>
+                        <div id="spinner" style="display: none">
+                            <div class="spinner-border text-danger" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="spinner-text">אנא המתן...</div>
                         </div>
+
                         {% for course in courses %}
                             <div class="chosen_course" id="chosen_course_{{ course.code }}" style="display: none">
-                                <label for="name_{{ course.code }}">שם:</label><input type="text"
-                                                                                      id="name_{{ course.code }}">
-                                <br>
-                                <label for="code_{{ course.code }}">קוד:</label><input type="text"
-                                                                                       id="code_{{ course.code }}">
+                                <div class="details-title fw-bolder text-decoration-underline fs-2" id="name_{{ course.code }}"></div>
+                                <div class="details fs-4" id="code_{{ course.code }}"></div>
+                                <div class="details fs-4" id="staff_{{ course.code }}"></div>
+                                <div class="details fs-4" id="exams_{{ course.code }}"></div>
+                                <div class="details fs-4" id="type_{{ course.code }}"></div>
+                                <div class="details fs-4" id="times_{{ course.code }}"></div>
+
+                                {#                                <label for="name_{{ course.code }}">שם:</label><input type="text" id="name_{{ course.code }}">#}
+                                {#                                <br>#}
+                                {#                                <label for="code_{{ course.code }}">קוד:</label><input type="text" #}
+                                {#                                                                                      id="code_{{ course.code }}">#}
                             </div>
                         {% endfor %}
                     {% endif %}
