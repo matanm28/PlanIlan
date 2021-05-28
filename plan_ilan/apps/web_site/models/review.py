@@ -46,6 +46,10 @@ class Review(PolymorphicModel, BaseModel):
         text_length = len(self.text)
         return f'{self.text[:50]}...' if text_length > 50 else self.text[:text_length]
 
+    @property
+    def amount_of_likes(self):
+        return self.likes.count()
+
     def edit(self, edited_headline: str = None, edited_text: str = None, edited_rating: Rating = None, **kwargs) -> bool:
         edited_fields = (self.__edit_headline(edited_headline), self.__edit_text(edited_text), self.__edit_rating(edited_rating))
         return any(edited_fields)

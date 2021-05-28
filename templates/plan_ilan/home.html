@@ -79,10 +79,11 @@
                             <p class="card-text">
                                 <label>מחלקות:
                                     {% for dep in t.departments %}
-                                        {{ dep }},
+                                        <li>{{ dep }}</li>
                                     {% endfor %}
                                 </label>
                                 <br>
+                            <label>דירוג ממוצע: {{ t.average_rating }}</label>
                             </p>
                             {% if request.user.is_authenticated %}
                                 <button type="button" class="btn btn-link" onclick="openRateModal(this)"

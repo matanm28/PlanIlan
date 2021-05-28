@@ -117,6 +117,20 @@ def save_comment_and_rating(request):
     review_object.save()
 
 
+def delete_comment(request):
+    query_rev = Review.objects.filter(id=request.POST.get('id', ''))
+    if query_rev.exists():
+        rev = query_rev.get()
+        if isinstance(rev, CourseReview):
+            query_rate = CourseRating.objects.filter(course=rev)
+        else:
+            query_rate = TeacherRating.objects.filter(teacher=rev)
+        if query_rate.exists():
+            rate = query_rate.get()
+            rate.delete()
+        rev.delete()
+
+
 @unauthenticated_user
 def register(request):
     if request.method == 'POST':
@@ -191,8 +205,10 @@ class TeacherDetailView(generic.DetailView):
         context = super(TeacherDetailView, self).get_context_data(**kwargs)
         teacher_rating = TeacherRating.objects.filter(teacher=context['teacher'])
         teacher_reviews = TeacherReview.objects.filter(teacher=context['teacher'])
+        users_rated = [rev.author.user for rev in teacher_reviews]
         context['teacher_rating'] = teacher_rating
         context['teacher_reviews'] = teacher_reviews
+        context['users_rated'] = users_rated
         return context
 
     def post(self, request, *args, **kwargs):
@@ -201,6 +217,8 @@ class TeacherDetailView(generic.DetailView):
             add_or_remove_like(request)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
+        elif request.POST.get('delete', ''):
+            delete_comment(request)
         return HttpResponseRedirect(reverse('teacher_detail', kwargs={'pk': self.object.pk}))
 
     def get(self, request, *args, **kwargs):

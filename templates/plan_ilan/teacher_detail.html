@@ -60,34 +60,41 @@
             <br><br><br>
             <div class="shadow">
                 <h3>הוסף תגובה</h3>
-                <form class="rate-form" method="post">
-                    {% csrf_token %}
-                    <label for="headline_{{ t.id }}">כותרת:
-                        <input  class="form-control" type="text" id="headline_{{ teacher.id }}">
-                    </label>
-                    <br>
-                    <label for="commentArea">תוכן:
-                        <textarea class="form-control" id="commentArea_{{ teacher.id }}" rows="3"></textarea>
-                    </label>
-                    <br>
-                    <label>דרג:</label>
-                    <div>
-                        <button type="submit" class="fa fa-star fa-2x star-btn" id="first-star_{{ t.id }}"
-                                onmouseover="changeStar(this)"></button>
-                        <button type="submit" class="fa fa-star fa-2x star-btn" id="second-star_{{ t.id }}"
-                                onmouseover="changeStar(this)"></button>
-                        <button type="submit" class="fa fa-star fa-2x star-btn" id="third-star_{{ t.id }}"
-                                onmouseover="changeStar(this)"></button>
-                        <button type="submit" class="fa fa-star fa-2x star-btn" id="fourth-star_{{ t.id }}"
-                                onmouseover="changeStar(this)"></button>
-                        <button type="submit" class="fa fa-star fa-2x star-btn" id="fifth-star_{{ t.id }}"
-                                onmouseover="changeStar(this)"></button>
-                    </div>
-                    <br>
-                    <button id="teacher_review_{{ teacher.id }}" class="btn btn-outline-primary"
-                            onclick="sendData(this)">שלח!
-                    </button>
-                </form>
+                {% if request.user in users_rated %}
+                    תגובתך התקבלה. אין אפשרות להוסיף תגובה נוספת.
+                    ניתן לערוך את תגובתך הקיימת.
+                {% elif not request.user.is_authenticated %}
+                    על מנת להשאיר תגובה, עליך להרשם לאתר.
+                {% else %}
+                    <form class="rate-form" method="post">
+                        {% csrf_token %}
+                        <label for="headline_{{ t.id }}">כותרת:
+                            <input class="form-control" type="text" id="headline_{{ teacher.id }}">
+                        </label>
+                        <br>
+                        <label for="commentArea">תוכן:
+                            <textarea class="form-control" id="commentArea_{{ teacher.id }}" rows="3"></textarea>
+                        </label>
+                        <br>
+                        <label>דרג:</label>
+                        <div>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="first-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="second-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="third-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="fourth-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="fifth-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                        </div>
+                        <br>
+                        <button id="teacher_review_{{ teacher.id }}" class="btn btn-outline-primary"
+                                onclick="sendData(this)">שלח!
+                        </button>
+                    </form>
+                {% endif %}
             </div>
         </div>
         <div class="column">
@@ -129,6 +136,11 @@
                                                 id="heart_teacher_{{ review.id }}"
                                                 name="heart-like" onclick="changeHeart(this)"></button>
                                     {% endif %}
+                                    <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                    <br>
+                                    <button id="delete_{{ review.id }}" class="fas fa-trash close-btn-groups trash"
+                                            onclick="delete_comment(this)"></button>
+                                    <button type="button" class="btn btn-link">ערוך</button>
                                 </div>
                             </div>
                         </div>
