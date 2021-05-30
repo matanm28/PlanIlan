@@ -33,6 +33,8 @@ urlpatterns = [
                   path('register/', views.register, name='register'),
                   path('teacher/<int:pk>',
                        views.TeacherDetailView.as_view(), name='teacher_detail'),
+                  path('delete-review/<int:pk>',
+                       views.ReviewDeleteView.as_view(), name='delete_review'),
                   # RESET PASSWORD URLS
                   path('reset_password/',
                        auth_views.PasswordResetView.as_view(template_name="plan_ilan/password_reset.html"),

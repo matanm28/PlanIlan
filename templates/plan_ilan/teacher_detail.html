@@ -135,12 +135,16 @@
                                         <button type="submit" class="fa fa-heart heart-btn"
                                                 id="heart_teacher_{{ review.id }}"
                                                 name="heart-like" onclick="changeHeart(this)"></button>
+                                        <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                        <br>
+                                        {% ifequal request.user review.author.user %}
+                                            <button id="delete_{{ review.id }}"
+                                                    class="fas fa-trash close-btn-groups trash"
+                                                    onclick="delete_comment(this)"></button>
+                                            <br>
+                                            <button type="button" class="btn btn-link">ערוך</button>
+                                        {% endifequal %}
                                     {% endif %}
-                                    <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
-                                    <br>
-                                    <button id="delete_{{ review.id }}" class="fas fa-trash close-btn-groups trash"
-                                            onclick="delete_comment(this)"></button>
-                                    <button type="button" class="btn btn-link">ערוך</button>
                                 </div>
                             </div>
                         </div>

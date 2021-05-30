@@ -67,7 +67,7 @@ function sendData(btn) {
             alert('התגובה התקבלה, תודה!');
         },
         error: function (error) {
-            alert('בעיה בדירוג');
+            alert('בעיה בהשארת התגובה. נסה שנית');
         }
     });
     return false;
@@ -75,20 +75,22 @@ function sendData(btn) {
 
 function delete_comment(delete_btn) {
     confirm("האם אתה בטוח שברצונך למחוק את התגובה?");
-    let rev_id = delete_btn.split("_")[1]
+    let rev_id = delete_btn.id.split("_")[1]
     let data = {
+        'csrfmiddlewaretoken': csrftoken,
         'id': rev_id,
-        'delete': true,
     };
     $.ajax({
-        url:  window.location.pathname,
-        type: 'POST',
+        url:  '/delete-review/' + rev_id,
+        type: 'post',
         data: data,
         success: function (data) {
             alert('התגובה נמחקה');
+            location.reload();
         },
         error: function (error) {
-            alert('בעיה במחיקה');
+            alert('בעיה במחיקה. נסה שנית');
+            location.reload();
         }
     });
     return false;

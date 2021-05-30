@@ -1,15 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.views import generic
 
-from .decorators import unauthenticated_user, authenticated_user
-from .filters import *
-from .forms import CreateAccountForm, CreateDjangoUserForm
-from .models import *
+from plan_ilan.apps.web_site.decorators import unauthenticated_user, authenticated_user
+from plan_ilan.apps.web_site.filters import *
+from plan_ilan.apps.web_site.forms import CreateAccountForm, CreateDjangoUserForm
+from plan_ilan.apps.web_site.models import *
 
 
 def search(request):
@@ -195,36 +193,3 @@ def time_table(request):
             return JsonResponse(context, safe=False)
         return render(request, 'timetable_generator/timetable.html', context)
     return render(request, 'timetable_generator/timetable.html')
-
-
-class TeacherDetailView(generic.DetailView):
-    model = Teacher
-    template_name = "plan_ilan/teacher_detail.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(TeacherDetailView, self).get_context_data(**kwargs)
-        teacher_rating = TeacherRating.objects.filter(teacher=context['teacher'])
-        teacher_reviews = TeacherReview.objects.filter(teacher=context['teacher'])
-        users_rated = [rev.author.user for rev in teacher_reviews]
-        context['teacher_rating'] = teacher_rating
-        context['teacher_reviews'] = teacher_reviews
-        context['users_rated'] = users_rated
-        return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if request.POST.get('PostID', ''):
-            add_or_remove_like(request)
-        elif request.POST.get('Rating_object_ID', ''):
-            save_comment_and_rating(request)
-        elif request.POST.get('delete', ''):
-            delete_comment(request)
-        return HttpResponseRedirect(reverse('teacher_detail', kwargs={'pk': self.object.pk}))
-
-    def get(self, request, *args, **kwargs):
-        if request.is_ajax() and request.user.is_authenticated:
-            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
-            json_likes_list = serializers.serialize("json", all_likes)
-            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
-        else:
-            return super(TeacherDetailView, self).get(request, *args, **kwargs)
