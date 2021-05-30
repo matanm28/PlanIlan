@@ -15,6 +15,7 @@ class LessonTime(BaseModel):
     year = models.PositiveSmallIntegerField()
 
     class Meta:
+        ordering = ['day','start_time','end_time']
         unique_together = ['day', 'semester', 'start_time', 'end_time', 'year']
         db_table = 'lesson_times'
 

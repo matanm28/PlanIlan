@@ -56,23 +56,6 @@ class LabeledIntegerEnum(models.IntegerChoices):
         raise EnumNotExistError(cls.__name__, search_value)
 
 
-class DAYS(LabeledIntegerEnum):
-    SUNDAY = 1, _('א')
-    MONDAY = 2, _('ב')
-    TUESDAY = 3, _('ג')
-    WEDNESDAY = 4, _('ד')
-    THURSDAY = 5, _('ה')
-    FRIDAY = 6, _('ו')
-
-    @classmethod
-    def full_strings_labels(cls) -> Tuple[str]:
-        return 'ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'
-
-    @property
-    def full_label(self) -> str:
-        return DAYS.full_strings_labels()[self.value - 1]
-
-
 class EnumModel(BaseModel):
     number = models.SmallIntegerField(primary_key=True, editable=False)
     label = models.CharField(max_length=60, editable=False)
@@ -107,6 +90,26 @@ class EnumModel(BaseModel):
         abstract = True
         unique_together = ['number', 'label']
         ordering = ['number']
+
+
+class DAYS(LabeledIntegerEnum):
+    SUNDAY = 1, _('א')
+    MONDAY = 2, _('ב')
+    TUESDAY = 3, _('ג')
+    WEDNESDAY = 4, _('ד')
+    THURSDAY = 5, _('ה')
+    FRIDAY = 6, _('ו')
+
+    @classmethod
+    def full_strings_labels(cls) -> Tuple[str]:
+        return 'ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'
+
+    @property
+    def full_label(self) -> str:
+        return DAYS.full_strings_labels()[self.value - 1]
+
+    def __str__(self):
+        return self.full_label
 
 
 class Day(EnumModel):

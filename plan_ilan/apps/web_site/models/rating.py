@@ -13,7 +13,7 @@ class Rating(BaseModel):
     value = models.PositiveSmallIntegerField(validators=VALIDATORS)
 
     class Meta:
-        ordering = ['value']
+        ordering = ['value','pk']
         abstract = True
 
     def edit_rating(self, edited_value: int = None) -> bool:

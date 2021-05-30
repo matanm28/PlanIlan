@@ -21,6 +21,7 @@ class Review(PolymorphicModel, BaseModel):
     date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering = ['date_modified', 'date_created']
         db_table = 'reviews'
 
     def like_review(self, user: Account) -> 'Like':
@@ -81,6 +82,7 @@ class TeacherReview(Review):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='reviews')
 
     class Meta:
+        ordering = ['pk']
         db_table = 'teacher_reviews'
 
 
@@ -95,6 +97,7 @@ class CourseReview(Review):
     average = models.FloatField(null=True)
 
     class Meta:
+        ordering = ['pk']
         db_table = 'course_reviews'
 
     def get_image_url_if_valid(self):
@@ -140,6 +143,7 @@ class Like(BaseModel):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='likes')
 
     class Meta:
+        ordering = ['pk']
         db_table = 'likes'
 
     def create(self, user: Account, review: Review) -> 'Like':
