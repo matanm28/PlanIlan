@@ -10,7 +10,8 @@
 {% endblock %}
 {% block js_block %}
     {% load static %}
-    <script type="text/javascript" src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
@@ -36,7 +37,7 @@
                                        value="{{ t_c.amount_of_likes }}" readonly/>
                                 {% if request.user.is_authenticated %}
                                     <button type="submit" class="fa fa-heart heart-btn" id="heart_teacher_{{ t_c.id }}"
-                                            name="heart-like"></button>
+                                            name="heart-like" onclick="changeHeart(this)"></button>
                                 {% endif %}
                             </div>
                             <div class="media-body">
@@ -78,10 +79,11 @@
                             <p class="card-text">
                                 <label>מחלקות:
                                     {% for dep in t.departments %}
-                                        {{ dep }},
+                                        <li>{{ dep }}</li>
                                     {% endfor %}
                                 </label>
                                 <br>
+                            <label>דירוג ממוצע: {{ t.average_rating }}</label>
                             </p>
                             {% if request.user.is_authenticated %}
                                 <button type="button" class="btn btn-link" onclick="openRateModal(this)"
@@ -90,7 +92,7 @@
                             {% else %}
                                 <button type="button" class="btn btn-link" disabled>דרג</button>
                             {% endif %}
-                            <button type="button" class="btn btn-link">פרטים נוספים</button>
+                            <a href="{% url 'teacher_detail' t.id %}" class="btn btn-link">פרטים נוספים</a>
                         </div>
                     </div>
                 </div>
@@ -101,20 +103,30 @@
                         <div>
                             <form class="rate-form" method="post">
                                 {% csrf_token %}
+                                <label for="headline_{{ t.id }}">כותרת:
+                                    <input type="text" id="headline_{{ t.id }}">
+                                </label>
+                                <br>
                                 <label for="commentArea">הוסף תגובה:</label>
-                                <textarea class="form-control" id="commentArea" rows="3"></textarea>
+                                <textarea class="form-control" id="commentArea_{{ t.id }}" rows="3"></textarea>
                                 <br>
                                 <label>דרג:</label>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="first-star_{{ t.id }}" data-id="{{ t.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="second-star_{{ t.id }}" data-id="{{ t.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="third-star_{{ t.id }}" data-id="{{ t.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="fourth-star_{{ t.id }}" data-id="{{ t.id }}"></button>
-                                <button type="submit" class="fa fa-star fa-2x star-btn"
-                                        id="fifth-star_{{ t.id }}" data-id="{{ t.id }}"></button>
+                                <div>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn" id="first-star_{{ t.id }}"
+                                            onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn" id="second-star_{{ t.id }}"
+                                            onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn" id="third-star_{{ t.id }}"
+                                            onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn" id="fourth-star_{{ t.id }}"
+                                            onmouseover="changeStar(this)"></button>
+                                    <button type="submit" class="fa fa-star fa-2x star-btn" id="fifth-star_{{ t.id }}"
+                                            onmouseover="changeStar(this)"></button>
+                                </div>
+                                <br>
+                                <button type="submit" id="teacher_review_{{ t.id }}" class="btn btn-outline-primary"
+                                        onclick="sendData(this)">שלח!
+                                </button>
                             </form>
                         </div>
                     </div>

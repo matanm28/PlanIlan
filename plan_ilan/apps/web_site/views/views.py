@@ -4,10 +4,10 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from .decorators import unauthenticated_user, authenticated_user
-from .filters import *
-from .forms import CreateAccountForm, CreateDjangoUserForm
-from .models import *
+from plan_ilan.apps.web_site.decorators import unauthenticated_user, authenticated_user
+from plan_ilan.apps.web_site.filters import *
+from plan_ilan.apps.web_site.forms import CreateAccountForm, CreateDjangoUserForm
+from plan_ilan.apps.web_site.models import *
 
 
 def search(request):
@@ -45,7 +45,8 @@ def get_details(code):
     json_types_details = serializers.serialize("json", types)
     lesson_times_list = LessonTime.objects.filter(lessons__pk__in=lessons_pk).distinct()
     json_times_details = serializers.serialize("json", lesson_times_list)
-    course_details = {'chosen_course': json_chosen_course, 'exams': json_exams_details, 'lesson_times': json_times_details,
+    course_details = {'chosen_course': json_chosen_course, 'exams': json_exams_details,
+                      'lesson_times': json_times_details,
                       'lesson_types': json_types_details, 'staff': json_teacher_details}
     return course_details
 
@@ -60,21 +61,23 @@ def home(request):
         return render(request, 'plan_ilan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
-            if request.POST.get('type', '') == 'course':
-                course_post = CourseReview.objects.get(id=request.POST.get('PostID', ''))
-                if request.POST.get('to_add', '') == '1':
-                    course_post.like_review(Account.objects.get(user=request.user))
-                else:
-                    course_post.remove_like(Account.objects.get(user=request.user))
-                course_post.save()
-            else:
-                teacher_post = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
-                teacher_post.like_review(request.user)
-                teacher_post.save()
+            add_or_remove_like(request)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
         return render(request, 'plan_ilan/home.html', context)
     return render(request, 'plan_ilan/home.html')
+
+
+def add_or_remove_like(request):
+    if request.POST.get('type', '') == 'course':
+        post_obj = CourseReview.objects.get(id=request.POST.get('PostID', ''))
+    else:
+        post_obj = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
+    if request.POST.get('to_add', '') == '1':
+        post_obj.like_review(Account.objects.get(user=request.user))
+    else:
+        post_obj.remove_like(Account.objects.get(user=request.user))
+    post_obj.save()
 
 
 def show_best_teacher_courses():
@@ -106,10 +109,24 @@ def save_comment_and_rating(request):
     else:
         teacher_rated = Teacher.objects.get(id=request.POST.get('Rating_object_ID', ''))
         rating_obj = TeacherRating.create(user, value, teacher_rated)
-        review_object = CourseReview.objects.create(teacher=teacher_rated, author=user, headline=headline,
-                                                    text=comment_body)
+        review_object = TeacherReview.objects.create(teacher=teacher_rated, author=user, headline=headline,
+                                                     text=comment_body)
     rating_obj.save()
     review_object.save()
+
+
+def delete_comment(request):
+    query_rev = Review.objects.filter(id=request.POST.get('id', ''))
+    if query_rev.exists():
+        rev = query_rev.get()
+        if isinstance(rev, CourseReview):
+            query_rate = CourseRating.objects.filter(course=rev)
+        else:
+            query_rate = TeacherRating.objects.filter(teacher=rev)
+        if query_rate.exists():
+            rate = query_rate.get()
+            rate.delete()
+        rev.delete()
 
 
 @unauthenticated_user

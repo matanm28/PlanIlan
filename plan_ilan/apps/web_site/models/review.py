@@ -46,6 +46,10 @@ class Review(PolymorphicModel, BaseModel):
         text_length = len(self.text)
         return f'{self.text[:50]}...' if text_length > 50 else self.text[:text_length]
 
+    @property
+    def amount_of_likes(self):
+        return self.likes.count()
+
     def edit(self, edited_headline: str = None, edited_text: str = None, edited_rating: Rating = None, **kwargs) -> bool:
         edited_fields = (self.__edit_headline(edited_headline), self.__edit_text(edited_text), self.__edit_rating(edited_rating))
         return any(edited_fields)
@@ -117,11 +121,13 @@ def pre_save_review_receiver(sender, instance: Review, *args, **kwargs):
     if not instance.slug:
         if isinstance(instance, CourseReview):
             special_str_for_slug = instance.course.name
+            num_rates = len(CourseReview.objects.filter(course=instance.course)) + 1
         elif isinstance(instance, TeacherReview):
             special_str_for_slug = instance.teacher.name
+            num_rates = len(TeacherReview.objects.filter(teacher=instance.teacher)) + 1
         else:
             special_str_for_slug = random.randint(0, 10 ** 5)
-        instance.slug = slugify(f'{instance.author.username}-{special_str_for_slug}', allow_unicode=True)
+        instance.slug = slugify(f'{instance.author.username}-{special_str_for_slug}-{num_rates}', allow_unicode=True)
 
 
 @receiver(post_delete, sender=CourseReview, dispatch_uid='delete_image_from_files_when_review_is_deleted', weak=False)

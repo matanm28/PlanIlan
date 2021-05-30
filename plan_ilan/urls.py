@@ -16,8 +16,9 @@ Including another URLconf
 
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.urls import path, include
+
 from . import settings
 from .apps.web_site import views
 
@@ -30,6 +31,10 @@ urlpatterns = [
                   path('login/', views.login_page, name='login'),
                   path('logout/', views.logout_user, name='logout'),
                   path('register/', views.register, name='register'),
+                  path('teacher/<int:pk>',
+                       views.TeacherDetailView.as_view(), name='teacher_detail'),
+                  path('delete-review/<int:pk>',
+                       views.ReviewDeleteView.as_view(), name='delete_review'),
                   # RESET PASSWORD URLS
                   path('reset_password/',
                        auth_views.PasswordResetView.as_view(template_name="plan_ilan/password_reset.html"),

@@ -1,0 +1,156 @@
+{% extends 'plan_ilan/base.html' %}
+{% block css_block %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/teacher_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/likes_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/scrollbar_style.css' %}"/>
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'plan_ilan/js/comment_likes.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/rating.js' %}"></script>
+{% endblock %}
+{% block title %}פרטי מורה{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <h1>{{ teacher.title_and_name }}</h1><br>
+            <p><strong>פקולטה:</strong> {{ teacher.faculty }}</p>
+            <p><strong>מחלקות:</strong>
+                {% for dep in teacher.departments %}
+                    <li>{{ dep }}</li>
+                {% endfor %}
+            </p>
+            <p><strong>טלפון:</strong>
+                {% if teacher.phone %}
+                    {{ teacher.phone }}
+                {% else %}
+                    אין
+                {% endif %}
+            </p>
+            <p><strong>אימייל:</strong>
+                {% if teacher.email %}
+                    {{ teacher.email }}
+                {% else %}
+                    אין
+                {% endif %}
+            </p>
+            <p><strong>קישור לאתר:</strong>
+                {% if teacher.website_url %}
+                    {{ teacher.website_url }}
+                {% else %}
+                    אין
+                {% endif %}
+            </p>
+            <p><strong>דירוג ממוצע: </strong>{{ teacher.average_rating }}</p>
+        </div>
+        <div class="column">
+            {% if not teacher.image.url %}
+                <img src="{{ teacher.image.url }}" alt=""/>
+            {% else %}
+                <img src="{% static 'plan_ilan/images/images.png' %}" alt=""/>
+            {% endif %}
+            <br><br><br>
+            <div class="shadow">
+                <h3>הוסף תגובה</h3>
+                {% if request.user in users_rated %}
+                    תגובתך התקבלה. אין אפשרות להוסיף תגובה נוספת.
+                    ניתן לערוך את תגובתך הקיימת.
+                {% elif not request.user.is_authenticated %}
+                    על מנת להשאיר תגובה, עליך להרשם לאתר.
+                {% else %}
+                    <form class="rate-form" method="post">
+                        {% csrf_token %}
+                        <label for="headline_{{ t.id }}">כותרת:
+                            <input class="form-control" type="text" id="headline_{{ teacher.id }}">
+                        </label>
+                        <br>
+                        <label for="commentArea">תוכן:
+                            <textarea class="form-control" id="commentArea_{{ teacher.id }}" rows="3"></textarea>
+                        </label>
+                        <br>
+                        <label>דרג:</label>
+                        <div>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="first-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="second-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="third-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="fourth-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                            <button type="submit" class="fa fa-star fa-2x star-btn" id="fifth-star_{{ t.id }}"
+                                    onmouseover="changeStar(this)"></button>
+                        </div>
+                        <br>
+                        <button id="teacher_review_{{ teacher.id }}" class="btn btn-outline-primary"
+                                onclick="sendData(this)">שלח!
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="column">
+            <h1>תגובות על המורה</h1><br>
+            <div class="scrollbar scrollbar-primary">
+                {% for review in teacher_reviews %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <img src="https://image.ibb.co/jw55Ex/def_face.jpg"
+                                         class="img img-rounded img-fluid"
+                                         alt=""/>
+                                </div>
+                                <div class="col-md-10">
+                                    <p>
+                                        {% if review.author.first_name %}
+                                            <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
+                                        {% else %}
+                                            <a class="float-left"><strong>{{ review.author }}</strong></a>
+                                        {% endif %}
+                                        {% for rating in teacher_rating %}
+                                            {% ifequal rating.user review.author %}
+                                                {% with ''|center:rating.value as range %}
+                                                    {% for _ in range %}
+                                                        <span class="float-right"><i
+                                                                class="text-warning fa fa-star"></i></span>
+                                                    {% endfor %}
+                                                {% endwith %}
+                                            {% endifequal %}
+                                        {% endfor %}
+
+                                    </p>
+                                    <div class="clearfix"></div>
+                                    <p><strong>{{ review.headline }}</strong></p>
+                                    <p>{{ review.text }}</p>
+                                    {% if request.user.is_authenticated %}
+                                        <button type="submit" class="fa fa-heart heart-btn"
+                                                id="heart_teacher_{{ review.id }}"
+                                                name="heart-like" onclick="changeHeart(this)"></button>
+                                        <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                        <br>
+                                        {% ifequal request.user review.author.user %}
+                                            <button id="delete_{{ review.id }}"
+                                                    class="fas fa-trash close-btn-groups trash"
+                                                    onclick="delete_comment(this)"></button>
+                                            <br>
+                                            <button type="button" class="btn btn-link">ערוך</button>
+                                        {% endifequal %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
