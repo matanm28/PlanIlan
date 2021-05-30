@@ -24,6 +24,7 @@ class Account(BaseModel):
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='accounts', default=FacultyEnum.UNKNOWN)
 
     class Meta:
+        ordering = ['pk', 'faculty']
         db_table = 'accounts'
 
     def create(self, user_name: str, password: str, email: str, first_name: str, last_name: str, faculty: Faculty):

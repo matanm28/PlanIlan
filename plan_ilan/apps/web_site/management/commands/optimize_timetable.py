@@ -8,7 +8,7 @@ from typing import Dict
 from codetiming import Timer
 from django.core.management import BaseCommand
 
-from plan_ilan.apps.plan_ilan_site.models import SemesterEnum, DAYS, Course
+from plan_ilan.apps.web_site.models import SemesterEnum, DAYS, Course
 from plan_ilan.apps.timetable_generator.timetable_optimizer import TimetableOptimizer
 from plan_ilan.apps.timetable_generator.timetable_optimizer import Interval
 

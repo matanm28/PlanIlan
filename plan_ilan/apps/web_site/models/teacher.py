@@ -3,9 +3,10 @@ from typing import List
 from django.db import models
 
 from . import BaseModel
+import plan_ilan.apps.web_site.models as my_models
 from .enums import Title, Faculty, Department
 from ..storage import OverwriteStorage
-from django.db.models import Avg
+from django.db.models import Avg, QuerySet
 
 
 def user_directory_path(instance: 'Teacher', filename: str):
@@ -27,6 +28,7 @@ class Teacher(BaseModel):
     image = models.ImageField(upload_to=user_directory_path, storage=overwrite_storage, null=True)
 
     class Meta:
+        ordering = ['name', 'title', 'pk']
         unique_together = ['name', 'title']
         db_table = 'teachers'
 
@@ -43,7 +45,7 @@ class Teacher(BaseModel):
         return teacher
 
     @property
-    def departments(self) -> List[Department]:
+    def departments(self) -> QuerySet[Department]:
         # pk is used for faster query execution
         return Department.objects.filter(courses__lessons__teachers__pk=self.pk).distinct()
 
@@ -58,6 +60,10 @@ class Teacher(BaseModel):
     @property
     def average_rating(self) -> float:
         return self.ratings.aggregate(average_value=Avg('value'))['average_value']
+
+    @property
+    def courses(self):
+        return my_models.Course.objects.filter(lessons__teachers=self).distinct()
 
     def __repr__(self):
         return f'id: {self.pk} name: {self.title_and_name}'

@@ -10,6 +10,7 @@ class Location(BaseModel):
     online = models.BooleanField(default=False)
 
     class Meta:
+        ordering = ['pk']
         unique_together = ['building_name', 'building_number', 'class_number', 'online']
         db_table = 'locations'
 
