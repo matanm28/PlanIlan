@@ -14,8 +14,11 @@ from .models import *
 def search(request):
     if request.method == 'GET':
         if request.is_ajax():
-            courses_dict = get_details(request.GET.get('code', ''))
-            return JsonResponse(courses_dict, safe=False)
+            if request.GET.get('type', '') == 'c':
+                chosen_dict = get_course_details(request.GET.get('code', ''))
+            else:
+                chosen_dict = get_teacher_details(request.GET.get('code', ''))
+            return JsonResponse(chosen_dict, safe=False)
         # COURSE SEARCH ENGINE
         lessons = Lesson.objects.all()
         lesson_filter = CourseInstanceFilter(request.GET, queryset=lessons)
@@ -33,10 +36,22 @@ def search(request):
     return render(request, 'plan_ilan/search.html')
 
 
-def get_details(code):
+def get_teacher_details(code):
+    chosen_teacher = Teacher.objects.filter(code=code)
+    name = serializers.serialize("json", chosen_teacher.title_and_name)
+    faculty = serializers.serialize("json", chosen_teacher.faculty)
+    departments = serializers.serialize("json", chosen_teacher.departments)
+    website_url = serializers.serialize("json", chosen_teacher.website_url)
+    teacher_details = {'name': name, 'faculty': faculty,
+                       'departments': departments, 'url': website_url}
+    return teacher_details
+
+
+def get_course_details(code):
     chosen_course = Course.objects.filter(code=code)
     json_chosen_course = serializers.serialize("json", chosen_course)
     lessons = Lesson.objects.filter(course__pk=code)
+    lessons_json = serializers.serialize("json", lessons)
     lessons_pk = list(map(lambda lesson: lesson.pk, lessons))
     teacher_list = Teacher.objects.filter(lessons__pk__in=lessons_pk).distinct()
     json_teacher_details = serializers.serialize("json", teacher_list)
@@ -45,10 +60,13 @@ def get_details(code):
     json_exams_details = serializers.serialize("json", exams)
     json_types_details = serializers.serialize("json", types)
     lesson_times_list = LessonTime.objects.filter(lessons__pk__in=lessons_pk).distinct()
+    dict_sessions = {}
+    for lt in lesson_times_list:
+        dict_sessions[lt.pk] = str(lt)
     json_times_details = serializers.serialize("json", lesson_times_list)
     course_details = {'chosen_course': json_chosen_course, 'exams': json_exams_details,
-                      'lesson_times': json_times_details,
-                      'lesson_types': json_types_details, 'staff': json_teacher_details}
+                      'lessons_times': json_times_details, 'lessons': lessons_json,
+                      'lesson_types': json_types_details, 'staff': json_teacher_details, 'session_dict': dict_sessions}
     return course_details
 
 

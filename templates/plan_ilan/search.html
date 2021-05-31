@@ -25,7 +25,7 @@
                 <button class="btn-choice focus clicked" id="course_button" onclick="display_course_filter()">קורס
                 </button>
             </div>
-            <div class="scrollbar scrollbar-primary" style="height: 81%; background: rgb(214, 97, 97);">
+            <div class="scrollbar scrollbar-primary" style="height: 81%; background: rgb(214,97,97);">
                 <div id="course_filter">
                     <form method="get">
                         {% csrf_token %}
@@ -120,14 +120,14 @@
                     {% if 'form-search-course' in request.GET %}
                         {% for course in courses %}
                             <button type="button" id="course_result_{{ course.code }}" class="btn class_btn"
-                                    onclick="chosenElement('chosen_course_{{ course.code }}')">{{ course.name }}<br>{{ course.code }}
+                                    onclick="chosenElement('chosen_course_{{ course.code }}', 'c')">{{ course.name }}<br>{{ course.code }}
                             </button>
                         {% endfor %}
                     {% endif %}
                     {% if 'form-search-teacher' in request.GET %}
                         {% for teacher in teachers %}
                             <button type="button" id="teacher_result_{{ forloop.counter0 }}" class="btn class_btn"
-                                    onclick="chosenElement('chosen_teacher_{{ forloop.counter0 }}')">{{ teacher }}
+                                    onclick="chosenElement('chosen_teacher_{{ forloop.counter0 }}', 't')">{{ teacher }}
                             </button>
                         {% endfor %}
                     {% endif %}
@@ -142,20 +142,18 @@
                             </div>
                             <div class="spinner-text">אנא המתן...</div>
                         </div>
-
                         {% for course in courses %}
                             <div class="chosen_course" id="chosen_course_{{ course.code }}" style="display: none">
-                                <div class="details-title fw-bolder text-decoration-underline fs-2" id="name_{{ course.code }}"></div>
+                                <div class="details-title fw-bolder text-decoration-underline fs-2"
+                                     id="name_{{ course.code }}"></div>
                                 <div class="details fs-4" id="code_{{ course.code }}"></div>
                                 <div class="details fs-4" id="staff_{{ course.code }}"></div>
-                                <div class="details fs-4" id="exams_{{ course.code }}"></div>
                                 <div class="details fs-4" id="type_{{ course.code }}"></div>
                                 <div class="details fs-4" id="times_{{ course.code }}"></div>
-
-                                {#                                <label for="name_{{ course.code }}">שם:</label><input type="text" id="name_{{ course.code }}">#}
-                                {#                                <br>#}
-                                {#                                <label for="code_{{ course.code }}">קוד:</label><input type="text" #}
-                                {#                                                                                      id="code_{{ course.code }}">#}
+                                <a class="details fs-4 btn-link" id="link_{{ course.code }}">לצפייה בסילבוס</a>
+                                <button class="btn btn-info details fs-4" id="profile_{{ course.code }}"
+                                        style="float: left">לצפייה בדף הקורס
+                                </button>
                             </div>
                         {% endfor %}
                     {% endif %}
