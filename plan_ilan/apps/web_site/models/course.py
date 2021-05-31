@@ -40,7 +40,8 @@ class Course(BaseModel):
                                                            'department': department,
                                                            'faculty': faculty
                                                        })
-        course.exams.set(exams)
+        if created or exams:
+            course.exams.set(exams)
         cls.log_created(course, created)
         if not created and not course.syllabus_link and syllabus_link:
             course.syllabus_link = syllabus_link

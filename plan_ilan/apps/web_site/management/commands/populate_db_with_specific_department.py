@@ -6,8 +6,8 @@ from plan_ilan.apps.web_site.management.commands.populate_database import Popula
 from plan_ilan.apps.web_site.models import DepartmentEnum
 from plan_ilan.utils.letters import big_letters
 
-
 logger = logging.getLogger('plan_ilan.management.commands.populate_database')
+
 
 def Command():
     return PopulateDatabaseWithSpecificDepartment()
@@ -27,5 +27,5 @@ class PopulateDatabaseWithSpecificDepartment(PopulateDatabaseCommand):
 
     @Timer(text='Script finished after total of {:.4f} seconds', logger=logger.info)
     def run_single_department(self, base_url: str, run_with_threads: bool, department: int):
-        courses = self.run_single_crawler(base_url, DepartmentEnum.from_int(department).label, run_with_threads)
+        crawler = self.run_single_crawler(base_url, DepartmentEnum.from_int(department).label, run_with_threads)
         print(big_letters('finished', 2, 4))

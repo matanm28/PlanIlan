@@ -34,6 +34,13 @@ class BaseModel(models.Model):
             return
         logging.info(f'{type(obj).__name__} instance created with id: {obj.pk}')
 
+    @classmethod
+    def log_error(cls, err, is_exception=True):
+        if is_exception:
+            logging.exception(err)
+        else:
+            logging.error(err)
+
     def __repr__(self):
         fields = self._meta.fields
         fields_str = []

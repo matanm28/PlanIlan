@@ -126,7 +126,8 @@ class ExamAdmin(admin.ModelAdmin):
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'building_name', 'building_number', 'class_number', 'is_online_location', 'lessons_in_location')
+    list_display = (
+        'id', 'building_name', 'building_number', 'class_number', 'is_online_location', 'lessons_in_location')
     sortable_by = ('id', 'building_name', 'building_number', 'class_number')
     search_fields = ('building_name', 'building_number', 'class_number')
     ordering = ['building_number', 'class_number']
@@ -154,15 +155,19 @@ class LessonTimeAdmin(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'title', 'faculty', 'phone', 'email', 'office', 'website_url', 'rating_field')
-    sortable_by = ('id', 'name', 'title', 'faculty')
-    search_fields = ('name', 'faculty__label')
+    list_display = ('id', 'name', 'title', 'faculties_field', 'phone', 'email', 'office', 'website_url', 'rating_field')
+    sortable_by = ('id', 'name', 'title')
+    search_fields = ('name', 'faculties__label')
     list_filter = ('title', FacultyListFilter)
-    ordering = ('name', 'faculty', 'id')
+    ordering = ('name', 'title', 'id')
 
     @admin.display(description='Rating', empty_value='-Not-Rated-')
-    def rating_field(self, obj: Teacher) -> Rating:
+    def rating_field(self, obj: Teacher) -> float:
         return obj.ratings.aggregate(average_value=Avg('value'))['average_value']
+
+    @admin.display(description='Faculties', empty_value='---')
+    def faculties_field(self, obj: Teacher) -> str:
+        return ', '.join(str(t) for t in obj.faculties.all())
 
 
 # Enums

@@ -1,7 +1,8 @@
-from typing import List
+from threading import Lock
 
 from django.db import models
 
+from plan_ilan.utils.decorators import static_vars
 from . import BaseModel
 import plan_ilan.apps.web_site.models as my_models
 from .enums import Title, Faculty, Department
@@ -20,7 +21,7 @@ overwrite_storage = OverwriteStorage()
 class Teacher(BaseModel):
     name = models.CharField(max_length=80)
     title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name='teachers')
-    faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, related_name='teachers')
+    faculties = models.ManyToManyField(Faculty, related_name='teachers')
     phone = models.CharField(max_length=12, null=True)
     email = models.EmailField(null=True)
     office = models.CharField(max_length=100, null=True)
@@ -34,15 +35,27 @@ class Teacher(BaseModel):
 
     @classmethod
     def create(cls, name: str, title: Title, faculty: Faculty) -> 'Teacher':
-        teacher, created = Teacher.objects.get_or_create(name=name, title=title, faculty=faculty,
+        teacher, created = Teacher.objects.get_or_create(name=name, title=title,
                                                          defaults={
                                                              'phone': None,
                                                              'email': None,
                                                              'office': None,
                                                              'website_url': None,
                                                              'image': None})
+        if not teacher.faculties.filter(pk=faculty.pk).exists():
+            teacher.faculties.add(faculty)
+            teacher.save()
         cls.log_created(teacher, created)
         return teacher
+
+    @classmethod
+    @static_vars(mutex=Lock())
+    def create_thread_safe(cls, name: str, title: Title, faculty: Faculty) -> 'Teacher':
+        try:
+            cls.create_thread_safe.mutex.acquire()
+            return cls.create(name, title, faculty)
+        finally:
+            cls.create_thread_safe.mutex.release()
 
     @property
     def departments(self) -> QuerySet[Department]:
@@ -50,11 +63,11 @@ class Teacher(BaseModel):
         return Department.objects.filter(courses__lessons__teachers__pk=self.pk).distinct()
 
     @property
-    def title_and_name(self):
+    def title_and_name(self) -> str:
         return f'{self.title.label} {self.name}'.strip()
 
     @property
-    def slug(self):
+    def slug(self) -> str:
         return f'teacher-{self.pk}'
 
     @property
@@ -62,8 +75,15 @@ class Teacher(BaseModel):
         return self.ratings.aggregate(average_value=Avg('value'))['average_value']
 
     @property
-    def courses(self):
+    def courses(self) -> QuerySet['my_models.Course']:
         return my_models.Course.objects.filter(lessons__teachers=self).distinct()
+
+    @property
+    def faculty(self) -> Faculty:
+        return self.faculties.first()
+
+    def get_faculties(self) -> QuerySet[Faculty]:
+        return self.faculties.all()
 
     def __repr__(self):
         return f'id: {self.pk} name: {self.title_and_name}'
