@@ -1,8 +1,54 @@
-from typing import List, Tuple
-import datetime
+from datetime import datetime, date, time, timedelta
+from typing import Union
+
 from django.db import models
 
-from plan_ilan.apps.web_site.models import BaseModel, Day
+from plan_ilan.apps.web_site.models import BaseModel
+
+
+class ImprovedTimeField(models.TimeField):
+    def __add__(self, other: timedelta) -> time:
+        if isinstance(other, timedelta):
+            return (datetime.combine(date.today(), self) - other).time()
+        else:
+            raise ValueError('other should be timedelta')
+
+    def __sub__(self, other: Union[timedelta, time]) -> Union[time, float]:
+        if isinstance(other, timedelta):
+            return (datetime.combine(date.today(), self) - other).time()
+        elif isinstance(other, time):
+            today = date.today()
+            return (datetime.combine(today, self) - datetime.combine(today, other)).total_seconds()
+        else:
+            raise ValueError('other should be Union[timedelta, time]')
+
+
+class TimeInterval(BaseModel):
+    start = ImprovedTimeField()
+    end = ImprovedTimeField()
+
+    @classmethod
+    def create(cls, start: datetime.time, end: datetime.time) -> 'TimeInterval':
+        if start > end:
+            start, end = end, start
+        time_interval, created = TimeInterval.objects.get_or_create(start=start, end=end)
+        cls.log_created(time_interval, created)
+        return time_interval
+
+    def is_overlapping(self, other: 'TimeInterval') -> bool:
+        return self.get_overlap(other) > 0
+        # if self.start <= other.start:
+        #     earlier, later = self, other
+        # else:
+        #     earlier, later = other, self
+        # return later.start <= earlier.end
+
+    def get_overlap(self, other: 'TimeInterval') -> float:
+        return max(0, min(self.end, other.end) - max(self.start, other.start))
+
+    class Meta:
+        ordering = ['start', 'end']
+        db_table = 'time_intervals'
 
 
 class Interval(BaseModel):
@@ -30,48 +76,3 @@ class Interval(BaseModel):
     class Meta:
         ordering = ['pk']
         db_table = 'intervals'
-
-
-class Time(BaseModel):
-    start = models.TimeField()
-    end = models.TimeField()
-
-    @classmethod
-    def create(cls, start: datetime.time, end: datetime.time) -> 'Time':
-        if start > end:
-            start, end = end, start
-        time, created = Time.objects.get_or_create(start=start, end=end)
-        cls.log_created(time, created)
-        return time
-
-    def is_overlapping(self, other: 'Time') -> bool:
-        if self.start <= other.start:
-            earlier, later = self, other
-        else:
-            earlier, later = other, self
-        return later.start <= earlier.end
-
-    class Meta:
-        ordering = ['start', 'end']
-        db_table = 'times'
-
-
-class BlockedTimePeriod(BaseModel):
-    day = models.ForeignKey(Day, on_delete=models.CASCADE, related_name='blocked_times')
-    blocked_time_periods = models.ManyToManyField(Time, related_name='blocked_time_periods')
-
-    @classmethod
-    def create(cls, day: Day, timetable: Timetable,
-               blocked_times: List[Tuple[datetime.time, datetime.time]]) -> 'BlockedTimePeriod':
-        blocked_time_period, created = cls.objects.get_or_create(day=day, timetable=timetable)
-        cls.log_created(blocked_time_period, created)
-        if created:
-            blocked_time_period.times.set(blocked_times)
-        else:
-            # todo: what's the wanted behavior?
-            blocked_time_period.times.add(blocked_times)
-        return blocked_time_period
-
-    class Meta:
-        ordering = ['timetable', 'day']
-        db_table = 'blocked_time_period'
