@@ -1,20 +1,23 @@
 from datetime import datetime, time, timedelta
+from threading import Lock
 
 from django.db import models
 
+from plan_ilan.utils.decorators import static_vars
 from . import BaseModel, Day, Semester
 from plan_ilan.utils.general import is_number
 from plan_ilan.utils.time import Time, TimeDelta
 
 
 class LessonTime(BaseModel):
-    day = models.ForeignKey(Day, on_delete=models.CASCADE,related_name='lesson_times')
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE,related_name='lesson_times')
+    day = models.ForeignKey(Day, on_delete=models.CASCADE, related_name='lesson_times')
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lesson_times')
     start_time = models.TimeField()
     end_time = models.TimeField()
     year = models.PositiveSmallIntegerField()
 
     class Meta:
+        ordering = ['day', 'start_time', 'end_time']
         unique_together = ['day', 'semester', 'start_time', 'end_time', 'year']
         db_table = 'lesson_times'
 
@@ -26,6 +29,16 @@ class LessonTime(BaseModel):
                                                                 year=year)
         cls.log_created(lesson_time, created)
         return lesson_time
+
+    @classmethod
+    @static_vars(mutex=Lock())
+    def create_thread_safe(cls, semester: Semester, day: Day, start_time: time,
+                           end_time: time, year: int) -> 'LessonTime':
+        try:
+            cls.create_thread_safe.mutex.acquire()
+            return cls.create(semester, day, start_time, end_time, year)
+        finally:
+            cls.create_thread_safe.mutex.release()
 
     @property
     def time_delta(self) -> timedelta:

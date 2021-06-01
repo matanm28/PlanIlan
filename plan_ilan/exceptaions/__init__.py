@@ -1,2 +1,3 @@
 from .cant_create_model_error import CantCreateModelError
 from .enum_not_exist_error import EnumNotExistError
+from .model_not_found_error import ModelNotFoundError

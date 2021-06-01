@@ -5,12 +5,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.views import generic
 
-from .decorators import unauthenticated_user, authenticated_user
-from .filters import *
-from .forms import CreateAccountForm, CreateDjangoUserForm
-from .models import *
+from plan_ilan.apps.web_site.decorators import unauthenticated_user, authenticated_user
+from plan_ilan.apps.web_site.filters import *
+from plan_ilan.apps.web_site.forms import CreateAccountForm, CreateDjangoUserForm
+from plan_ilan.apps.web_site.models import *
 
 
 def search(request):
@@ -92,19 +91,23 @@ def home(request):
         return render(request, 'plan_ilan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('PostID', ''):
-            if request.POST.get('type', '') == 'course':
-                post_obj = CourseReview.objects.get(id=request.POST.get('PostID', ''))
-            else:
-                post_obj = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
-            if request.POST.get('to_add', '') == '1':
-                post_obj.like_review(Account.objects.get(user=request.user))
-            else:
-                post_obj.remove_like(Account.objects.get(user=request.user))
-            post_obj.save()
+            add_or_remove_like(request)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
         return render(request, 'plan_ilan/home.html', context)
     return render(request, 'plan_ilan/home.html')
+
+
+def add_or_remove_like(request):
+    if request.POST.get('type', '') == 'course':
+        post_obj = CourseReview.objects.get(id=request.POST.get('PostID', ''))
+    else:
+        post_obj = TeacherReview.objects.get(id=request.POST.get('PostID', ''))
+    if request.POST.get('to_add', '') == '1':
+        post_obj.like_review(Account.objects.get(user=request.user))
+    else:
+        post_obj.remove_like(Account.objects.get(user=request.user))
+    post_obj.save()
 
 
 def show_best_teacher_courses():
@@ -119,8 +122,11 @@ def show_best_teacher_courses():
     # LATEST COMMENTS
     teacher_comments = TeacherReview.objects.all().order_by('date_modified')[:5]
     course_comments = CourseReview.objects.all().order_by('date_modified')[:5]
+    teacher_rating = TeacherRating.objects.filter(teacher__pk__in=teachers_id)
+    course_rating = CourseRating.objects.filter(course__pk__in=courses_id)
     return {'teachers': teachers_obj, 'courses': courses_obj,
-            'teacher_comments': teacher_comments, 'course_comments': course_comments}
+            'teacher_comments': teacher_comments, 'course_comments': course_comments, 'teacher_rating': teacher_rating,
+            'course_rating': course_rating}
 
 
 def save_comment_and_rating(request):
@@ -140,6 +146,20 @@ def save_comment_and_rating(request):
                                                      text=comment_body)
     rating_obj.save()
     review_object.save()
+
+
+def delete_comment(request):
+    query_rev = Review.objects.filter(id=request.POST.get('id', ''))
+    if query_rev.exists():
+        rev = query_rev.get()
+        if isinstance(rev, CourseReview):
+            query_rate = CourseRating.objects.filter(course=rev)
+        else:
+            query_rate = TeacherRating.objects.filter(teacher=rev)
+        if query_rate.exists():
+            rate = query_rate.get()
+            rate.delete()
+        rev.delete()
 
 
 @unauthenticated_user
@@ -206,16 +226,3 @@ def time_table(request):
             return JsonResponse(context, safe=False)
         return render(request, 'timetable_generator/timetable.html', context)
     return render(request, 'timetable_generator/timetable.html')
-
-
-class TeacherDetailView(generic.DetailView):
-    model = Teacher
-    template_name = "plan_ilan/teacher_detail.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(TeacherDetailView, self).get_context_data(**kwargs)
-        teacher_rating = TeacherRating.objects.filter(teacher=context['teacher'])
-        teacher_reviews = TeacherReview.objects.filter(teacher=context['teacher'])
-        context['teacher_rating'] = teacher_rating
-        context['teacher_reviews'] = teacher_reviews
-        return context

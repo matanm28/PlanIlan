@@ -40,7 +40,8 @@ class Course(BaseModel):
                                                            'department': department,
                                                            'faculty': faculty
                                                        })
-        course.exams.set(exams)
+        if created or exams:
+            course.exams.set(exams)
         cls.log_created(course, created)
         if not created and not course.syllabus_link and syllabus_link:
             course.syllabus_link = syllabus_link
@@ -62,6 +63,15 @@ class Course(BaseModel):
     def amount_of_ratings(self) -> int:
         return self.ratings.count()
 
+    @property
+    def total_points(self) -> float:
+        return (self.lessons
+                .exclude(lesson_type__in=[LessonTypeEnum.REINFORCING, LessonTypeEnum.MACHLAKA_TIME])
+                .values('lesson_type', 'points')
+                .distinct()
+                .aggregate(models.Sum('points'))
+                )['points__sum']
+
     def __str__(self):
         return f'{self.name} ({self.code})'
 
@@ -78,12 +88,14 @@ class Lesson(BaseModel):
     locations = models.ManyToManyField(Location, related_name='lessons')
 
     class Meta:
+        ordering = ['id']
         db_table = 'lessons'
 
     @classmethod
     def create(cls, code: str, group: str, name: str, teachers: List[Teacher], session_type: LessonType,
                faculty: Faculty, department: Department, session_times: List[LessonTime], locations: List[Location],
-               exams: List[Exam], points: float = None, details_link: str = None, syllabus_link: str = None) -> 'Lesson':
+               exams: List[Exam], points: float = None, details_link: str = None,
+               syllabus_link: str = None) -> 'Lesson':
         if not len(teachers) > 0:
             raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "staff list can't be empty")
         if not len(session_times) > 0:

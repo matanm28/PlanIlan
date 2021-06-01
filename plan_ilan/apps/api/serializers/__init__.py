@@ -1,0 +1,4 @@
+from .general_serializers import EnumSerializer, LessonTimeSerializer, LocationSerializer, ExamSerializer
+from .teacher_serializers import TeacherBasicSerializer, TeacherExtendedSerializer,TeacherFullDetailsSerializer
+from .course_serializers import CourseBasicSerializer, CourseExtendedSerializer, CourseFullDetailsSerializer, \
+    CourseExtraDetailsSerializer, LessonBasicSerializer, LessonExtendedSerializer, LessonFullDetailsSerializer

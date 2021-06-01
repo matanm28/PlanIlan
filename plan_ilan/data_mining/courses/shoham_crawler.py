@@ -10,13 +10,16 @@ from typing import List, Deque, Tuple
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
+from django.db import IntegrityError
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 
 from plan_ilan.exceptaions import EnumNotExistError, CantCreateModelError
-from plan_ilan.apps.web_site.models import Course, Lesson, Location, DAYS, LessonTime, Teacher, LessonTypeEnum, TitleEnum, \
+from plan_ilan.apps.web_site.models import Course, Lesson, Location, DAYS, LessonTime, Teacher, LessonTypeEnum, \
+    TitleEnum, \
     DepartmentEnum, SemesterEnum, Exam, ExamPeriodEnum
-from plan_ilan.apps.web_site.models import FacultyEnum, Semester, ExamPeriod, Faculty, Title, Department, LessonType, Day
+from plan_ilan.apps.web_site.models import FacultyEnum, Semester, ExamPeriod, Faculty, Title, Department, LessonType, \
+    Day
 from plan_ilan.utils.general import is_float, is_number
 
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
@@ -33,6 +36,7 @@ class ShohamCrawler:
         self.__logger = logger if logger else logging.getLogger()
         self.logger.info('Creating a ShoamCrawler instance')
         self.__courses_list = []
+        self.__num_of_fails = 0
         self.__soups_queue = deque()
         self.__course_detail_url_list = deque()
         self.__base_url = base_url if base_url.endswith('/') else f'{base_url}/'
@@ -78,12 +82,8 @@ class ShohamCrawler:
         self.__running = value
 
     @property
-    def all_correct(self) -> bool:
-        return self.__all_correct
-
-    @all_correct.setter
-    def all_correct(self, value: bool):
-        self.__all_correct = value
+    def num_of_fails(self):
+        return self.__num_of_fails
 
     def start(self, department_name: str = 'בחר', run_with_threads: bool = True):
         self.logger.info(f'Started scraping process {"with threads" if run_with_threads else ""}')
@@ -207,6 +207,7 @@ class ShohamCrawler:
             for future in concurrent.futures.as_completed(futures):
                 if future.exception() is not None:
                     self.logger.exception(future.exception())
+                    self.__num_of_fails+=1
                 elif future.result() is not None:
                     self.courses_list.append(future.result())
                 products.task_done()
@@ -236,6 +237,7 @@ class CourseInstanceBuilder:
         'exams': re.compile('gvTermRooms', re.IGNORECASE),
         'syllabus': re.compile('sylabusHyperLink1', re.IGNORECASE),
     }
+    mutex = threading.Lock()
 
     def __init__(self, courses_year: int, base_url: str, logger) -> None:
         self.year = courses_year
@@ -370,10 +372,11 @@ class CourseInstanceBuilder:
                 title_enum = TitleEnum.BLANK
             try:
                 title = Title.objects.get(number=title_enum)
-                # todo: check problem with 	80801-01 for example, teacher name to long.
-                teacher = Teacher.create(title=title, name=full_name.strip(), faculty=faculty)
+                teacher = Teacher.create_thread_safe(title=title, name=full_name.strip(), faculty=faculty)
                 teachers_list.append(teacher)
             except (EnumNotExistError, CantCreateModelError) as err:
+                self.logger.exception(err)
+            except IntegrityError as err:
                 self.logger.exception(err)
         if not teachers_list:
             self.all_correct = False
@@ -423,7 +426,7 @@ class CourseInstanceBuilder:
             end_time = datetime.strptime(date + end_time_str.strip(), self.time_format)
             day_enum = DAYS.from_string(day_char)
             day = Day.objects.get(number=day_enum)
-            session_time = LessonTime.create(semester=semester, day=day, start_time=start_time, end_time=end_time,
+            session_time = LessonTime.create_thread_safe(semester=semester, day=day, start_time=start_time, end_time=end_time,
                                              year=self.year)
             session_times.append(session_time)
         if not session_times:
@@ -465,7 +468,7 @@ class CourseInstanceBuilder:
         else:
             class_number = None
         online = building_name in ('נלמד בזום', 'טרם שובץ')
-        return Location.create(building_name=building_name, building_number=building_number,
+        return Location.create_thread_safe(building_name=building_name, building_number=building_number,
                                class_number=class_number,
                                online=online)
 

@@ -60,14 +60,37 @@ function sendData(btn) {
         'headline': headline
     };
     $.ajax({
-        url: '/',
+        url:  window.location.pathname,
         type: 'POST',
         data: data,
         success: function (data) {
-            alert('successfully rated');
+            alert('התגובה התקבלה, תודה!');
         },
         error: function (error) {
-            alert('error; ' + eval(error));
+            alert('בעיה בהשארת התגובה. נסה שנית');
+        }
+    });
+    return false;
+}
+
+function delete_comment(delete_btn) {
+    confirm("האם אתה בטוח שברצונך למחוק את התגובה?");
+    let rev_id = delete_btn.id.split("_")[1]
+    let data = {
+        'csrfmiddlewaretoken': csrftoken,
+        'id': rev_id,
+    };
+    $.ajax({
+        url:  '/delete-review/' + rev_id,
+        type: 'post',
+        data: data,
+        success: function (data) {
+            alert('התגובה נמחקה');
+            location.reload();
+        },
+        error: function (error) {
+            alert('בעיה במחיקה. נסה שנית');
+            location.reload();
         }
     });
     return false;

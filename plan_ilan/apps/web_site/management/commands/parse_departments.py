@@ -6,7 +6,7 @@ from typing import List, Set, Dict
 from django.core.management import BaseCommand
 from selenium.common.exceptions import NoSuchElementException
 
-from plan_ilan.apps.plan_ilan_site.models import Course
+from plan_ilan.apps.web_site.models import Course
 from plan_ilan.utils.letters import big_letters
 from plan_ilan.utils.web import *
 from selenium.webdriver.support.select import Select

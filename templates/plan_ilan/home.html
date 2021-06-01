@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'plan_ilan/css/latest-posts.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/teacher_and_course_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/likes_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/home_style.css' %}"/>
 {% endblock %}
@@ -29,38 +29,104 @@
                 <div class="widget blog-widget">
                     <h2 class="widget-header">תגובות אחרונות</h2>
                     <h3>תגובות מורים</h3>
-                    {% for t_c in teacher_comments %}
-                        <div class="ct-latest">
-                            <div class="media-left">
-                                <p>{{ t_c.author }}</p>
-                                <input class="amount-likes" type='number' id='amount_{{ t_c.id }}'
-                                       value="{{ t_c.amount_of_likes }}" readonly/>
-                                {% if request.user.is_authenticated %}
-                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_teacher_{{ t_c.id }}"
-                                            name="heart-like" onclick="changeHeart(this)"></button>
-                                {% endif %}
-                            </div>
-                            <div class="media-body">
-                                <h2 class="ct-latest-header media-heading">{{ t_c.headline }}</h2>
-                                <p>{{ t_c.text }}</p>
+                    {% for review in teacher_comments %}
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg"
+                                             class="img img-rounded img-fluid"
+                                             alt=""/>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <p>
+                                            {% if review.author.first_name %}
+                                                <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
+                                            {% else %}
+                                                <a class="float-left"><strong>{{ review.author }}</strong></a>
+                                            {% endif %}
+                                            {% for rating in teacher_rating %}
+                                                {% if rating.user == review.author and rating.teacher == review.teacher %}
+                                                    {% with ''|center:rating.value as range %}
+                                                        {% for _ in range %}
+                                                            <span class="float-right"><i
+                                                                    class="text-warning fa fa-star"></i></span>
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </p>
+                                        <div class="clearfix"></div>
+                                        <p><strong>{{ review.headline }}</strong></p>
+                                        <p>{{ review.text }}</p>
+                                        {% if request.user.is_authenticated %}
+                                            <button type="submit" class="fa fa-heart heart-btn"
+                                                    id="heart_teacher_{{ review.id }}"
+                                                    name="heart-like" onclick="changeHeart(this)"></button>
+                                            <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                            <br>
+                                            {% ifequal request.user review.author.user %}
+                                                <button id="delete_{{ review.id }}"
+                                                        class="fas fa-trash close-btn-groups trash"
+                                                        onclick="delete_comment(this)"></button>
+                                                <br>
+                                                <button type="button" class="btn btn-link">ערוך</button>
+                                            {% endifequal %}
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
                     <h3>תגובות קורסים</h3>
-                    {% for c_c in course_comments %}
-                        <div class="ct-latest">
-                            <div class="media-left">
-                                <p>{{ c_c.author }}</p>
-                                <input class="amount-likes" type='number' id='amount_{{ c_c.id }}'
-                                       value="{{ c_c.amount_of_likes }}" readonly/>
-                                {% if request.user.is_authenticated %}
-                                    <button type="submit" class="fa fa-heart heart-btn" id="heart_course_{{ c_c.id }}"
-                                            name="heart-like" onclick="changeHeart(this)"></button>
-                                {% endif %}
-                            </div>
-                            <div class="media-body">
-                                <h2 class="ct-latest-header media-heading">{{ c_c.headline }}</h2>
-                                <p>{{ c_c.text }}</p>
+                    {% for review in course_comments %}
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg"
+                                             class="img img-rounded img-fluid"
+                                             alt=""/>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <p>
+                                            {% if review.author.first_name %}
+                                                <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
+                                            {% else %}
+                                                <a class="float-left"><strong>{{ review.author }}</strong></a>
+                                            {% endif %}
+                                            {% for rating in course_rating %}
+                                                {% if rating.user == review.author and rating.course == review.course %}
+                                                    {% with ''|center:rating.value as range %}
+                                                        {% for _ in range %}
+                                                            <span class="float-right"><i
+                                                                    class="text-warning fa fa-star"></i></span>
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                {% endif %}
+                                            {% endfor %}
+
+                                        </p>
+                                        <div class="clearfix"></div>
+                                        <p><strong>{{ review.headline }}</strong></p>
+                                        <p>{{ review.text }}</p>
+                                        {% if request.user.is_authenticated %}
+                                            <button type="submit" class="fa fa-heart heart-btn"
+                                                    id="heart_course_{{ review.id }}"
+                                                    name="heart-like" onclick="changeHeart(this)"></button>
+                                            <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                            <br>
+                                            {% ifequal request.user review.author.user %}
+                                                <button id="delete_{{ review.id }}"
+                                                        class="fas fa-trash close-btn-groups trash"
+                                                        onclick="delete_comment(this)"></button>
+                                                <br>
+                                                <button type="button" class="btn btn-link">ערוך</button>
+                                            {% endifequal %}
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -79,10 +145,11 @@
                             <p class="card-text">
                                 <label>מחלקות:
                                     {% for dep in t.departments %}
-                                        {{ dep }},
+                                        <li>{{ dep }}</li>
                                     {% endfor %}
                                 </label>
                                 <br>
+                                <label>דירוג ממוצע: {{ t.average_rating }}</label>
                             </p>
                             {% if request.user.is_authenticated %}
                                 <button type="button" class="btn btn-link" onclick="openRateModal(this)"

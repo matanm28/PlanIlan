@@ -10,6 +10,7 @@ class Exam(BaseModel):
     date = models.DateTimeField()
 
     class Meta:
+        ordering = ['period', 'pk']
         unique_together = ['period', 'date']
         db_table = 'exams'
 

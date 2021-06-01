@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_admin_multiple_choice_list_filter',
     'polymorphic',
     'rest_framework',
+    'crispy_forms',
     'debug_toolbar',
 ]
 
@@ -220,3 +221,11 @@ MEDIA_URL = '/media/'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# used by REST-framework API
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 25,
+}
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
