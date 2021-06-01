@@ -105,3 +105,9 @@
     text-align: center;
     font-weight: bold
 }
+
+.details-link:hover {
+    --link-hover-color: blue;
+    color: #0000ff;
+    text-decoration: underline;
+}

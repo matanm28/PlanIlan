@@ -38,23 +38,24 @@ def search(request):
 
 
 def get_teacher_details(code):
-    chosen_teacher = Teacher.objects.filter(id=code)
-    #teacher_json = serializers.serialize("json", chosen_teacher[0])
-    # name = chosen_teacher[0].title_and_name
-    # faculty = chosen_teacher[0].faculty
-    json_d = {
-        "name": chosen_teacher[0].title_and_name,
-        # "faculty": chosen_teacher[0].faculty,
-        "url": chosen_teacher[0].website_url
+    chosen_teacher = Teacher.objects.filter(id=code)[0]
+    faculties_qs = chosen_teacher.get_faculties()
+    faculties = []
+    for faculty_qs in faculties_qs:
+        faculties.append(faculty_qs.label)
+    departments_qs = chosen_teacher.departments
+    departments = []
+    for department_qs in departments_qs:
+        departments.append(department_qs.label)
+    json_dict = {
+        "name": chosen_teacher.title_and_name,
+        "faculties": faculties,
+        "departments": departments,
+        "url": chosen_teacher.website_url
     }
-    y = json.dumps(json_d)
-    y = json.loads(y)
-    # departments_json = serializers.serialize("json", lessons)
-    # departments = serializers.serialize("json", chosen_teacher[0].departments)
-    # website_url = chosen_teacher[0].website_url
-    # teacher_details = {'title_and_name': name, 'faculty': faculty,
-    #                    'departments': departments, 'url': website_url}
-    teacher_details = {'teacher': y}
+    json_string = json.dumps(json_dict)
+    json_teacher = json.loads(json_string)
+    teacher_details = {'teacher': json_teacher}
     return teacher_details
 
 

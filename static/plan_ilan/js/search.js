@@ -90,21 +90,33 @@ function addCourseDetails(code, data) {
     document.getElementById("staff_" + code).innerHTML = "<i>סגל: </i>" + staff
     document.getElementById("times_" + code).innerHTML = "<i>זמנים: </i>" + lesson_times
     if (link != null) {
-        document.getElementById("link_" + code).href = link;
+        const txt = "לצפייה בסילבוס";
+        document.getElementById("link_" + id).innerHTML = txt.link(link);
     }
 }
 
 function addTeacherDetails(id, data) {
     let title_and_name = data.teacher['name'];
-    //let faculty = data.faculty;
-    //let department = JSON.parse(data.departments);
+    let faculties = data.teacher['faculties'];
+    let departments = data.teacher['departments'];
     let link = data.teacher['url'];
     // adding details
     document.getElementById("name_" + id).innerHTML = title_and_name
-    //document.getElementById("faculty_" + id).innerHTML = "<i>פקולטה: </i>" + faculty
-    //document.getElementById("department_" + id).innerHTML = "<i>מחלקה: </i>" + department
+    if (faculties.length > 1) {
+        document.getElementById("faculty_" + id).innerHTML = "<i>פקולטות: </i>" + faculties.toString()
+    }
+    if (faculties.length === 1) {
+        document.getElementById("faculty_" + id).innerHTML = "<i>פקולטה: </i>" + faculties.toString()
+    }
+    if (departments.length > 1) {
+        document.getElementById("department_" + id).innerHTML = "<i>מחלקות: </i>" + departments.toString()
+    }
+    if (departments.length === 1) {
+        document.getElementById("department_" + id).innerHTML = "<i>מחלקה: </i>" + departments.toString()
+    }
     if (link != null) {
-        document.getElementById("link_" + id).href = link;
+        const txt = "לאתר המורה";
+        document.getElementById("link_" + id).innerHTML = txt.link(link);
     }
 }
 
