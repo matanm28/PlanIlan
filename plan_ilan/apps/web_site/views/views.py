@@ -92,8 +92,11 @@ def show_best_teacher_courses():
     # LATEST COMMENTS
     teacher_comments = TeacherReview.objects.all().order_by('date_modified')[:5]
     course_comments = CourseReview.objects.all().order_by('date_modified')[:5]
+    teacher_rating = TeacherRating.objects.filter(teacher__pk__in=teachers_id)
+    course_rating = CourseRating.objects.filter(course__pk__in=courses_id)
     return {'teachers': teachers_obj, 'courses': courses_obj,
-            'teacher_comments': teacher_comments, 'course_comments': course_comments}
+            'teacher_comments': teacher_comments, 'course_comments': course_comments, 'teacher_rating': teacher_rating,
+            'course_rating': course_rating}
 
 
 def save_comment_and_rating(request):
