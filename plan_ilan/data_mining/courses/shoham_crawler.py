@@ -207,7 +207,7 @@ class ShohamCrawler:
             for future in concurrent.futures.as_completed(futures):
                 if future.exception() is not None:
                     self.logger.exception(future.exception())
-                    self.__num_of_fails+=1
+                    self.__num_of_fails += 1
                 elif future.result() is not None:
                     self.courses_list.append(future.result())
                 products.task_done()
@@ -356,8 +356,6 @@ class CourseInstanceBuilder:
         if not teacher_td:
             self.all_correct = False
             return []
-        # todo have a problem with splitting names here - maybe use regex? - look at hours regex.
-        teacher_names = teacher_td.text.split('\n')
         teachers_list = []
         for name in teacher_td.contents:
             if not isinstance(name, NavigableString):
@@ -372,7 +370,7 @@ class CourseInstanceBuilder:
                 title_enum = TitleEnum.BLANK
             try:
                 title = Title.objects.get(number=title_enum)
-                teacher = Teacher.create_thread_safe(title=title, name=full_name.strip(), faculty=faculty)
+                teacher = Teacher.create(title=title, name=full_name.strip(), faculty=faculty)
                 teachers_list.append(teacher)
             except (EnumNotExistError, CantCreateModelError) as err:
                 self.logger.exception(err)
@@ -426,8 +424,9 @@ class CourseInstanceBuilder:
             end_time = datetime.strptime(date + end_time_str.strip(), self.time_format)
             day_enum = DAYS.from_string(day_char)
             day = Day.objects.get(number=day_enum)
-            session_time = LessonTime.create_thread_safe(semester=semester, day=day, start_time=start_time, end_time=end_time,
-                                             year=self.year)
+            session_time = LessonTime.create_thread_safe(semester=semester, day=day, start_time=start_time,
+                                                         end_time=end_time,
+                                                         year=self.year)
             session_times.append(session_time)
         if not session_times:
             self.all_correct = False
@@ -437,7 +436,7 @@ class CourseInstanceBuilder:
         if not self.all_correct:
             return []
         if not buildings_td or not rooms_td:
-            self.all_correct = False
+            # self.all_correct = False
             return []
         buildings_list = []
         room_numbers_list = []
@@ -469,8 +468,8 @@ class CourseInstanceBuilder:
             class_number = None
         online = building_name in ('נלמד בזום', 'טרם שובץ')
         return Location.create_thread_safe(building_name=building_name, building_number=building_number,
-                               class_number=class_number,
-                               online=online)
+                                           class_number=class_number,
+                                           online=online)
 
     def __parse_course_points(self, points_td: Tag) -> float:
         if not self.all_correct:

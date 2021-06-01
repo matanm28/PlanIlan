@@ -97,12 +97,12 @@ class Lesson(BaseModel):
                exams: List[Exam], points: float = None, details_link: str = None,
                syllabus_link: str = None) -> 'Lesson':
         if not len(teachers) > 0:
-            raise cls.generate_cant_create_model_err(cls.__name__, teachers.__name__, "staff list can't be empty")
+            raise cls.generate_cant_create_model_err(cls.__name__, 'teachers', "staff list can't be empty")
         if not len(session_times) > 0:
-            raise cls.generate_cant_create_model_err(cls.__name__, session_times.__name__,
+            raise cls.generate_cant_create_model_err(cls.__name__, 'session_times',
                                                      "session_times list can't be empty")
-        if not len(locations) > 0:
-            raise cls.generate_cant_create_model_err(cls.__name__, locations.__name__, "locations list can't be empty")
+        if not len(locations) >= 0:
+            raise cls.generate_cant_create_model_err(cls.__name__, 'locations', "locations list can't be empty")
         try:
             course = Course.create(code, name, department, faculty, exams, syllabus_link)
             lesson_id = f'{code}_{group}_{session_times[0].year}'
@@ -114,7 +114,8 @@ class Lesson(BaseModel):
                                                                'details_link': details_link,
                                                                'points': points})
             lesson.teachers.set(teachers)
-            lesson.locations.set(locations)
+            if created or locations:
+                lesson.locations.set(locations)
             lesson.session_times.set(session_times)
             cls.log_created(lesson, created)
             return lesson
@@ -165,7 +166,7 @@ class Lesson(BaseModel):
     def semester(self):
         semesters = set()
         for session_times in self.session_times.all():
-            semesters.add(session_times.semester.value)
+            semesters.add(session_times.semester.choice)
         if len(semesters) != 1:
             if len(semesters) == 0:
                 logging.warning('Course with no listed semesters')

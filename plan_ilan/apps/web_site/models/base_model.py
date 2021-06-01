@@ -17,6 +17,9 @@ class BaseModel(models.Model):
     def create(cls, *args, **kwargs) -> 'BaseModel':
         pass
 
+    def update(self, **kwargs) -> int:
+        return self.__class__.objects.filter(pk=self.pk).update(**kwargs)
+
     @classmethod
     def generate_cant_create_model_err(cls, model_type: str, param_name: str, allowed_types: Iterable[str],
                                        actual_type: str) -> CantCreateModelError:

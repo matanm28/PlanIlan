@@ -66,5 +66,5 @@ class PopulateEnumTablesCommand(BaseCommand):
 
     def __populate_enum_model_class(self, enum_model_class: Type[EnumModel]):
         for enum_model in enum_model_class.get_enum_class():
-            enum_model_class.create(enum_model.value)
+            enum_model_class.create(enum_model.choice)
 

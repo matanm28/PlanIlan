@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import List, Dict
 
-from plan_ilan.apps.plan_ilan_site.models import LessonTime
+from plan_ilan.apps.web_site.models import LessonTime
 from plan_ilan.apps.timetable_generator.timetable_optimizer.optimized_course import OptimizedCourse
 
 
