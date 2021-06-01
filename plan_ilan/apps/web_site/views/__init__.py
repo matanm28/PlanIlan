@@ -1,3 +1,3 @@
 from .views import *
-from .teacher_view import *
-from .delete_review import *
+from .teacher_view import TeacherDetailView
+from .delete_review import ReviewDeleteView
