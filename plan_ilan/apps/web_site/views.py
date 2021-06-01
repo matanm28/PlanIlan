@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core import serializers
@@ -37,13 +39,23 @@ def search(request):
 
 
 def get_teacher_details(code):
-    chosen_teacher = Teacher.objects.filter(code=code)
-    name = serializers.serialize("json", chosen_teacher.title_and_name)
-    faculty = serializers.serialize("json", chosen_teacher.faculty)
-    departments = serializers.serialize("json", chosen_teacher.departments)
-    website_url = serializers.serialize("json", chosen_teacher.website_url)
-    teacher_details = {'name': name, 'faculty': faculty,
-                       'departments': departments, 'url': website_url}
+    chosen_teacher = Teacher.objects.filter(id=code)
+    #teacher_json = serializers.serialize("json", chosen_teacher[0])
+    # name = chosen_teacher[0].title_and_name
+    # faculty = chosen_teacher[0].faculty
+    json_d = {
+        "name": chosen_teacher[0].title_and_name,
+        # "faculty": chosen_teacher[0].faculty,
+        "url": chosen_teacher[0].website_url
+    }
+    y = json.dumps(json_d)
+    y = json.loads(y)
+    # departments_json = serializers.serialize("json", lessons)
+    # departments = serializers.serialize("json", chosen_teacher[0].departments)
+    # website_url = chosen_teacher[0].website_url
+    # teacher_details = {'title_and_name': name, 'faculty': faculty,
+    #                    'departments': departments, 'url': website_url}
+    teacher_details = {'teacher': y}
     return teacher_details
 
 

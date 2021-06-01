@@ -95,7 +95,17 @@ function addCourseDetails(code, data) {
 }
 
 function addTeacherDetails(id, data) {
-
+    let title_and_name = data.teacher['name'];
+    //let faculty = data.faculty;
+    //let department = JSON.parse(data.departments);
+    let link = data.teacher['url'];
+    // adding details
+    document.getElementById("name_" + id).innerHTML = title_and_name
+    //document.getElementById("faculty_" + id).innerHTML = "<i>פקולטה: </i>" + faculty
+    //document.getElementById("department_" + id).innerHTML = "<i>מחלקה: </i>" + department
+    if (link != null) {
+        document.getElementById("link_" + id).href = link;
+    }
 }
 
 function get_field(arr, f) {
