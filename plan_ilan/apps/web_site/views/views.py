@@ -12,6 +12,10 @@ from plan_ilan.apps.web_site.forms import CreateAccountForm, CreateDjangoUserFor
 from plan_ilan.apps.web_site.models import *
 
 
+def about_page(request):
+    return render(request, 'plan_ilan/about.html')
+
+
 def search(request):
     if request.method == 'GET':
         if request.is_ajax():

@@ -17,50 +17,77 @@
     <title>{% block title %}דף הבית{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
-                        שלום
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
-                        {% if user.is_authenticated %}
-                            {{ request.user }}
-                        {% else %}
-                            אורח
-                        {% endif %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    {% if user.is_authenticated %}
-                        <a class="nav-link active" href="{% url 'logout' %}">התנתק</a>
-                    {% else %}
-                        <a class="nav-link active" href="{% url 'login' %}">התחבר</a>
-                    {% endif %}
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">דף הבית</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url 'search' %}">חיפוש</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">בנה מערכת שעות</a>
-                    </li>
-                {% endif %}
-            </ul>
-{#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"#}
-{#                aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">#}
-{#            <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>#}
-{#        </button>#}
-{#        <div class="collapse navbar-collapse" id="navbarNav" style="height: 30%">#}
-{#            #}
-{#        </div>#}
+<nav class="navbar" style="padding: 1%">
+    <div class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+        <a class="dis" href="#" tabindex="-1" aria-disabled="true">
+            שלום&nbsp;
+        </a>
+        <a class="dis" href="#" tabindex="-1" aria-disabled="true">
+            {% if user.is_authenticated %}
+                {{ request.user }},
+            {% else %}
+                אורח,
+            {% endif %}
+        </a>
+        {% if user.is_authenticated %}
+            <a class="act" href="{% url 'logout' %}">&nbspהתנתק</a>
+        {% else %}
+            <a class="act" href="{% url 'login' %}">&nbspהתחבר</a>
+        {% endif %}
+        <a class="act" aria-current="page" href="{% url 'home' %}">דף הבית </a>
+        <a class="act" aria-current="page" href="{% url 'search' %}">חיפוש</a>
+        {% if user.is_authenticated %}
+            <a class="act" aria-current="page" href="{% url 'timetable' %}">בנה מערכת שעות</a>
+        {% endif %}
+        <a class="act" aria-current="page" href="{% url 'about' %}">אודות</a>
     </div>
+    <div class="logo-navbar">
+        <img src="{% static 'plan_ilan/images/logo.png' %}" class="logo-navbar-img"/>
+    </div>
+    {#        <ul class="navbar-nav mx-auto">#}
+    {#            <li class="nav-item" style="float: right">#}
+    {#                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">#}
+    {#                    שלום#}
+    {#                </a>#}
+    {#            </li>#}
+    {#            <li class="nav-item">#}
+    {#                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">#}
+    {#                    {% if user.is_authenticated %}#}
+    {#                        {{ request.user }}#}
+    {#                    {% else %}#}
+    {#                        אורח#}
+    {#                    {% endif %}#}
+    {#                </a>#}
+    {#            </li>#}
+    {#            <li class="nav-item">#}
+    {#                {% if user.is_authenticated %}#}
+    {#                    <a class="nav-link active" href="{% url 'logout' %}">התנתק</a>#}
+    {#                {% else %}#}
+    {#                    <a class="nav-link active" href="{% url 'login' %}">התחבר</a>#}
+    {#                {% endif %}#}
+    {#            </li>#}
+    {#            <li class="nav-item">#}
+    {#                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">דף הבית</a>#}
+    {#            </li>#}
+    {#            <li class="nav-item">#}
+    {#                <a class="nav-link active" aria-current="page" href="{% url 'search' %}">חיפוש</a>#}
+    {#            </li>#}
+    {#            <li class="nav-item">#}
+    {#                <a class="nav-link active" aria-current="page" href="{% url 'about' %}">אודות</a>#}
+    {#            </li>#}
+    {#            {% if user.is_authenticated %}#}
+    {#                <li class="nav-item">#}
+    {#                    <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">בנה מערכת שעות</a>#}
+    {#                </li>#}
+    {#            {% endif %}#}
+    {#        </ul>#}
+    {#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"#}
+    {#                aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">#}
+    {#            <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>#}
+    {#        </button>#}
+    {#        <div class="collapse navbar-collapse" id="navbarNav" style="height: 30%">#}
+    {#            #}
+    {#        </div>#}
 </nav>
 <div class="container" style="height: 90%">
     {% block content %}
