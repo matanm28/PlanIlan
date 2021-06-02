@@ -20,12 +20,36 @@
 }
 
 .resize-box {
-    resize: vertical;
     width: 100%;
     height: 50%;
     float: right;
-    border: 5px solid blue;
+    /*border: 5px solid blue;*/
     padding: 2%;
+
+}
+
+.zero-elements {
+    text-align: center;
+    float: right;
+    margin-top: 20%;
+    color: black;
+}
+
+.zero_elements_image {
+    width: 60%;
+    height: 80%;
+    position: relative;
+    float: left;
+}
+
+#courses_results {
+    border-bottom: 1px solid black;
+    /*resize: vertical;*/
+    /*overflow: auto;*/
+}
+
+#chosen_elements {
+    border-top: 1px solid black;
 }
 
 .open-btn {

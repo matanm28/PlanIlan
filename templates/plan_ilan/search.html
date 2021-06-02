@@ -119,6 +119,17 @@
             <div class="resize-box" id="courses_results">
                 <div class="scrollbar scrollbar-primary">
                     {% if 'form-search-course' in request.GET %}
+                        {% if courses|length == 0 %}
+                            <div class="row" style="position: absolute; height: auto; width: 90%">
+                                <div class="column" style="position: relative; width: 60%">
+                                    <img src="{% static 'plan_ilan/images/zero-results.png' %}"
+                                         class="zero_elements_image"/>
+                                </div>
+                                <div class="column" style="position: relative; width: 40%">
+                                    <div class="zero-elements fw-bolder fs-2">לא נמצאו קורסים מתאימים</div>
+                                </div>
+                            </div>
+                        {% endif %}
                         {% for course in courses %}
                             <button type="button" id="course_result_{{ course.code }}" class="btn class_btn"
                                     onclick="chosenElement('chosen_course_{{ course.code }}', 'c')">{{ course.name }}<br>{{ course.code }}
@@ -126,6 +137,17 @@
                         {% endfor %}
                     {% endif %}
                     {% if 'form-search-teacher' in request.GET %}
+                        {% if teachers|length == 0 %}
+                            <div class="row" style="position: absolute; height: auto; width: 90%">
+                                <div class="column" style="position: relative; width: 60%">
+                                    <img src="{% static 'plan_ilan/images/zero-results.png' %}"
+                                         class="zero_elements_image"/>
+                                </div>
+                                <div class="column" style="position: relative; width: 40%">
+                                    <div class="zero-elements fw-bolder fs-2">לא נמצא סגל מתאים</div>
+                                </div>
+                            </div>
+                        {% endif %}
                         {% for teacher in teachers %}
                             <button type="button" id="teacher_result_{{ teacher.id }}" class="btn class_btn"
                                     onclick="chosenElement('chosen_teacher_{{ teacher.id }}', 't')">{{ teacher }}

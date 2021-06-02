@@ -145,6 +145,13 @@ function get_times_details(lessons, lessons_times, session_dict) {
 
 
 $(function () {
-    $("#courses_result").resizable();
-    $("#chosen_element").resizable();
+    $("#courses_results").resizable();
+    $("#chosen_elements").resizable();
 });
+
+// $(document).ready(function () {
+//   $("#courses_result").resizable({
+//     containment: 'parent',
+//     handles: 'e'
+//   });
+// });
