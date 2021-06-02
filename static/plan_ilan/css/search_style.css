@@ -7,6 +7,7 @@
     z-index: 1; /* Stay on top */
     top: auto; /* Stay at the top */
     right: 0;
+    border-top: 1px solid white;
     background-color: rgba(198, 30, 30, 0.7);
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 0; /* Place content 60px from the top */
@@ -39,14 +40,17 @@
     background-color: rgba(84, 87, 90, 0.5);
     cursor: pointer;
     writing-mode: vertical-lr;
-    -webkit-writing-mode: vertical-lr;
+    /*text-orientation: mixed;*/
+    text-align: left;
+    padding-top: 1%;
+    /*-webkit-writing-mode: vertical-lr;*/
 }
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
     position: absolute;
     top: 0;
-    right: 25px;
+    /*right: 25px;*/
     font-size: 36px;
     margin-right: 50px;
 }

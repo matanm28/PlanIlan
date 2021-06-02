@@ -9,6 +9,8 @@
 {% endblock %}
 {% block js_block %}
     {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
@@ -112,9 +114,8 @@
                 </div>
             </div>
         </div>
-        <div id="results" style="position:absolute; right: 0; height: 100%; width: 75%">
-            <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i
-                    class="fas fa-caret-left fa-2x"></i>חפש</span>
+        <div id="results" style="position:absolute; right: 0; height: 90%; width: 75%">
+            <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i class="fas fa-chevron-left"></i>חפש</span>
             <div class="resize-box" id="courses_results">
                 <div class="scrollbar scrollbar-primary">
                     {% if 'form-search-course' in request.GET %}
