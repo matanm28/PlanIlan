@@ -91,7 +91,7 @@ function addCourseDetails(code, data) {
     document.getElementById("times_" + code).innerHTML = "<i>זמנים: </i>" + lesson_times
     if (link != null) {
         const txt = "לצפייה בסילבוס";
-        document.getElementById("link_" + id).innerHTML = txt.link(link);
+        document.getElementById("link_" + code).innerHTML = txt.link(link);
     }
 }
 
