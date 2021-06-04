@@ -74,24 +74,22 @@ function chosenElement(id, type) {
 }
 
 function addCourseDetails(code, data) {
-    let course_data = JSON.parse(data.chosen_course);
-    let types = JSON.parse(data.lesson_types);
-    let staff = JSON.parse(data.staff);
-    let lessons = JSON.parse(data.lessons);
-    let lesson_times = JSON.parse(data.lessons_times);
-    let link = course_data[0]["fields"]["syllabus_link"]
-    staff = get_field(staff, 'name');
-    types = get_field(types, 'label');
-    lesson_times = get_times_details(lessons, lesson_times, data.session_dict);
-    // adding details
-    document.getElementById("name_" + code).innerHTML = course_data[0]["fields"]["name"]
+    document.getElementById("name_" + code).innerHTML = data["name"]
     document.getElementById("code_" + code).innerHTML = "<i>קוד: </i>" + code
-    document.getElementById("type_" + code).innerHTML = "<i>סוג מפגש: </i>" + types
-    document.getElementById("staff_" + code).innerHTML = "<i>סגל: </i>" + staff
-    document.getElementById("times_" + code).innerHTML = "<i>זמנים: </i>" + lesson_times
-    if (link != null) {
+    if (data["syllabus_link"] != null) {
         const txt = "לצפייה בסילבוס";
-        document.getElementById("link_" + code).innerHTML = txt.link(link);
+        document.getElementById("link_" + code).innerHTML = txt.link(data["syllabus_link"]);
+    }
+    for (const lesson of data["lessons"]) {
+        let final_string = "";
+        final_string += "סוג שיעור: " + lesson["lesson_type"] + ", " + "מרצים: "
+        for (const t of lesson["teachers"]) {
+            final_string += t["title"] + " " + t["name"] + ", "
+        }
+        for (const ses of lesson["session_times"]) {
+            final_string += "יום " + ses["day"] + ", " + ses["semester"] + ", שעת התחלה: " + ses["start_time"] + ", שעת סיום: " + ses["end_time"] + " "
+        }
+        document.getElementById("classes_" + code).innerHTML += "<li>" + final_string + "</li>"
     }
 }
 
