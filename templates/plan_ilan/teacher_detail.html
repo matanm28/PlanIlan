@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/scrollbar_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/edit_comment_modal.css' %}"/>
 {% endblock %}
 {% block js_block %}
     {% load static %}
@@ -16,6 +17,7 @@
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/rating.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/open_close_edit_modal.js' %}"></script>
 {% endblock %}
 {% block title %}פרטי מורה{% endblock %}
 {% block content %}
@@ -135,17 +137,62 @@
                                         <button type="submit" class="fa fa-heart heart-btn"
                                                 id="heart_teacher_{{ review.id }}"
                                                 name="heart-like" onclick="changeHeart(this)"></button>
-                                        <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                        <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }} אנשים
+                                            אהבו את זה</p>
                                         <br>
                                         {% ifequal request.user review.author.user %}
                                             <button id="delete_{{ review.id }}"
                                                     class="fas fa-trash close-btn-groups trash"
                                                     onclick="delete_comment(this)"></button>
                                             <br>
-                                            <button type="button" class="btn btn-link">ערוך</button>
+                                            <button type="button" id="btn_{{ review.id }}" class="btn btn-link"
+                                                    onclick="openRateModal(this)">ערוך
+                                            </button>
                                         {% endifequal %}
                                     {% endif %}
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rateModal_{{ review.id }}" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close" id="closeRate_{{ review.id }}"
+                                  onclick="closeRateModal(this)">&times;</span>
+                            <div>
+                                <form class="rate-form" method="post">
+                                    {% csrf_token %}
+                                    <label for="headline_{{ review.id }}">כותרת:
+                                        <input type="text" id="headline_{{ review.id }}">
+                                    </label>
+                                    <br>
+                                    <label for="commentArea">הוסף תגובה:</label>
+                                    <textarea class="form-control" id="commentArea_{{ review.id }}"
+                                              rows="3"></textarea>
+                                    <br>
+                                    <label>דרג:</label>
+                                    <div>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="first-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="second-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="third-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="fourth-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="fifth-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                    </div>
+                                    <br>
+                                    <button id="course_edit_{{ review.id }}" class="btn btn-outline-primary"
+                                            onclick="sendData(this)">שלח!
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

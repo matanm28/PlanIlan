@@ -31,7 +31,7 @@ class TeacherDetailView(generic.DetailView):
         if request.POST.get('action', '') == 'edit':
             update_review_and_rating(request)
         elif request.POST.get('PostID', ''):
-            add_or_remove_like(request)
+            return JsonResponse(add_or_remove_like(request), safe=False)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
         return HttpResponseRedirect(reverse('teacher_detail', kwargs={'pk': self.object.pk}))
