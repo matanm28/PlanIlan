@@ -4,7 +4,8 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from plan_ilan.apps.web_site.models import *
-from plan_ilan.apps.web_site.views import add_or_remove_like, save_comment_and_rating, delete_comment
+from plan_ilan.apps.web_site.views import add_or_remove_like, save_comment_and_rating, delete_comment, \
+    update_review_and_rating
 
 
 class TeacherDetailView(generic.DetailView):
@@ -27,7 +28,9 @@ class TeacherDetailView(generic.DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if request.POST.get('PostID', ''):
+        if request.POST.get('action', '') == 'edit':
+            update_review_and_rating(request)
+        elif request.POST.get('PostID', ''):
             add_or_remove_like(request)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)

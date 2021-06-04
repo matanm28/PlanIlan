@@ -95,12 +95,27 @@ def home(request):
             return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
         return render(request, 'plan_ilan/home.html', context)
     elif request.method == 'POST':
-        if request.POST.get('PostID', ''):
+        if request.POST.get('action', '') == 'edit':
+            update_review_and_rating(request)
+        elif request.POST.get('PostID', ''):
             add_or_remove_like(request)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
         return render(request, 'plan_ilan/home.html', context)
     return render(request, 'plan_ilan/home.html')
+
+
+def update_review_and_rating(request):
+    user = Account.objects.get(user=request.user)
+    value = int(request.POST.get('rate_number', ''))
+    headline = request.POST.get('headline', '')
+    comment_body = request.POST.get('comment_body', '')
+    review_object = Review.objects.filter(id=request.POST.get('Rating_object_ID', ''))
+    if isinstance(review_object, TeacherReview):
+        rating_obj = TeacherRating.create(user, value, review_object.teacher)
+    else:
+        rating_obj = CourseRating.create(user, value, review_object.course)
+    review_object.edit(headline, comment_body, rating_obj)
 
 
 def add_or_remove_like(request):

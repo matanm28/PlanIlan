@@ -57,7 +57,8 @@ function sendData(btn) {
         'Rating_object_ID': btn_info[2],
         'csrfmiddlewaretoken': csrftoken,
         'comment_body': comment,
-        'headline': headline
+        'headline': headline,
+        'action': btn_info[1]
     };
     $.ajax({
         url:  window.location.pathname,
