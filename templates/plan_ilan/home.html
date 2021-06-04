@@ -64,7 +64,7 @@
                                             <button type="submit" class="fa fa-heart heart-btn"
                                                     id="heart_teacher_{{ review.id }}"
                                                     name="heart-like" onclick="changeHeart(this)"></button>
-                                            <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                            <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
                                             <br>
                                             {% ifequal request.user review.author.user %}
                                                 <button id="delete_{{ review.id }}"
@@ -156,7 +156,7 @@
                                             <button type="submit" class="fa fa-heart heart-btn"
                                                     id="heart_course_{{ review.id }}"
                                                     name="heart-like" onclick="changeHeart(this)"></button>
-                                            <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                            <p id="amount_{{ review.id }}" class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
                                             <br>
                                             {% ifequal request.user review.author.user %}
                                                 <button id="delete_{{ review.id }}"

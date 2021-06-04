@@ -98,7 +98,7 @@ def home(request):
         if request.POST.get('action', '') == 'edit':
             update_review_and_rating(request)
         elif request.POST.get('PostID', ''):
-            add_or_remove_like(request)
+            return JsonResponse(add_or_remove_like(request), safe=False)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
         context = show_best_teacher_courses()
@@ -130,6 +130,7 @@ def add_or_remove_like(request):
     else:
         post_obj.remove_like(Account.objects.get(user=request.user))
     post_obj.save()
+    return {'amount_likes': post_obj.amount_of_likes}
 
 
 def show_best_teacher_courses():

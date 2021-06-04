@@ -174,9 +174,9 @@
                                 <div class="details fs-4" id="type_{{ course.code }}"></div>
                                 <div class="details fs-4" id="times_{{ course.code }}"></div>
                                 <a class="details fs-4" id="link_{{ course.code }}"></a>
-                                <button class="btn btn-info details fs-4" id="profile_{{ course.code }}"
-                                        style="float: left;">לצפייה בדף הקורס
-                                </button>
+                                <a class="btn btn-info details fs-4" style="float: left;"
+                                   href="{% url 'course_detail' course.code %}">לצפייה בדף הפרופיל
+                                </a>
                             </div>
                         {% endfor %}
                     {% endif %}
@@ -189,9 +189,9 @@
                                 <div class="details fs-4" id="faculty_{{ teacher.id }}"></div>
                                 <div class="details fs-4" id="department_{{ teacher.id }}"></div>
                                 <a class="details-link fs-4" id="link_{{ teacher.id }}"></a>
-                                <button class="btn btn-info details fs-4" id="profile_{{ teacher.id }}"
-                                        style="float: left;">לצפייה בדף הפרופיל
-                                </button>
+                                <a class="btn btn-info details fs-4" style="float: left;"
+                                   href="{% url 'teacher_detail' teacher.id %}">לצפייה בדף הפרופיל
+                                </a>
                             </div>
                         {% endfor %}
                     {% endif %}
