@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/scrollbar_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/button_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/edit_comment_modal.css' %}"/>
 {% endblock %}
 {% block js_block %}
@@ -95,12 +96,11 @@
                         {% endif %}
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="column">
-            <div>
-                <h3>הוסף תגובה</h3>
+            <div class="add-comment">
+                <h3>הוספת תגובה</h3>
                 {% if request.user in users_rated %}
                     תגובתך התקבלה. אין אפשרות להוסיף תגובה נוספת.
                     ניתן לערוך את תגובתך הקיימת.
@@ -109,15 +109,15 @@
                 {% else %}
                     <form class="rate-form" method="post">
                         {% csrf_token %}
-                        <label for="headline_{{ t.id }}">כותרת:
-                            <input class="form-control" type="text" id="headline_{{ teacher.id }}">
+                        <label for="headline_{{ t.id }}">
+                            <input class="form-control" type="text" placeholder="כותרת..." id="headline_{{ teacher.id }}">
                         </label>
                         <br>
-                        <label for="commentArea">תוכן:
-                            <textarea class="form-control" id="commentArea_{{ teacher.id }}" rows="3"></textarea>
+                        <label for="commentArea" style="padding: 1%">
+                            <textarea class="form-control" id="commentArea_{{ teacher.id }}" placeholder="תוכן..." rows="3"></textarea>
                         </label>
                         <br>
-                        <label>דרג:</label>
+{#                        <label>דרג:</label>#}
                         <div>
                             <button type="submit" class="fa fa-star fa-2x star-btn" id="first-star_{{ t.id }}"
                                     onmouseover="changeStar(this)"></button>
@@ -131,8 +131,8 @@
                                     onmouseover="changeStar(this)"></button>
                         </div>
                         <br>
-                        <button id="teacher_review_{{ teacher.id }}" class="btn btn-outline-primary"
-                                onclick="sendData(this)">שלח!
+                        <button id="teacher_review_{{ teacher.id }}" class="btn class_btn"
+                                onclick="sendData(this)">שלח
                         </button>
                     </form>
                 {% endif %}
@@ -238,5 +238,123 @@
                 {% endfor %}
             </div>
         </div>
+
+        {#    test#}
+
+        <div class="container">
+            <div class="row">
+                <div class="panel panel-default widget">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-comment"></span>
+                        <h3 class="panel-title">
+                            Recent Comments</h3>
+                        <span class="label label-info">
+                    78</span>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">
+                                        <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-11">
+                                        <div>
+                                            <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html">
+                                                Google Style Login Page Design Using Bootstrap</a>
+                                            <div class="mic-info">
+                                                By: <a href="#">Bhaumik Patel</a> on 2 Aug 2013
+                                            </div>
+                                        </div>
+                                        <div class="comment-text">
+                                            Awesome design
+                                        </div>
+                                        <div class="action">
+                                            <button type="button" class="btn btn-primary btn-xs" title="Edit">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-success btn-xs" title="Approved">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-xs" title="Delete">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">
+                                        <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-11">
+                                        <div>
+                                            <a href="http://bootsnipp.com/BhaumikPatel/snippets/Obgj">Admin Panel Quick
+                                                Shortcuts</a>
+                                            <div class="mic-info">
+                                                By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013
+                                            </div>
+                                        </div>
+                                        <div class="comment-text">
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
+                                            nibh
+                                            euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi
+                                            enim
+                                        </div>
+                                        <div class="action">
+                                            <button type="button" class="btn btn-primary btn-xs" title="Edit">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-success btn-xs" title="Approved">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-xs" title="Delete">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-2 col-md-1">
+                                        <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-11">
+                                        <div>
+                                            <a href="http://bootsnipp.com/BhaumikPatel/snippets/4ldn">Cool Sign Up</a>
+                                            <div class="mic-info">
+                                                By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013
+                                            </div>
+                                        </div>
+                                        <div class="comment-text">
+                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
+                                            nibh
+                                            euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi
+                                            enim
+                                        </div>
+                                        <div class="action">
+                                            <button type="button" class="btn btn-primary btn-xs" title="Edit">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-success btn-xs" title="Approved">
+                                                <span class="glyphicon glyphicon-ok"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-xs" title="Delete">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <a href="#" class="btn btn-primary btn-sm btn-block" role="button"><span
+                                class="glyphicon glyphicon-refresh"></span> More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 {% endblock %}
