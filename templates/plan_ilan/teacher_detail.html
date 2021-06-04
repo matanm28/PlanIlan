@@ -22,81 +22,82 @@
 {% block content %}
     <div class="row">
         <div class="column">
-            {#        tets#}
             <div class="card">
                 {% if teacher.has_valid_image %}
-                    <img src="{{ teacher.image.url }}" alt="teacher_profile"/>
+                    <img class="card-img-top" src="{{ teacher.image.url }}" alt="teacher_profile"/>
                 {% else %}
-                    <img src="{% static 'plan_ilan/images/images.png' %}" alt="teacher_profile"/>
+                    <img class="card-img-top" src="{% static 'plan_ilan/images/images.png' %}" alt="teacher_profile"/>
                 {% endif %}
-                <h1 class="title"><b>{{ teacher.title_and_name }}</b></h1>
-                <div class="list-group-flush">
-                    <div class="list-group-item">
-                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                class="fas fa-city fa-2x"
-                                aria-hidden="true"></i></span>
-                            {% if teacher.get_faculties|length == 1 %}
-                                &nbsp<strong>פקולטה:</strong> {{ teacher.get_faculties_as_string }}
-                            {% endif %}
-                            {% if teacher.get_faculties|length > 1 %}
-                                &nbsp<strong>פקולטות:</strong> {{ teacher.get_faculties_as_string }}
-                            {% endif %}
-                        </p>
-                    </div>
-                    <div class="list-group-item">
-                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                class="fas fa-university fa-2x"
-                                aria-hidden="true"></i></span>
-                            {% if teacher.departments|length == 1 %}
-                                &nbsp<strong>מחלקה:</strong> {{ teacher.get_departments_as_string }}
-                            {% endif %}
-                            {% if teacher.departments|length > 1 %}
-                                &nbsp<strong>מחלקות:</strong> {{ teacher.get_departments_as_string }}
-                            {% endif %}
-                        </p>
-                    </div>
-                    <div class="list-group-item">
+                <div class="card-body">
+                    <h1 class="title"><b>{{ teacher.title_and_name }}</b></h1>
+                    <div class="list-group-flush">
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-city fa-2x"
+                                    aria-hidden="true"></i></span>
+                                {% if teacher.get_faculties|length == 1 %}
+                                    &nbsp<strong>פקולטה:</strong> {{ teacher.get_faculties_as_string }}
+                                {% endif %}
+                                {% if teacher.get_faculties|length > 1 %}
+                                    &nbsp<strong>פקולטות:</strong> {{ teacher.get_faculties_as_string }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-university fa-2x"
+                                    aria-hidden="true"></i></span>
+                                {% if teacher.departments|length == 1 %}
+                                    &nbsp<strong>מחלקה:</strong> {{ teacher.get_departments_as_string }}
+                                {% endif %}
+                                {% if teacher.departments|length > 1 %}
+                                    &nbsp<strong>מחלקות:</strong> {{ teacher.get_departments_as_string }}
+                                {% endif %}
+                            </p>
+                        </div>
                         {% if teacher.phone %}
-                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                    class="fas fa-phone fa-2x"
-                                    aria-hidden="true"></i></span>
-                                &nbsp<strong>טלפון:</strong> {{ teacher.phone }}
-                            </p>
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-phone fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>טלפון:</strong> {{ teacher.phone }}
+                                </p>
+                            </div>
                         {% endif %}
-                    </div>
-                    <div class="list-group-item">
                         {% if teacher.email %}
-                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                    class="fas fa-at fa-2x"
-                                    aria-hidden="true"></i></span>
-                                &nbsp<strong>אי-מייל:</strong> {{ teacher.email }}
-                            </p>
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-at fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>אי-מייל:</strong> {{ teacher.email }}
+                                </p>
+                            </div>
                         {% endif %}
-                    </div>
-                    <div class="list-group-item">
                         {% if teacher.website_url %}
-                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                    class="fas fa-globe fa-2x"
-                                    aria-hidden="true"></i></span>
-                                &nbsp<strong>אתר אישי:</strong> {{ teacher.website_url }}
-                            </p>
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-globe fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>אתר אישי:</strong> {{ teacher.website_url }}
+                                </p>
+                            </div>
                         {% endif %}
-                    </div>
-                    <div class="list-group-item">
                         {% if teacher.average_rating %}
-                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                    class="fas fa-star fa-2x"
-                                    aria-hidden="true"></i></span>
-                                &nbsp<strong>ממוצע הדירוג:</strong> {{ teacher.average_rating }}
-                            </p>
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-star fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>דירוג ממוצע:</strong> {{ teacher.average_rating }}
+                                </p>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="column">
-            <br><br><br>
-            <div class="shadow">
+            <div>
                 <h3>הוסף תגובה</h3>
                 {% if request.user in users_rated %}
                     תגובתך התקבלה. אין אפשרות להוסיף תגובה נוספת.
