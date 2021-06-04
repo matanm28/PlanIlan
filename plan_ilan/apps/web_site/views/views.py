@@ -87,12 +87,12 @@ def get_course_details(code):
 
 
 def home(request):
-    context = show_best_teacher_courses()
     if request.method == 'GET':
         if request.is_ajax() and request.user.is_authenticated:
             all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
             json_likes_list = serializers.serialize("json", all_likes)
             return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
+        context = show_best_teacher_courses()
         return render(request, 'plan_ilan/home.html', context)
     elif request.method == 'POST':
         if request.POST.get('action', '') == 'edit':
@@ -101,22 +101,23 @@ def home(request):
             add_or_remove_like(request)
         elif request.POST.get('Rating_object_ID', ''):
             save_comment_and_rating(request)
+        context = show_best_teacher_courses()
         return render(request, 'plan_ilan/home.html', context)
     return render(request, 'plan_ilan/home.html')
 
 
 def update_review_and_rating(request):
     user = Account.objects.get(user=request.user)
-    value = int(request.POST.get('rate_number', ''))
+    value = int(request.POST.get('rate_number', '0'))
     headline = request.POST.get('headline', '')
     comment_body = request.POST.get('comment_body', '')
     review_object = Review.objects.filter(id=request.POST.get('Rating_object_ID', ''))
-    if isinstance(review_object[0], TeacherReview):
-        rating_obj = TeacherRating.create(user, value, review_object[0].teacher)
-    else:
-        rating_obj = CourseRating.create(user, value, review_object[0].course)
-    review_object.first().edit(headline, comment_body, rating_obj)
-    review_object.first().save()
+    if not review_object.exists():
+        pass
+    review_object = review_object.first()
+    review_object.edit(headline, comment_body, save=True)
+    ref_instance = review_object.teacher if isinstance(review_object, TeacherReview) else review_object.course
+    rating_obj = Rating.create(user=user, value=value, ref_instance=ref_instance)
 
 
 def add_or_remove_like(request):

@@ -51,9 +51,9 @@ function sendData(btn) {
     let btn_info = btn.id.split("_")
     let headline = document.getElementById("headline_" + btn_info[2]).value;
     let comment = document.getElementById("commentArea_" + btn_info[2]).value;
-    let curr_url = window.location.pathname;
+    let curr_url = window.location.pathname
     $.ajax({
-        url: curr_url,
+        url: window.location.pathname,
         type: 'POST',
         data: {
             'type': btn_info[0],
@@ -66,13 +66,13 @@ function sendData(btn) {
         },
         success: function (data) {
             alert('התגובה התקבלה, תודה!');
-            location.replace(curr_url)
+            window.location.href = curr_url;
+            window.location.reload()
         },
         error: function (error) {
             alert('בעיה בהשארת התגובה. נסה שנית');
         }
     });
-    return false;
 }
 
 function delete_comment(delete_btn) {
