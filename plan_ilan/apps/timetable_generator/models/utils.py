@@ -1,31 +1,14 @@
-from datetime import datetime, date, time, timedelta
-from typing import Union
+from datetime import datetime
 
 from django.db import models
 
 from plan_ilan.apps.web_site.models import BaseModel
-
-
-class ImprovedTimeField(models.TimeField):
-    def __add__(self, other: timedelta) -> time:
-        if isinstance(other, timedelta):
-            return (datetime.combine(date.today(), self) - other).time()
-        else:
-            raise ValueError('other should be timedelta')
-
-    def __sub__(self, other: Union[timedelta, time]) -> Union[time, float]:
-        if isinstance(other, timedelta):
-            return (datetime.combine(date.today(), self) - other).time()
-        elif isinstance(other, time):
-            today = date.today()
-            return (datetime.combine(today, self) - datetime.combine(today, other)).total_seconds()
-        else:
-            raise ValueError('other should be Union[timedelta, time]')
+from plan_ilan import costume_fields
 
 
 class TimeInterval(BaseModel):
-    start = ImprovedTimeField()
-    end = ImprovedTimeField()
+    start = costume_fields.ImprovedTimeField()
+    end = costume_fields.ImprovedTimeField()
 
     @classmethod
     def create(cls, start: datetime.time, end: datetime.time) -> 'TimeInterval':

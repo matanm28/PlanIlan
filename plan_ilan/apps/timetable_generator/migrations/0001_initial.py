@@ -4,7 +4,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
 import model_utils.fields
-import plan_ilan.apps.timetable_generator.models.utils
+import plan_ilan.costume_fields
 
 
 class Migration(migrations.Migration):
@@ -54,8 +54,8 @@ class Migration(migrations.Migration):
             name='TimeInterval',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start', plan_ilan.apps.timetable_generator.models.utils.ImprovedTimeField()),
-                ('end', plan_ilan.apps.timetable_generator.models.utils.ImprovedTimeField()),
+                ('start', plan_ilan.costume_fields.ImprovedTimeField()),
+                ('end', plan_ilan.costume_fields.ImprovedTimeField()),
             ],
             options={
                 'db_table': 'time_intervals',

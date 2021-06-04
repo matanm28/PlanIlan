@@ -3,6 +3,7 @@ from threading import Lock
 
 from django.db import models
 
+from plan_ilan import costume_fields
 from plan_ilan.utils.decorators import static_vars
 from . import BaseModel, Day, Semester
 from plan_ilan.utils.general import is_number
@@ -12,8 +13,8 @@ from plan_ilan.utils.time import Time, TimeDelta
 class LessonTime(BaseModel):
     day = models.ForeignKey(Day, on_delete=models.CASCADE, related_name='lesson_times')
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='lesson_times')
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = costume_fields.ImprovedTimeField()
+    end_time = costume_fields.ImprovedTimeField()
     year = models.PositiveSmallIntegerField()
 
     class Meta:
