@@ -88,7 +88,7 @@ class Lesson(BaseModel):
     locations = models.ManyToManyField(Location, related_name='lessons')
 
     class Meta:
-        ordering = ['id']
+        ordering = ['lesson_type', 'group']
         db_table = 'lessons'
 
     @classmethod

@@ -1,0 +1,2 @@
+from .course_serializers import CourseSearchSerializer
+from .teacher_serializers import TeacherSearchSerializer

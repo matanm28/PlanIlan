@@ -10,6 +10,7 @@ from plan_ilan.apps.web_site.decorators import unauthenticated_user, authenticat
 from plan_ilan.apps.web_site.filters import *
 from plan_ilan.apps.web_site.forms import CreateAccountForm, CreateDjangoUserForm
 from plan_ilan.apps.web_site.models import *
+from plan_ilan.apps.web_site.serializers import CourseSearchSerializer
 
 
 def about_page(request):
@@ -64,26 +65,9 @@ def get_teacher_details(code):
 
 
 def get_course_details(code):
-    chosen_course = Course.objects.filter(code=code)
-    json_chosen_course = serializers.serialize("json", chosen_course)
-    lessons = Lesson.objects.filter(course__pk=code)
-    lessons_json = serializers.serialize("json", lessons)
-    lessons_pk = list(map(lambda lesson: lesson.pk, lessons))
-    teacher_list = Teacher.objects.filter(lessons__pk__in=lessons_pk).distinct()
-    json_teacher_details = serializers.serialize("json", teacher_list)
-    types = LessonType.objects.filter(lessons__pk__in=lessons_pk).distinct()
-    exams = Exam.objects.filter(courses__pk=code)
-    json_exams_details = serializers.serialize("json", exams)
-    json_types_details = serializers.serialize("json", types)
-    lesson_times_list = LessonTime.objects.filter(lessons__pk__in=lessons_pk).distinct()
-    dict_sessions = {}
-    for lt in lesson_times_list:
-        dict_sessions[lt.pk] = str(lt)
-    json_times_details = serializers.serialize("json", lesson_times_list)
-    course_details = {'chosen_course': json_chosen_course, 'exams': json_exams_details,
-                      'lessons_times': json_times_details, 'lessons': lessons_json,
-                      'lesson_types': json_types_details, 'staff': json_teacher_details, 'session_dict': dict_sessions}
-    return course_details
+    chosen_course = Course.objects.filter(code=code).first()
+    course_details = CourseSearchSerializer(chosen_course)
+    return course_details.data
 
 
 def home(request):
