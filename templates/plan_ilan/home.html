@@ -64,14 +64,17 @@
                                             <button type="submit" class="fa fa-heart heart-btn"
                                                     id="heart_teacher_{{ review.id }}"
                                                     name="heart-like" onclick="changeHeart(this)"></button>
-                                            <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                            <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }}
+                                                אנשים אהבו את זה</p>
                                             <br>
                                             {% ifequal request.user review.author.user %}
                                                 <button id="delete_{{ review.id }}"
                                                         class="fas fa-trash close-btn-groups trash"
                                                         onclick="delete_comment(this)"></button>
                                                 <br>
-                                                <button type="button" id="btn_{{ review.id }}" class="btn btn-link" onclick="openRateModal(this)">ערוך</button>
+                                                <button type="button" id="btn_{{ review.id }}" class="btn btn-link"
+                                                        onclick="openRateModal(this)">ערוך
+                                                </button>
                                             {% endifequal %}
                                         {% endif %}
                                     </div>
@@ -156,7 +159,8 @@
                                             <button type="submit" class="fa fa-heart heart-btn"
                                                     id="heart_course_{{ review.id }}"
                                                     name="heart-like" onclick="changeHeart(this)"></button>
-                                            <p id="amount_{{ review.id }}" class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                            <p id="amount_{{ review.id }}" class="liked">{{ review.amount_of_likes }}
+                                                אנשים אהבו את זה</p>
                                             <br>
                                             {% ifequal request.user review.author.user %}
                                                 <button id="delete_{{ review.id }}"
@@ -257,7 +261,7 @@
                                 <br>
                                 <label>דירוג ממוצע: {{ c.average_rating }}</label>
                             </p>
-                            <button type="button" class="btn btn-link">פרטים נוספים</button>
+                            <a href="{% url 'course_detail' c.code %}" class="btn btn-link">פרטים נוספים</a>
                         </div>
                     </div>
                 </div>
