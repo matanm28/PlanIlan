@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from polymorphic.models import PolymorphicModel
 
 from ..decorators import receiver_subclasses
-from . import Account, Teacher, Course, BaseModel, Rating
+from . import Account, Teacher, Course, BaseModel, Rating, TeacherRating, CourseRating
 
 
 class Review(PolymorphicModel, BaseModel):
@@ -52,7 +52,7 @@ class Review(PolymorphicModel, BaseModel):
         return self.likes.count()
 
     def edit(self, edited_headline: str = None, edited_text: str = None, edited_rating: Rating = None, **kwargs) -> bool:
-        edited_fields = (self.__edit_headline(edited_headline), self.__edit_text(edited_text), self.__edit_rating(edited_rating))
+        edited_fields = (self.__edit_headline(edited_headline), self.__edit_text(edited_text), self._edit_rating(edited_rating))
         return any(edited_fields)
 
     def __edit_headline(self, edited_headline: str) -> bool:
@@ -67,7 +67,7 @@ class Review(PolymorphicModel, BaseModel):
         self.text = edited_text
         return True
 
-    def __edit_rating(self, edited_rating: Rating) -> bool:
+    def _edit_rating(self, edited_rating: Rating) -> bool:
         if edited_rating is None:
             return False
         self.rating.delete()
@@ -84,6 +84,15 @@ class TeacherReview(Review):
     class Meta:
         ordering = ['pk']
         db_table = 'teacher_reviews'
+
+    def _edit_rating(self, edited_rating: Rating) -> bool:
+        if edited_rating is None:
+            return False
+        last_rating = TeacherRating.objects.filter(teacher=self.teacher)
+        if last_rating.exists():
+            last_rating.first().delete()
+        self.teacher.ratings.add(edited_rating)
+        return True
 
 
 def upload_location(instance: 'CourseReview', filename: str, **kwargs):
@@ -116,6 +125,15 @@ class CourseReview(Review):
             return False
         self.image.delete()
         # something to save image
+        return True
+
+    def _edit_rating(self, edited_rating: Rating) -> bool:
+        if edited_rating is None:
+            return False
+        last_rating = CourseRating.objects.filter(course=self.course)
+        if last_rating.exists():
+            last_rating.first().delete()
+        self.course.ratings.add(edited_rating)
         return True
 
 

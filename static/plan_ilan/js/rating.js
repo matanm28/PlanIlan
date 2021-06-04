@@ -51,21 +51,22 @@ function sendData(btn) {
     let btn_info = btn.id.split("_")
     let headline = document.getElementById("headline_" + btn_info[2]).value;
     let comment = document.getElementById("commentArea_" + btn_info[2]).value;
-    let data = {
-        'type': btn_info[0],
-        'rate_number': star_value,
-        'Rating_object_ID': btn_info[2],
-        'csrfmiddlewaretoken': csrftoken,
-        'comment_body': comment,
-        'headline': headline,
-        'action': btn_info[1]
-    };
+    let curr_url = window.location.pathname;
     $.ajax({
-        url:  window.location.pathname,
+        url: curr_url,
         type: 'POST',
-        data: data,
+        data: {
+            'type': btn_info[0],
+            'rate_number': star_value,
+            'Rating_object_ID': btn_info[2],
+            'csrfmiddlewaretoken': csrftoken,
+            'comment_body': comment,
+            'headline': headline,
+            'action': btn_info[1]
+        },
         success: function (data) {
             alert('התגובה התקבלה, תודה!');
+            location.replace(curr_url)
         },
         error: function (error) {
             alert('בעיה בהשארת התגובה. נסה שנית');
@@ -82,7 +83,7 @@ function delete_comment(delete_btn) {
         'id': rev_id,
     };
     $.ajax({
-        url:  '/delete-review/' + rev_id,
+        url: '/delete-review/' + rev_id,
         type: 'post',
         data: data,
         success: function (data) {

@@ -111,11 +111,12 @@ def update_review_and_rating(request):
     headline = request.POST.get('headline', '')
     comment_body = request.POST.get('comment_body', '')
     review_object = Review.objects.filter(id=request.POST.get('Rating_object_ID', ''))
-    if isinstance(review_object, TeacherReview):
-        rating_obj = TeacherRating.create(user, value, review_object.teacher)
+    if isinstance(review_object[0], TeacherReview):
+        rating_obj = TeacherRating.create(user, value, review_object[0].teacher)
     else:
-        rating_obj = CourseRating.create(user, value, review_object.course)
-    review_object.edit(headline, comment_body, rating_obj)
+        rating_obj = CourseRating.create(user, value, review_object[0].course)
+    review_object.first().edit(headline, comment_body, rating_obj)
+    review_object.first().save()
 
 
 def add_or_remove_like(request):
