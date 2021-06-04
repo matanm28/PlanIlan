@@ -71,7 +71,7 @@
                                                         class="fas fa-trash close-btn-groups trash"
                                                         onclick="delete_comment(this)"></button>
                                                 <br>
-                                                <button type="button" class="btn btn-link">ערוך</button>
+                                                <button type="button" id="btn_{{ review.id }}" class="btn btn-link" onclick="openRateModal(this)">ערוך</button>
                                             {% endifequal %}
                                         {% endif %}
                                     </div>
