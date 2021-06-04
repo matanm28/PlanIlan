@@ -1,12 +1,14 @@
 {% extends 'plan_ilan/base.html' %}
 {% block css_block %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'plan_ilan/css/teacher_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/teacher_and_course_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/likes_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free' %}">
     <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/scrollbar_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/edit_comment_modal.css' %}"/>
 {% endblock %}
 {% block js_block %}
     {% load static %}
@@ -16,49 +18,88 @@
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/rating.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/open_close_edit_modal.js' %}"></script>
 {% endblock %}
 {% block title %}פרטי מורה{% endblock %}
 {% block content %}
     <div class="row">
         <div class="column">
-            <h1>{{ teacher.title_and_name }}</h1><br>
-            <p><strong>פקולטה:</strong> {{ teacher.faculty }}</p>
-            <p><strong>מחלקות:</strong>
-                {% for dep in teacher.departments %}
-                    <li>{{ dep }}</li>
-                {% endfor %}
-            </p>
-            <p><strong>טלפון:</strong>
-                {% if teacher.phone %}
-                    {{ teacher.phone }}
+            <div class="card">
+                {% if teacher.has_valid_image %}
+                    <img class="card-img-top" src="{{ teacher.image.url }}" alt="teacher_profile"/>
                 {% else %}
-                    אין
+                    <img class="card-img-top" src="{% static 'plan_ilan/images/images.png' %}" alt="teacher_profile"/>
                 {% endif %}
-            </p>
-            <p><strong>אימייל:</strong>
-                {% if teacher.email %}
-                    {{ teacher.email }}
-                {% else %}
-                    אין
-                {% endif %}
-            </p>
-            <p><strong>קישור לאתר:</strong>
-                {% if teacher.website_url %}
-                    {{ teacher.website_url }}
-                {% else %}
-                    אין
-                {% endif %}
-            </p>
-            <p><strong>דירוג ממוצע: </strong>{{ teacher.average_rating }}</p>
+                <div class="card-body">
+                    <h1 class="title"><b>{{ teacher.title_and_name }}</b></h1>
+                    <div class="list-group-flush">
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-city fa-2x"
+                                    aria-hidden="true"></i></span>
+                                {% if teacher.get_faculties|length == 1 %}
+                                    &nbsp<strong>פקולטה:</strong> {{ teacher.get_faculties_as_string }}
+                                {% endif %}
+                                {% if teacher.get_faculties|length > 1 %}
+                                    &nbsp<strong>פקולטות:</strong> {{ teacher.get_faculties_as_string }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-university fa-2x"
+                                    aria-hidden="true"></i></span>
+                                {% if teacher.departments|length == 1 %}
+                                    &nbsp<strong>מחלקה:</strong> {{ teacher.get_departments_as_string }}
+                                {% endif %}
+                                {% if teacher.departments|length > 1 %}
+                                    &nbsp<strong>מחלקות:</strong> {{ teacher.get_departments_as_string }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        {% if teacher.phone %}
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-phone fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>טלפון:</strong> {{ teacher.phone }}
+                                </p>
+                            </div>
+                        {% endif %}
+                        {% if teacher.email %}
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-at fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>אי-מייל:</strong> {{ teacher.email }}
+                                </p>
+                            </div>
+                        {% endif %}
+                        {% if teacher.website_url %}
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-globe fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>אתר אישי:</strong> {{ teacher.website_url }}
+                                </p>
+                            </div>
+                        {% endif %}
+                        {% if teacher.average_rating %}
+                            <div class="list-group-item">
+                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                        class="fas fa-star fa-2x"
+                                        aria-hidden="true"></i></span>
+                                    &nbsp<strong>דירוג ממוצע:</strong> {{ teacher.average_rating }}
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
         </div>
         <div class="column">
-            {% if not teacher.image.url %}
-                <img src="{{ teacher.image.url }}" alt=""/>
-            {% else %}
-                <img src="{% static 'plan_ilan/images/images.png' %}" alt=""/>
-            {% endif %}
-            <br><br><br>
-            <div class="shadow">
+            <div>
                 <h3>הוסף תגובה</h3>
                 {% if request.user in users_rated %}
                     תגובתך התקבלה. אין אפשרות להוסיף תגובה נוספת.
@@ -135,17 +176,62 @@
                                         <button type="submit" class="fa fa-heart heart-btn"
                                                 id="heart_teacher_{{ review.id }}"
                                                 name="heart-like" onclick="changeHeart(this)"></button>
-                                        <p class="liked">{{ review.amount_of_likes }} אנשים אהבו את זה</p>
+                                        <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }} אנשים
+                                            אהבו את זה</p>
                                         <br>
                                         {% ifequal request.user review.author.user %}
                                             <button id="delete_{{ review.id }}"
                                                     class="fas fa-trash close-btn-groups trash"
                                                     onclick="delete_comment(this)"></button>
                                             <br>
-                                            <button type="button" class="btn btn-link">ערוך</button>
+                                            <button type="button" id="btn_{{ review.id }}" class="btn btn-link"
+                                                    onclick="openRateModal(this)">ערוך
+                                            </button>
                                         {% endifequal %}
                                     {% endif %}
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="rateModal_{{ review.id }}" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close" id="closeRate_{{ review.id }}"
+                                  onclick="closeRateModal(this)">&times;</span>
+                            <div>
+                                <form class="rate-form" method="post">
+                                    {% csrf_token %}
+                                    <label for="headline_{{ review.id }}">כותרת:
+                                        <input type="text" id="headline_{{ review.id }}">
+                                    </label>
+                                    <br>
+                                    <label for="commentArea">הוסף תגובה:</label>
+                                    <textarea class="form-control" id="commentArea_{{ review.id }}"
+                                              rows="3"></textarea>
+                                    <br>
+                                    <label>דרג:</label>
+                                    <div>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="first-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="second-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="third-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="fourth-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                        <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                id="fifth-star_{{ review.id }}"
+                                                onmouseover="changeStar(this)"></button>
+                                    </div>
+                                    <br>
+                                    <button id="course_edit_{{ review.id }}" class="btn btn-outline-primary"
+                                            onclick="sendData(this)">שלח!
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

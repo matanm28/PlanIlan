@@ -9,6 +9,8 @@
 {% endblock %}
 {% block js_block %}
     {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
@@ -25,7 +27,7 @@
                 <button class="btn-choice focus clicked" id="course_button" onclick="display_course_filter()">קורס
                 </button>
             </div>
-            <div class="scrollbar scrollbar-primary" style="height: 81%; background: rgb(214, 97, 97);">
+            <div class="scrollbar scrollbar-primary" style="height: 81%; background: rgb(214,97,97);">
                 <div id="course_filter">
                     <form method="get">
                         {% csrf_token %}
@@ -112,22 +114,43 @@
                 </div>
             </div>
         </div>
-        <div id="results" style="position:absolute; right: 0; height: 100%; width: 75%">
-            <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i
-                    class="fas fa-caret-left fa-2x"></i>חפש</span>
+        <div id="results" style="position:absolute; right: 0; height: 90%; width: 75%">
+            <span class="open-btn" id="open_search_box" onclick="openSearchBox()"><i class="fas fa-chevron-left"></i>חפש</span>
             <div class="resize-box" id="courses_results">
                 <div class="scrollbar scrollbar-primary">
                     {% if 'form-search-course' in request.GET %}
+                        {% if courses|length == 0 %}
+                            <div class="row" style="position: absolute; height: auto; width: 90%">
+                                <div class="column" style="position: relative; width: 60%">
+                                    <img src="{% static 'plan_ilan/images/zero-results.png' %}"
+                                         class="zero_elements_image"/>
+                                </div>
+                                <div class="column" style="position: relative; width: 40%">
+                                    <div class="zero-elements fw-bolder fs-2">לא נמצאו קורסים מתאימים</div>
+                                </div>
+                            </div>
+                        {% endif %}
                         {% for course in courses %}
                             <button type="button" id="course_result_{{ course.code }}" class="btn class_btn"
-                                    onclick="chosenElement('chosen_course_{{ course.code }}')">{{ course.name }}<br>{{ course.code }}
+                                    onclick="chosenElement('chosen_course_{{ course.code }}', 'c')">{{ course.name }}<br>{{ course.code }}
                             </button>
                         {% endfor %}
                     {% endif %}
                     {% if 'form-search-teacher' in request.GET %}
+                        {% if teachers|length == 0 %}
+                            <div class="row" style="position: absolute; height: auto; width: 90%">
+                                <div class="column" style="position: relative; width: 60%">
+                                    <img src="{% static 'plan_ilan/images/zero-results.png' %}"
+                                         class="zero_elements_image"/>
+                                </div>
+                                <div class="column" style="position: relative; width: 40%">
+                                    <div class="zero-elements fw-bolder fs-2">לא נמצא סגל מתאים</div>
+                                </div>
+                            </div>
+                        {% endif %}
                         {% for teacher in teachers %}
-                            <button type="button" id="teacher_result_{{ forloop.counter0 }}" class="btn class_btn"
-                                    onclick="chosenElement('chosen_teacher_{{ forloop.counter0 }}')">{{ teacher }}
+                            <button type="button" id="teacher_result_{{ teacher.id }}" class="btn class_btn"
+                                    onclick="chosenElement('chosen_teacher_{{ teacher.id }}', 't')">{{ teacher }}
                             </button>
                         {% endfor %}
                     {% endif %}
@@ -135,25 +158,40 @@
             </div>
             <div class="ui-widget-content resize-box" id="chosen_elements">
                 <div class="scrollbar scrollbar-primary">
-                    {% if 'form-search-course' in request.GET %}
-                        <div class="spinner-border text-danger" role="status" id="spinner" style="display: none">
+                    <div id="spinner" style="display: none">
+                        <div class="spinner-border text-danger" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
+                        <div class="spinner-text">אנא המתן...</div>
+                    </div>
+                    {% if 'form-search-course' in request.GET %}
                         {% for course in courses %}
                             <div class="chosen_course" id="chosen_course_{{ course.code }}" style="display: none">
-                                <label for="name_{{ course.code }}">שם:</label><input type="text"
-                                                                                      id="name_{{ course.code }}">
-                                <br>
-                                <label for="code_{{ course.code }}">קוד:</label><input type="text"
-                                                                                       id="code_{{ course.code }}">
+                                <div class="details-title fw-bolder text-decoration-underline fs-2"
+                                     id="name_{{ course.code }}"></div>
+                                <div class="details fs-4" id="code_{{ course.code }}"></div>
+                                <div class="details fs-4" id="staff_{{ course.code }}"></div>
+                                <div class="details fs-4" id="type_{{ course.code }}"></div>
+                                <div class="details fs-4" id="times_{{ course.code }}"></div>
+                                <a class="details fs-4" id="link_{{ course.code }}"></a>
+                                <a class="btn btn-info details fs-4" style="float: left;"
+                                   href="{% url 'course_detail' course.code %}">לצפייה בדף הפרופיל
+                                </a>
                             </div>
                         {% endfor %}
                     {% endif %}
                     {% if 'form-search-teacher' in request.GET %}
                         {% for teacher in teachers %}
-                            <div class="chosen_teacher" id="chosen_teacher_{{ forloop.counter0 }}"
+                            <div class="chosen_teacher" id="chosen_teacher_{{ teacher.id }}"
                                  style="display: none">
-                                {{ teacher }}
+                                <div class="details-title fw-bolder text-decoration-underline fs-2"
+                                     id="name_{{ teacher.id }}"></div>
+                                <div class="details fs-4" id="faculty_{{ teacher.id }}"></div>
+                                <div class="details fs-4" id="department_{{ teacher.id }}"></div>
+                                <a class="details-link fs-4" id="link_{{ teacher.id }}"></a>
+                                <a class="btn btn-info details fs-4" style="float: left;"
+                                   href="{% url 'teacher_detail' teacher.id %}">לצפייה בדף הפרופיל
+                                </a>
                             </div>
                         {% endfor %}
                     {% endif %}

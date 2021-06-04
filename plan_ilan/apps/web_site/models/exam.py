@@ -22,3 +22,6 @@ class Exam(BaseModel):
 
     def __str__(self) -> str:
         return f'{self.date.strftime("%d.%m.%y, %H:%M")} ({self.period.label})'
+
+    def __repr__(self) -> str:
+        return f'{self.date.strftime("%d.%m.%y, %H:%M")} ({self.period.label})'

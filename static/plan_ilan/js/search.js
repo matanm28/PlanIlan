@@ -36,18 +36,19 @@ function closeSearchBox() {
     }
 }
 
-function chosenElement(id) {
+function chosenElement(id, type) {
     let spinner = document.getElementById("spinner")
     spinner.style.display = "block";
-    let former_chosen_course = document.getElementsByClassName("shown");
-    if (former_chosen_course !== undefined && former_chosen_course.length > 0) {
-        former_chosen_course = former_chosen_course[0];
-        former_chosen_course.classList.remove("shown");
-        former_chosen_course.style.display = "none";
+    let former_chosen_element = document.getElementsByClassName("shown");
+    if (former_chosen_element !== undefined && former_chosen_element.length > 0) {
+        former_chosen_element = former_chosen_element[0];
+        former_chosen_element.classList.remove("shown");
+        former_chosen_element.style.display = "none";
     }
-    const course_code = id.split("_")[2];
+    const code = id.split("_")[2];
     let data = {
-        'code': course_code,
+        'code': code,
+        'type': type,
         'csrfmiddlewaretoken': csrftoken,
     };
     $.ajax({
@@ -55,17 +56,15 @@ function chosenElement(id) {
         type: 'GET',
         data: data,
         success: function (data) {
-            let course_data = JSON.parse(data.chosen_course);
-            let exams = JSON.parse(data.exams);
-            let times = JSON.parse(data.lesson_times);
-            let types = JSON.parse(data.lesson_types);
-            let staff = JSON.parse(data.staff);
-            document.getElementById("name_" + course_code).value = course_data[0]["fields"]["name"]
-            document.getElementById("code_" + course_code).value = course_code
+            if (type === 'c') {
+                addCourseDetails(code, data)
+            } else {
+                addTeacherDetails(code, data)
+            }
             spinner.style.display = "none";
-            const chosen_course = document.getElementById(id);
-            chosen_course.classList.add("shown");
-            chosen_course.style.display = "block";
+            const chosen_element = document.getElementById(id);
+            chosen_element.classList.add("shown");
+            chosen_element.style.display = "block";
         },
         error: function (error) {
             alert('error; ' + eval(error));
@@ -74,7 +73,85 @@ function chosenElement(id) {
     return false;
 }
 
+function addCourseDetails(code, data) {
+    let course_data = JSON.parse(data.chosen_course);
+    let types = JSON.parse(data.lesson_types);
+    let staff = JSON.parse(data.staff);
+    let lessons = JSON.parse(data.lessons);
+    let lesson_times = JSON.parse(data.lessons_times);
+    let link = course_data[0]["fields"]["syllabus_link"]
+    staff = get_field(staff, 'name');
+    types = get_field(types, 'label');
+    lesson_times = get_times_details(lessons, lesson_times, data.session_dict);
+    // adding details
+    document.getElementById("name_" + code).innerHTML = course_data[0]["fields"]["name"]
+    document.getElementById("code_" + code).innerHTML = "<i>קוד: </i>" + code
+    document.getElementById("type_" + code).innerHTML = "<i>סוג מפגש: </i>" + types
+    document.getElementById("staff_" + code).innerHTML = "<i>סגל: </i>" + staff
+    document.getElementById("times_" + code).innerHTML = "<i>זמנים: </i>" + lesson_times
+    if (link != null) {
+        const txt = "לצפייה בסילבוס";
+        document.getElementById("link_" + code).innerHTML = txt.link(link);
+    }
+}
+
+function addTeacherDetails(id, data) {
+    let title_and_name = data.teacher['name'];
+    let faculties = data.teacher['faculties'];
+    let departments = data.teacher['departments'];
+    let link = data.teacher['url'];
+    // adding details
+    document.getElementById("name_" + id).innerHTML = title_and_name
+    if (faculties.length > 1) {
+        document.getElementById("faculty_" + id).innerHTML = "<i>פקולטות: </i>" + faculties.toString()
+    }
+    if (faculties.length === 1) {
+        document.getElementById("faculty_" + id).innerHTML = "<i>פקולטה: </i>" + faculties.toString()
+    }
+    if (departments.length > 1) {
+        document.getElementById("department_" + id).innerHTML = "<i>מחלקות: </i>" + departments.toString()
+    }
+    if (departments.length === 1) {
+        document.getElementById("department_" + id).innerHTML = "<i>מחלקה: </i>" + departments.toString()
+    }
+    if (link != null) {
+        const txt = "לאתר המורה";
+        document.getElementById("link_" + id).innerHTML = txt.link(link);
+    }
+}
+
+function get_field(arr, f) {
+    let staff_names = []
+    for (let i = 0; i < arr.length; i++) {
+        staff_names.push((arr[i].fields)[f])
+    }
+    return staff_names.toString()
+}
+
+function get_times_details(lessons, lessons_times, session_dict) {
+    let details = []
+    for (let i = 0; i < lessons.length; i++) {
+        for (let j = 0; j < lessons_times.length; j++) {
+            let pk = lessons_times[j]['pk'];
+            if (pk === lessons[i].fields['session_times'][0]) {
+                let num = lessons[i].fields['group'];
+                let time = session_dict[pk];
+                details.push("קבוצה " + num + " - " + time);
+            }
+        }
+    }
+    return details.toString()
+}
+
+
 $(function () {
-    $("#courses_result").resizable();
-    $("#chosen_element").resizable();
+    $("#courses_results").resizable();
+    $("#chosen_elements").resizable();
 });
+
+// $(document).ready(function () {
+//   $("#courses_result").resizable({
+//     containment: 'parent',
+//     handles: 'e'
+//   });
+// });

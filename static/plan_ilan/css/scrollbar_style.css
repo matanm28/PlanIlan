@@ -6,6 +6,7 @@
     /*!*width: 32rem;*!*/
     height: 100%;
     width: 100%;
+    padding: 0.5em;
     /*width: auto;*/
     /*background: #fff;*/
     overflow-y: auto;

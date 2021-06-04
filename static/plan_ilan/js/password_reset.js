@@ -5,7 +5,7 @@ We start indexing at one because CSRF_token is considered and input field
 
 //Query All input fields
 var form_fields = document.getElementsByTagName('input')
-form_fields[1].placeholder = 'אי-מייל...';
+form_fields[1].placeholder = 'אימייל...';
 
 for (var field in form_fields) {
     form_fields[field].className += ' form-control'

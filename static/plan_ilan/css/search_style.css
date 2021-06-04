@@ -7,6 +7,7 @@
     z-index: 1; /* Stay on top */
     top: auto; /* Stay at the top */
     right: 0;
+    border-top: 1px solid white;
     background-color: rgba(198, 30, 30, 0.7);
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 0; /* Place content 60px from the top */
@@ -19,12 +20,36 @@
 }
 
 .resize-box {
-    resize: vertical;
     width: 100%;
     height: 50%;
     float: right;
-    border: 5px solid blue;
+    /*border: 5px solid blue;*/
     padding: 2%;
+
+}
+
+.zero-elements {
+    text-align: center;
+    float: right;
+    margin-top: 20%;
+    color: black;
+}
+
+.zero_elements_image {
+    width: 60%;
+    height: 80%;
+    position: relative;
+    float: left;
+}
+
+#courses_results {
+    border-bottom: 1px solid black;
+    /*resize: vertical;*/
+    /*overflow: auto;*/
+}
+
+#chosen_elements {
+    border-top: 1px solid black;
 }
 
 .open-btn {
@@ -39,14 +64,17 @@
     background-color: rgba(84, 87, 90, 0.5);
     cursor: pointer;
     writing-mode: vertical-lr;
-    -webkit-writing-mode: vertical-lr;
+    /*text-orientation: mixed;*/
+    text-align: left;
+    padding-top: 1%;
+    /*-webkit-writing-mode: vertical-lr;*/
 }
 
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
     position: absolute;
     top: 0;
-    right: 25px;
+    /*right: 25px;*/
     font-size: 36px;
     margin-right: 50px;
 }
@@ -94,4 +122,20 @@
 
 #teacher_search {
     color: #111111;
+}
+
+.details {
+    color: black;
+}
+
+.details-title {
+    color: rgba(198, 30, 30, 0.7);
+    text-align: center;
+    font-weight: bold
+}
+
+.details-link:hover {
+    --link-hover-color: blue;
+    color: #0000ff;
+    text-decoration: underline;
 }

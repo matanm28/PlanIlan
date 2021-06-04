@@ -7,7 +7,7 @@ html {
 }
 
 .bg_image {
-    position: absolute;
+    position: fixed;
     height: 100%;
     width: 100%;
     background-image: url("/../../static/plan_ilan/images/red-and-white-background-login.jpg");

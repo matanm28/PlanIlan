@@ -16,6 +16,8 @@ function changeHeart(pressed) {
         type: 'POST',
         data: data,
         success: function (data) {
+            let amount_of_likes = JSON.parse(data.amount_likes);
+            document.getElementById("amount_" + post_id).innerText = amount_of_likes + " אנשים אהבו את זה"
         },
         error: function (error) {
             alert('error; ' + eval(error));

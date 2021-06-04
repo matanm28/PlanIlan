@@ -1,0 +1,61 @@
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 2%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    margin: auto;
+    /*text-align: center;*/
+    /*font-family: arial;*/
+}
+
+.detail {
+    border: 0;
+!important;
+}
+
+.icon {
+    background: rgba(198, 30, 30, 0.7);
+    color: white !important;
+    border: 0 !important;
+    border-radius: 0.25rem !important;
+}
+
+.title {
+    color: rgba(198, 30, 30, 0.7);
+    font-size: 2rem;
+    text-align: center;
+}
+
+
+.shadow {
+    box-shadow: 0 10px 5px grey;
+    text-align: center;
+}
+
+.liked {
+    float: left;
+    padding: 0;
+    position: center;
+}
+
+.trash {
+    float: left;
+    position: absolute;
+}
+
+
+

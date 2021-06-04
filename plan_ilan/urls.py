@@ -29,6 +29,7 @@ urlpatterns = [
                   path('timetable/', views.time_table, name='timetable'),
                   # USER AUTHENTICATION URLS
                   path('login/', views.login_page, name='login'),
+                  path('about/', views.about_page, name='about'),
                   path('logout/', views.logout_user, name='logout'),
                   path('register/', views.register, name='register'),
                   path('teacher/<int:pk>',
