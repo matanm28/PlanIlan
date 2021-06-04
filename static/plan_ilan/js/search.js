@@ -94,10 +94,16 @@ function addCourseDetails(code, data) {
 }
 
 function addTeacherDetails(id, data) {
-    let title_and_name = data.teacher['name'];
-    let faculties = data.teacher['faculties'];
-    let departments = data.teacher['departments'];
-    let link = data.teacher['url'];
+    let title_and_name = data['title'] + " " + data['name'];
+    let faculties = data['faculty'];
+    let departments = data['departments'];
+    let link = data['website_url'];
+    if (data['courses'].length > 1) {
+        document.getElementById("courses_" + id).innerHTML += `<i>קורסים: </i>${data['courses'].map((course)=>course.name).join(', ')}`
+    }
+    if (data['courses'].length === 1) {
+        document.getElementById("courses_" + id).innerHTML = "<i>קורס: </i>" + data['courses'][0].name
+    }
     // adding details
     document.getElementById("name_" + id).innerHTML = title_and_name
     if (faculties.length > 1) {

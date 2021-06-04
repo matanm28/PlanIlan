@@ -10,7 +10,7 @@ from plan_ilan.apps.web_site.decorators import unauthenticated_user, authenticat
 from plan_ilan.apps.web_site.filters import CourseInstanceFilter, TeacherInstanceFilter
 from plan_ilan.apps.web_site.forms import CreateAccountForm, CreateDjangoUserForm
 from plan_ilan.apps.web_site.models import *
-from plan_ilan.apps.web_site.serializers import CourseSearchSerializer
+from plan_ilan.apps.web_site.serializers import CourseSearchSerializer, TeacherSearchSerializer
 
 
 def about_page(request):
@@ -43,25 +43,26 @@ def search(request):
 
 
 def get_teacher_details(code):
-    chosen_teacher = Teacher.objects.filter(id=code)[0]
-    faculties_qs = chosen_teacher.get_faculties()
-    faculties = []
-    for faculty_qs in faculties_qs:
-        faculties.append(faculty_qs.label)
-    departments_qs = chosen_teacher.departments
-    departments = []
-    for department_qs in departments_qs:
-        departments.append(department_qs.label)
-    json_dict = {
-        "name": chosen_teacher.title_and_name,
-        "faculties": faculties,
-        "departments": departments,
-        "url": chosen_teacher.website_url
-    }
-    json_string = json.dumps(json_dict)
-    json_teacher = json.loads(json_string)
-    teacher_details = {'teacher': json_teacher}
-    return teacher_details
+    chosen_teacher = Teacher.objects.filter(id=code).first()
+    teacher_details = TeacherSearchSerializer(chosen_teacher)
+    # faculties_qs = chosen_teacher.get_faculties()
+    # faculties = []
+    # for faculty_qs in faculties_qs:
+    #     faculties.append(faculty_qs.label)
+    # departments_qs = chosen_teacher.departments
+    # departments = []
+    # for department_qs in departments_qs:
+    #     departments.append(department_qs.label)
+    # json_dict = {
+    #     "name": chosen_teacher.title_and_name,
+    #     "faculties": faculties,
+    #     "departments": departments,
+    #     "url": chosen_teacher.website_url
+    # }
+    # json_string = json.dumps(json_dict)
+    # json_teacher = json.loads(json_string)
+    # teacher_details = {'teacher': json_teacher}
+    return teacher_details.data
 
 
 def get_course_details(code):
