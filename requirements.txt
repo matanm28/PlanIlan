@@ -20,3 +20,4 @@ django-debug-toolbar
 beautifulsoup4
 requests
 django-crispy-forms
+django-model-utils

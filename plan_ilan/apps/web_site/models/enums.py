@@ -15,21 +15,21 @@ class LabeledTextEnum(models.TextChoices):
         for enum in cls:
             if search_value in enum.label:
                 return enum
-        raise EnumNotExistError(cls.__name__, search_value)
+        raise EnumNotExistError(cls, search_value, cls.from_string)
 
     @classmethod
-    def from_number(cls, search_value: str) -> 'LabeledTextEnum':
+    def from_int(cls, search_value: str) -> 'LabeledTextEnum':
         for enum in cls:
             if enum.value == search_value:
                 return enum
-        raise EnumNotExistError(cls.__name__, search_value)
+        raise EnumNotExistError(cls, search_value, cls.from_int)
 
     @classmethod
     def from_name(cls, search_value: str) -> 'LabeledTextEnum':
         for enum in cls:
             if search_value in enum.name:
                 return enum
-        raise EnumNotExistError(cls.__name__, search_value)
+        raise EnumNotExistError(cls, search_value, cls.from_name)
 
 
 # todo: change error to __empty__ or default enum
@@ -39,21 +39,21 @@ class LabeledIntegerEnum(models.IntegerChoices):
         for enum in cls:
             if search_value in enum.label:
                 return enum
-        raise EnumNotExistError(cls.__name__, search_value)
+        raise EnumNotExistError(cls, search_value, cls.from_string)
 
     @classmethod
     def from_int(cls, search_value: int) -> 'LabeledIntegerEnum':
         for enum in cls:
             if enum.value == search_value:
                 return enum
-        raise EnumNotExistError(cls.__name__, search_value)
+        raise EnumNotExistError(cls, search_value, cls.from_int)
 
     @classmethod
     def from_name(cls, search_value: str) -> 'LabeledIntegerEnum':
         for enum in cls:
             if search_value in enum.name:
                 return enum
-        raise EnumNotExistError(cls.__name__, search_value)
+        raise EnumNotExistError(cls, search_value, cls.from_name)
 
 
 class EnumModel(BaseModel):
@@ -79,6 +79,10 @@ class EnumModel(BaseModel):
     @property
     def enum(self) -> LabeledIntegerEnum:
         return self.get_enum_class().from_int(self.number)
+
+    @classmethod
+    def choices(cls):
+        return cls.objects.all()
 
     def __repr__(self):
         return f'number:{self.number}, label:{self.label}'
@@ -235,6 +239,10 @@ class Department(EnumModel):
         cls.log_created(instance, created)
         return instance
 
+    @classmethod
+    def choices(cls):
+        return Department.objects.exclude(pk=DepartmentEnum.NULL_DEPARTMENT).all()
+
 
 class FacultyEnum(LabeledIntegerEnum):
     GENERAL = 0, _("כללי")
@@ -273,8 +281,8 @@ class Faculty(EnumModel):
         return instance
 
     @classmethod
-    def forms_queryset(cls):
-        return Faculty.objects.exclude(pk=FacultyEnum.UNKNOWN)
+    def choices(cls):
+        return Faculty.objects.exclude(pk=FacultyEnum.UNKNOWN).all()
 
 
 class SemesterEnum(LabeledIntegerEnum):
@@ -332,7 +340,6 @@ class ExamPeriod(EnumModel):
         instance, created = ExamPeriod.objects.get_or_create(number=enum.value, label=enum.label)
         cls.log_created(instance, created)
         return instance
-
 
 class LessonTypeEnum(LabeledIntegerEnum):
     LECTURE = 0, _('הרצאה')

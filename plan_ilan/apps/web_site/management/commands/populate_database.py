@@ -50,15 +50,13 @@ class PopulateDatabaseCommand(BaseCommand):
                 for department in DepartmentEnum:
                     if department == DepartmentEnum.NULL_DEPARTMENT:
                         continue
-                    if department < 59:
-                        continue
                     future = executor.submit(cls.run_single_crawler, base_url, department.label, run_with_threads)
-                    futures[future] = department.label
+                    futures[future] = department
                     logger.info(f'sent {department.label} to executor')
                 for future in concurrent.futures.as_completed(futures.keys()):
                     if future.exception():
                         failed_department = futures[future]
-                        logger.error(f'Department {failed_department} ended with exception')
+                        logger.error(f'Department {failed_department.label} ended with exception')
                         logger.exception(f'{future.exception()}')
                         departments_with_errors.append(failed_department)
                         continue
@@ -69,10 +67,12 @@ class PopulateDatabaseCommand(BaseCommand):
                     if crawler.num_of_fails:
                         departments_with_fails.append(futures[future])
                 if departments_with_errors:
-                    departments_error_string = '\n'.join([f'{i + 1}.{dep}' for i, dep in enumerate(departments_with_errors)])
+                    departments_error_string = '\n'.join(
+                        [f'{dep.number}.{dep.label}' for dep in departments_with_errors])
                     logger.error(f'Departments that exited with exceptions:\n {departments_error_string}')
                 if departments_with_fails:
-                    departments_fails_string = '\n'.join([f'{i + 1}.{dep}' for i, dep in enumerate(departments_with_fails)])
+                    departments_fails_string = '\n'.join(
+                        [f'{dep.number}.{dep.label}' for dep in departments_with_fails])
                     logger.error(f'Departments that failed to insert some data:\n {departments_fails_string}')
         else:
             crawler = cls.run_single_crawler(base_url, 'בחר', run_with_threads)
@@ -81,6 +81,6 @@ class PopulateDatabaseCommand(BaseCommand):
 
     @classmethod
     def run_single_crawler(cls, base_url: str, department_name: str, run_with_threads: bool) -> ShohamCrawler:
-        crawler = ShohamCrawler(base_url, settings.DEBUG, logger)
+        crawler = ShohamCrawler(base_url, False and settings.DEBUG, logger)
         crawler.start(department_name, run_with_threads)
         return crawler

@@ -35,6 +35,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 INSTALLED_APPS = [
     'plan_ilan.apps.web_site',
+    'plan_ilan.apps.timetable_generator',
     'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -87,7 +88,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DEVELOPMENT = False
+DEVELOPMENT = True
 IS_MATAN_MACHINE = socket.gethostname() == 'MAMALKA-FSYX3'
 DB_HOST = 'LOCAL' if DEVELOPMENT and IS_MATAN_MACHINE else 'AWS'
 db_information = dict(os.environ)

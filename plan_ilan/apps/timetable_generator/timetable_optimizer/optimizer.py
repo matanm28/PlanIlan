@@ -6,7 +6,7 @@ from codetiming import Timer
 from django.db.models import QuerySet
 from gekko import Gekko
 
-from plan_ilan.apps.plan_ilan_site.models import Course
+from plan_ilan.apps.web_site.models import Course
 from plan_ilan.apps.timetable_generator.timetable_optimizer.optimized_course import OptimizedCourse
 from plan_ilan.apps.timetable_generator.timetable_optimizer.utils import Interval
 
@@ -60,7 +60,7 @@ class TimetableOptimizer:
     def __proccess_var_values_to_solution(self):
         solution = []
         for key, item in self.course_vars.items():
-            if sum(item.VALUE.value) == 1:
+            if sum(item.VALUE.choice) == 1:
                 solution.extend(key)
         return solution
 
