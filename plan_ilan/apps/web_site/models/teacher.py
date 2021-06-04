@@ -82,11 +82,22 @@ class Teacher(BaseModel):
     def faculty(self) -> Faculty:
         return self.faculties.first()
 
-    def get_faculties(self) -> QuerySet[Faculty]:
+    def get_faculties(self):
         return self.faculties.all()
+
+    def get_faculties_as_string(self, delim=', ') -> str:
+        return delim.join(self.faculties.values_list('label', flat=True))
+
+    def get_departments_as_string(self, delim=', ') -> str:
+        return delim.join(self.departments.values_list('label', flat=True))
+
+    @property
+    def has_valid_image(self)->bool:
+        return bool(self.image)
 
     def __repr__(self):
         return f'id: {self.pk} name: {self.title_and_name}'
 
     def __str__(self):
         return f'{self.title_and_name}'
+
