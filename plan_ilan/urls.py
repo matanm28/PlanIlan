@@ -34,6 +34,8 @@ urlpatterns = [
                   path('register/', views.register, name='register'),
                   path('teacher/<int:pk>',
                        views.TeacherDetailView.as_view(), name='teacher_detail'),
+                  path('course/<int:pk>',
+                       views.CourseDetailView.as_view(), name='course_detail'),
                   path('delete-review/<int:pk>',
                        views.ReviewDeleteView.as_view(), name='delete_review'),
                   # RESET PASSWORD URLS
