@@ -34,6 +34,13 @@
     border-radius: 0.25rem !important;
 }
 
+.tab-title {
+    background-color: rgba(198, 30, 30, 0.7);
+    border-radius: 0.5rem !important;
+    color: white;
+    text-align: center;
+}
+
 .title {
     color: rgba(198, 30, 30, 0.7);
     font-size: 2rem;
@@ -57,9 +64,10 @@
     position: absolute;
 }
 
-.add-comment {
+.card-comment {
     border: 4px solid rgb(214, 97, 97);
     border-radius: 0.5rem !important;
+    padding: 1%;
 }
 
 .widget .panel-body { padding:0px; }

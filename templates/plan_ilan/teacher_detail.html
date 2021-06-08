@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{% static 'plan_ilan/css/teacher_and_course_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/likes_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free' %}">
+    {#    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free' %}">#}
     <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/scrollbar_style.css' %}"/>
@@ -23,102 +23,210 @@
 {% endblock %}
 {% block title %}פרטי מורה{% endblock %}
 {% block content %}
-    <div class="row">
-        <div class="column">
-            <div class="card">
-                {% if teacher.has_valid_image %}
-                    <img class="card-img-top" src="{{ teacher.image.url }}" alt="teacher_profile"/>
-                {% else %}
-                    <img class="card-img-top" src="{% static 'plan_ilan/images/images.png' %}" alt="teacher_profile"/>
-                {% endif %}
-                <div class="card-body">
-                    <h1 class="title"><b>{{ teacher.title_and_name }}</b></h1>
-                    <div class="list-group-flush">
-                        <div class="list-group-item">
-                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                    class="fas fa-city fa-2x"
-                                    aria-hidden="true"></i></span>
-                                {% if teacher.get_faculties|length == 1 %}
-                                    &nbsp<strong>פקולטה:</strong> {{ teacher.get_faculties_as_string }}
-                                {% endif %}
-                                {% if teacher.get_faculties|length > 1 %}
-                                    &nbsp<strong>פקולטות:</strong> {{ teacher.get_faculties_as_string }}
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="list-group-item">
-                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                    class="fas fa-university fa-2x"
-                                    aria-hidden="true"></i></span>
-                                {% if teacher.departments|length == 1 %}
-                                    &nbsp<strong>מחלקה:</strong> {{ teacher.get_departments_as_string }}
-                                {% endif %}
-                                {% if teacher.departments|length > 1 %}
-                                    &nbsp<strong>מחלקות:</strong> {{ teacher.get_departments_as_string }}
-                                {% endif %}
-                            </p>
-                        </div>
-                        {% if teacher.phone %}
-                            <div class="list-group-item">
-                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                        class="fas fa-phone fa-2x"
-                                        aria-hidden="true"></i></span>
-                                    &nbsp<strong>טלפון:</strong> {{ teacher.phone }}
-                                </p>
-                            </div>
-                        {% endif %}
-                        {% if teacher.email %}
-                            <div class="list-group-item">
-                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                        class="fas fa-at fa-2x"
-                                        aria-hidden="true"></i></span>
-                                    &nbsp<strong>אי-מייל:</strong> {{ teacher.email }}
-                                </p>
-                            </div>
-                        {% endif %}
-                        {% if teacher.website_url %}
-                            <div class="list-group-item">
-                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                        class="fas fa-globe fa-2x"
-                                        aria-hidden="true"></i></span>
-                                    &nbsp<strong>אתר אישי:</strong> {{ teacher.website_url }}
-                                </p>
-                            </div>
-                        {% endif %}
-                        {% if teacher.average_rating %}
-                            <div class="list-group-item">
-                                <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
-                                        class="fas fa-star fa-2x"
-                                        aria-hidden="true"></i></span>
-                                    &nbsp<strong>דירוג ממוצע:</strong> {{ teacher.average_rating }}
-                                </p>
-                            </div>
-                        {% endif %}
+    <div class="column">
+        <div class="card">
+            {% if teacher.has_valid_image %}
+                <img class="card-img-top" src="{{ teacher.image.url }}" alt="teacher_profile"/>
+            {% else %}
+                <img class="card-img-top" src="{% static 'plan_ilan/images/images.png' %}" alt="teacher_profile"/>
+            {% endif %}
+            <div class="card-body">
+                <h1 class="title"><b>{{ teacher.title_and_name }}</b></h1>
+                <div class="list-group-flush">
+                    <div class="list-group-item">
+                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                class="fas fa-city fa-2x"
+                                aria-hidden="true"></i></span>
+                            {% if teacher.get_faculties|length == 1 %}
+                                &nbsp<strong>פקולטה:</strong> {{ teacher.get_faculties_as_string }}
+                            {% endif %}
+                            {% if teacher.get_faculties|length > 1 %}
+                                &nbsp<strong>פקולטות:</strong> {{ teacher.get_faculties_as_string }}
+                            {% endif %}
+                        </p>
                     </div>
+                    <div class="list-group-item">
+                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                class="fas fa-university fa-2x"
+                                aria-hidden="true"></i></span>
+                            {% if teacher.departments|length == 1 %}
+                                &nbsp<strong>מחלקה:</strong> {{ teacher.get_departments_as_string }}
+                            {% endif %}
+                            {% if teacher.departments|length > 1 %}
+                                &nbsp<strong>מחלקות:</strong> {{ teacher.get_departments_as_string }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% if teacher.phone %}
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-phone fa-2x"
+                                    aria-hidden="true"></i></span>
+                                &nbsp<strong>טלפון:</strong> {{ teacher.phone }}
+                            </p>
+                        </div>
+                    {% endif %}
+                    {% if teacher.email %}
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-at fa-2x"
+                                    aria-hidden="true"></i></span>
+                                &nbsp<strong>אי-מייל:</strong> {{ teacher.email }}
+                            </p>
+                        </div>
+                    {% endif %}
+                    {% if teacher.website_url %}
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-globe fa-2x"
+                                    aria-hidden="true"></i></span>
+                                &nbsp<strong>אתר אישי:</strong> {{ teacher.website_url }}
+                            </p>
+                        </div>
+                    {% endif %}
+                    {% if teacher.average_rating %}
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-star fa-2x"
+                                    aria-hidden="true"></i></span>
+                                &nbsp<strong>דירוג ממוצע:</strong> {{ teacher.average_rating }}
+                            </p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="column">
-            <div class="add-comment">
-                <h3>הוספת תגובה</h3>
+    </div>
+    <div class="column">
+        <div class="row mb-2">
+            <div class="card-comment">
+                <h1 class="tab-title"><b>תגובות על המורה</b></h1>
+                <div class="scrollbar scrollbar-primary">
+                    {% for review in teacher_reviews %}
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg"
+                                             class="img img-rounded img-fluid"
+                                             alt=""/>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <p>
+                                            {% if review.author.first_name %}
+                                                <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
+                                            {% else %}
+                                                <a class="float-left"><strong>{{ review.author }}</strong></a>
+                                            {% endif %}
+                                            {% for rating in teacher_rating %}
+                                                {% ifequal rating.user review.author %}
+                                                    {% with ''|center:rating.value as range %}
+                                                        {% for _ in range %}
+                                                            <span class="float-right"><i
+                                                                    class="text-warning fa fa-star"></i></span>
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                {% endifequal %}
+                                            {% endfor %}
+
+                                        </p>
+                                        <div class="clearfix"></div>
+                                        <p><strong>{{ review.headline }}</strong></p>
+                                        <p>{{ review.text }}</p>
+                                        {% if request.user.is_authenticated %}
+                                            <button type="submit" class="fa fa-heart heart-btn"
+                                                    id="heart_teacher_{{ review.id }}"
+                                                    name="heart-like" onclick="changeHeart(this)"></button>
+                                            <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }}
+                                                אנשים
+                                                אהבו את זה</p>
+                                            <br>
+                                            {% ifequal request.user review.author.user %}
+                                                <button id="delete_{{ review.id }}"
+                                                        class="fas fa-trash close-btn-groups trash"
+                                                        onclick="delete_comment(this)"></button>
+                                                <br>
+                                                <button type="button" id="btn_{{ review.id }}" class="btn btn-link"
+                                                        onclick="openRateModal(this)">ערוך
+                                                </button>
+                                            {% endifequal %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="rateModal_{{ review.id }}" class="modal">
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                            <span class="close" id="closeRate_{{ review.id }}"
+                                  onclick="closeRateModal(this)">&times;</span>
+                                <div>
+                                    <form class="rate-form" method="post">
+                                        {% csrf_token %}
+                                        <label for="headline_{{ review.id }}">כותרת:
+                                            <input type="text" id="headline_{{ review.id }}">
+                                        </label>
+                                        <br>
+                                        <label for="commentArea">הוסף תגובה:</label>
+                                        <textarea class="form-control" id="commentArea_{{ review.id }}"
+                                                  rows="3"></textarea>
+                                        <br>
+                                        <label>דרג:</label>
+                                        <div>
+                                            <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                    id="first-star_{{ review.id }}"
+                                                    onmouseover="changeStar(this)"></button>
+                                            <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                    id="second-star_{{ review.id }}"
+                                                    onmouseover="changeStar(this)"></button>
+                                            <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                    id="third-star_{{ review.id }}"
+                                                    onmouseover="changeStar(this)"></button>
+                                            <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                    id="fourth-star_{{ review.id }}"
+                                                    onmouseover="changeStar(this)"></button>
+                                            <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                    id="fifth-star_{{ review.id }}"
+                                                    onmouseover="changeStar(this)"></button>
+                                        </div>
+                                        <br>
+                                        <button id="course_edit_{{ review.id }}" class="btn btn-outline-primary"
+                                                onclick="sendData(this)">שלח!
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card-comment">
+                <h1 class="tab-title"><b>הוספת תגובה</b></h1>
                 {% if request.user in users_rated %}
-                    תגובתך התקבלה. אין אפשרות להוסיף תגובה נוספת.
-                    ניתן לערוך את תגובתך הקיימת.
+                    <p>
+                        אין אפשרות להוסיף תגובה נוספת.
+                        ניתן לערוך את תגובתך הקיימת.
+                    </p>
                 {% elif not request.user.is_authenticated %}
-                    על מנת להשאיר תגובה, עליך להרשם לאתר.
+                    <p>
+                        על מנת להשאיר תגובה, עליך להרשם לאתר.
+                    </p>
                 {% else %}
                     <form class="rate-form" method="post">
                         {% csrf_token %}
                         <label for="headline_{{ t.id }}">
-                            <input class="form-control" type="text" placeholder="כותרת..." id="headline_{{ teacher.id }}">
+                            <input class="form-control" type="text" placeholder="כותרת..."
+                                   id="headline_{{ teacher.id }}">
                         </label>
                         <br>
                         <label for="commentArea" style="padding: 1%">
-                            <textarea class="form-control" id="commentArea_{{ teacher.id }}" placeholder="תוכן..." rows="3"></textarea>
+                            <textarea class="form-control" id="commentArea_{{ teacher.id }}" placeholder="תוכן..."
+                                      rows="3"></textarea>
                         </label>
-                        <br>
-{#                        <label>דרג:</label>#}
-                        <div>
+                        {#                        <label>דרג:</label>#}
+                        <div id="star_ratings">
                             <button type="submit" class="fa fa-star fa-2x star-btn" id="first-star_{{ t.id }}"
                                     onmouseover="changeStar(this)"></button>
                             <button type="submit" class="fa fa-star fa-2x star-btn" id="second-star_{{ t.id }}"
@@ -130,231 +238,128 @@
                             <button type="submit" class="fa fa-star fa-2x star-btn" id="fifth-star_{{ t.id }}"
                                     onmouseover="changeStar(this)"></button>
                         </div>
-                        <br>
-                        <button id="teacher_review_{{ teacher.id }}" class="btn class_btn"
+                        <button id="teacher_review_{{ teacher.id }}" class="btn send_btn"
                                 onclick="sendData(this)">שלח
                         </button>
                     </form>
                 {% endif %}
             </div>
         </div>
-        <div class="column">
-            <h1>תגובות על המורה</h1><br>
-            <div class="scrollbar scrollbar-primary">
-                {% for review in teacher_reviews %}
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <img src="https://image.ibb.co/jw55Ex/def_face.jpg"
-                                         class="img img-rounded img-fluid"
-                                         alt=""/>
-                                </div>
-                                <div class="col-md-10">
-                                    <p>
-                                        {% if review.author.first_name %}
-                                            <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
-                                        {% else %}
-                                            <a class="float-left"><strong>{{ review.author }}</strong></a>
-                                        {% endif %}
-                                        {% for rating in teacher_rating %}
-                                            {% ifequal rating.user review.author %}
-                                                {% with ''|center:rating.value as range %}
-                                                    {% for _ in range %}
-                                                        <span class="float-right"><i
-                                                                class="text-warning fa fa-star"></i></span>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                            {% endifequal %}
-                                        {% endfor %}
-
-                                    </p>
-                                    <div class="clearfix"></div>
-                                    <p><strong>{{ review.headline }}</strong></p>
-                                    <p>{{ review.text }}</p>
-                                    {% if request.user.is_authenticated %}
-                                        <button type="submit" class="fa fa-heart heart-btn"
-                                                id="heart_teacher_{{ review.id }}"
-                                                name="heart-like" onclick="changeHeart(this)"></button>
-                                        <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }} אנשים
-                                            אהבו את זה</p>
-                                        <br>
-                                        {% ifequal request.user review.author.user %}
-                                            <button id="delete_{{ review.id }}"
-                                                    class="fas fa-trash close-btn-groups trash"
-                                                    onclick="delete_comment(this)"></button>
-                                            <br>
-                                            <button type="button" id="btn_{{ review.id }}" class="btn btn-link"
-                                                    onclick="openRateModal(this)">ערוך
-                                            </button>
-                                        {% endifequal %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="rateModal_{{ review.id }}" class="modal">
-                        <!-- Modal content -->
-                        <div class="modal-content">
-                            <span class="close" id="closeRate_{{ review.id }}"
-                                  onclick="closeRateModal(this)">&times;</span>
-                            <div>
-                                <form class="rate-form" method="post">
-                                    {% csrf_token %}
-                                    <label for="headline_{{ review.id }}">כותרת:
-                                        <input type="text" id="headline_{{ review.id }}">
-                                    </label>
-                                    <br>
-                                    <label for="commentArea">הוסף תגובה:</label>
-                                    <textarea class="form-control" id="commentArea_{{ review.id }}"
-                                              rows="3"></textarea>
-                                    <br>
-                                    <label>דרג:</label>
-                                    <div>
-                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                id="first-star_{{ review.id }}"
-                                                onmouseover="changeStar(this)"></button>
-                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                id="second-star_{{ review.id }}"
-                                                onmouseover="changeStar(this)"></button>
-                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                id="third-star_{{ review.id }}"
-                                                onmouseover="changeStar(this)"></button>
-                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                id="fourth-star_{{ review.id }}"
-                                                onmouseover="changeStar(this)"></button>
-                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                id="fifth-star_{{ review.id }}"
-                                                onmouseover="changeStar(this)"></button>
-                                    </div>
-                                    <br>
-                                    <button id="course_edit_{{ review.id }}" class="btn btn-outline-primary"
-                                            onclick="sendData(this)">שלח!
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        {#    test#}
-
-        <div class="container">
-            <div class="row">
-                <div class="panel panel-default widget">
-                    <div class="panel-heading">
-                        <span class="glyphicon glyphicon-comment"></span>
-                        <h3 class="panel-title">
-                            Recent Comments</h3>
-                        <span class="label label-info">
-                    78</span>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-2 col-md-1">
-                                        <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>
-                                    </div>
-                                    <div class="col-xs-10 col-md-11">
-                                        <div>
-                                            <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html">
-                                                Google Style Login Page Design Using Bootstrap</a>
-                                            <div class="mic-info">
-                                                By: <a href="#">Bhaumik Patel</a> on 2 Aug 2013
-                                            </div>
-                                        </div>
-                                        <div class="comment-text">
-                                            Awesome design
-                                        </div>
-                                        <div class="action">
-                                            <button type="button" class="btn btn-primary btn-xs" title="Edit">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </button>
-                                            <button type="button" class="btn btn-success btn-xs" title="Approved">
-                                                <span class="glyphicon glyphicon-ok"></span>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-xs" title="Delete">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-2 col-md-1">
-                                        <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>
-                                    </div>
-                                    <div class="col-xs-10 col-md-11">
-                                        <div>
-                                            <a href="http://bootsnipp.com/BhaumikPatel/snippets/Obgj">Admin Panel Quick
-                                                Shortcuts</a>
-                                            <div class="mic-info">
-                                                By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013
-                                            </div>
-                                        </div>
-                                        <div class="comment-text">
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-                                            nibh
-                                            euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi
-                                            enim
-                                        </div>
-                                        <div class="action">
-                                            <button type="button" class="btn btn-primary btn-xs" title="Edit">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </button>
-                                            <button type="button" class="btn btn-success btn-xs" title="Approved">
-                                                <span class="glyphicon glyphicon-ok"></span>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-xs" title="Delete">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-2 col-md-1">
-                                        <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>
-                                    </div>
-                                    <div class="col-xs-10 col-md-11">
-                                        <div>
-                                            <a href="http://bootsnipp.com/BhaumikPatel/snippets/4ldn">Cool Sign Up</a>
-                                            <div class="mic-info">
-                                                By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013
-                                            </div>
-                                        </div>
-                                        <div class="comment-text">
-                                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
-                                            nibh
-                                            euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi
-                                            enim
-                                        </div>
-                                        <div class="action">
-                                            <button type="button" class="btn btn-primary btn-xs" title="Edit">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </button>
-                                            <button type="button" class="btn btn-success btn-xs" title="Approved">
-                                                <span class="glyphicon glyphicon-ok"></span>
-                                            </button>
-                                            <button type="button" class="btn btn-danger btn-xs" title="Delete">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <a href="#" class="btn btn-primary btn-sm btn-block" role="button"><span
-                                class="glyphicon glyphicon-refresh"></span> More</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
+    {#    test#}
+
+    {#    <div class="container">#}
+    {#        <div class="row">#}
+    {#            <div class="panel panel-default widget">#}
+    {#                <div class="panel-heading">#}
+    {#                    <span class="glyphicon glyphicon-comment"></span>#}
+    {#                    <h3 class="panel-title">#}
+    {#                        Recent Comments</h3>#}
+    {#                    <span class="label label-info">#}
+    {#                    78</span>#}
+    {#                </div>#}
+    {#                <div class="panel-body">#}
+    {#                    <ul class="list-group">#}
+    {#                        <li class="list-group-item">#}
+    {#                            <div class="row">#}
+    {#                                <div class="col-xs-2 col-md-1">#}
+    {#                                    <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>#}
+    {#                                </div>#}
+    {#                                <div class="col-xs-10 col-md-11">#}
+    {#                                    <div>#}
+    {#                                        <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html">#}
+    {#                                            Google Style Login Page Design Using Bootstrap</a>#}
+    {#                                        <div class="mic-info">#}
+    {#                                            By: <a href="#">Bhaumik Patel</a> on 2 Aug 2013#}
+    {#                                        </div>#}
+    {#                                    </div>#}
+    {#                                    <div class="comment-text">#}
+    {#                                        Awesome design#}
+    {#                                    </div>#}
+    {#                                    <div class="action">#}
+    {#                                        <button type="button" class="btn btn-primary btn-xs" title="Edit">#}
+    {#                                            <span class="glyphicon glyphicon-pencil"></span>#}
+    {#                                        </button>#}
+    {#                                        <button type="button" class="btn btn-success btn-xs" title="Approved">#}
+    {#                                            <span class="glyphicon glyphicon-ok"></span>#}
+    {#                                        </button>#}
+    {#                                        <button type="button" class="btn btn-danger btn-xs" title="Delete">#}
+    {#                                            <span class="glyphicon glyphicon-trash"></span>#}
+    {#                                        </button>#}
+    {#                                    </div>#}
+    {#                                </div>#}
+    {#                            </div>#}
+    {#                        </li>#}
+    {#                        <li class="list-group-item">#}
+    {#                            <div class="row">#}
+    {#                                <div class="col-xs-2 col-md-1">#}
+    {#                                    <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>#}
+    {#                                </div>#}
+    {#                                <div class="col-xs-10 col-md-11">#}
+    {#                                    <div>#}
+    {#                                        <a href="http://bootsnipp.com/BhaumikPatel/snippets/Obgj">Admin Panel Quick#}
+    {#                                            Shortcuts</a>#}
+    {#                                        <div class="mic-info">#}
+    {#                                            By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013#}
+    {#                                        </div>#}
+    {#                                    </div>#}
+    {#                                    <div class="comment-text">#}
+    {#                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy#}
+    {#                                        nibh#}
+    {#                                        euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi#}
+    {#                                        enim#}
+    {#                                    </div>#}
+    {#                                    <div class="action">#}
+    {#                                        <button type="button" class="btn btn-primary btn-xs" title="Edit">#}
+    {#                                            <span class="glyphicon glyphicon-pencil"></span>#}
+    {#                                        </button>#}
+    {#                                        <button type="button" class="btn btn-success btn-xs" title="Approved">#}
+    {#                                            <span class="glyphicon glyphicon-ok"></span>#}
+    {#                                        </button>#}
+    {#                                        <button type="button" class="btn btn-danger btn-xs" title="Delete">#}
+    {#                                            <span class="glyphicon glyphicon-trash"></span>#}
+    {#                                        </button>#}
+    {#                                    </div>#}
+    {#                                </div>#}
+    {#                            </div>#}
+    {#                        </li>#}
+    {#                        <li class="list-group-item">#}
+    {#                            <div class="row">#}
+    {#                                <div class="col-xs-2 col-md-1">#}
+    {#                                    <img src="http://placehold.it/80" class="img-circle img-responsive" alt=""/>#}
+    {#                                </div>#}
+    {#                                <div class="col-xs-10 col-md-11">#}
+    {#                                    <div>#}
+    {#                                        <a href="http://bootsnipp.com/BhaumikPatel/snippets/4ldn">Cool Sign Up</a>#}
+    {#                                        <div class="mic-info">#}
+    {#                                            By: <a href="#">Bhaumik Patel</a> on 11 Nov 2013#}
+    {#                                        </div>#}
+    {#                                    </div>#}
+    {#                                    <div class="comment-text">#}
+    {#                                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy#}
+    {#                                        nibh#}
+    {#                                        euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi#}
+    {#                                        enim#}
+    {#                                    </div>#}
+    {#                                    <div class="action">#}
+    {#                                        <button type="button" class="btn btn-primary btn-xs" title="Edit">#}
+    {#                                            <span class="glyphicon glyphicon-pencil"></span>#}
+    {#                                        </button>#}
+    {#                                        <button type="button" class="btn btn-success btn-xs" title="Approved">#}
+    {#                                            <span class="glyphicon glyphicon-ok"></span>#}
+    {#                                        </button>#}
+    {#                                        <button type="button" class="btn btn-danger btn-xs" title="Delete">#}
+    {#                                            <span class="glyphicon glyphicon-trash"></span>#}
+    {#                                        </button>#}
+    {#                                    </div>#}
+    {#                                </div>#}
+    {#                            </div>#}
+    {#                        </li>#}
+    {#                    </ul>#}
+    {#                    <a href="#" class="btn btn-primary btn-sm btn-block" role="button"><span#}
+    {#                            class="glyphicon glyphicon-refresh"></span> More</a>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
 {% endblock %}
