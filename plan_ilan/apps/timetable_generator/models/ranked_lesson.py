@@ -27,6 +27,10 @@ class RankedLesson(BaseModel):
         return self.lesson.course
 
     @property
+    def code_and_group(self) -> str:
+        return self.lesson.code_and_group
+
+    @property
     def code(self) -> str:
         return self.lesson.code
 

@@ -8,9 +8,10 @@ from typing import Dict
 from codetiming import Timer
 from django.core.management import BaseCommand
 
+from plan_ilan.apps.timetable_generator.models import Timetable
 from plan_ilan.apps.web_site.models import SemesterEnum, DAYS, Course
-from plan_ilan.apps.timetable_generator.timetable_optimizer import TimetableOptimizer
-from plan_ilan.apps.timetable_generator.timetable_optimizer import Interval
+from plan_ilan.apps.timetable_generator.timetable_optimizer.optimizer import TimetableOptimizer
+from plan_ilan.apps.timetable_generator.timetable_optimizer.utils import Interval
 
 DEFAULT_JSON_ENTRIES = {
     'rankings': defaultdict(lambda: 0),
@@ -78,6 +79,8 @@ class OptimizeTimetableCommand(BaseCommand):
 
     @Timer(text='Script finished after total of {:.4f} seconds')
     def handle(self, *args, **options):
+        t = Timetable.objects.first()
+        t.get_solutions()
         if 'timetable_data' in options:
             data = options['timetable_data']
         else:

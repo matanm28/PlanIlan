@@ -6,7 +6,7 @@ from codetiming import Timer
 from django.db.models import QuerySet
 from gekko import Gekko
 
-from plan_ilan.apps.web_site.models import Course
+from plan_ilan.apps.web_site.models import Course, Lesson
 from plan_ilan.apps.timetable_generator.timetable_optimizer.optimized_course import OptimizedCourse
 from plan_ilan.apps.timetable_generator.timetable_optimizer.utils import Interval
 
@@ -60,7 +60,7 @@ class TimetableOptimizer:
     def __proccess_var_values_to_solution(self):
         solution = []
         for key, item in self.course_vars.items():
-            if sum(item.VALUE.choice) == 1:
+            if sum(item.VALUE.value) == 1:
                 solution.extend(key)
         return solution
 
@@ -71,16 +71,16 @@ class TimetableOptimizer:
         return optimized_course_list
 
     def __populate_courses_dicts(self, mandatory: List[str], elective: List[str]) -> List[Course]:
-        mandatory_courses = Course.objects.filter(code__in=mandatory)
+        mandatory_courses = Lesson.objects.filter(course__code__in=mandatory)
         mandatory_courses_list = self.__build_dict_after_filtering(mandatory_courses, self.mandatory_dict)
-        elective_courses = Course.objects.filter(code__in=elective)
+        elective_courses = Lesson.objects.filter(course__code__in=elective)
         elective_courses_list = self.__build_dict_after_filtering(elective_courses, self.elective_dict)
         return mandatory_courses_list + elective_courses_list
 
-    def __build_dict_after_filtering(self, courses_query_set: QuerySet[Course], courses_dict: Dict) -> List[Course]:
+    def __build_dict_after_filtering(self, courses_query_set: QuerySet[Lesson], courses_dict: Dict) -> List[Course]:
         courses_list = []
         for course in courses_query_set:
-            if course.semester != self.semester:
+            if course.semester.number != self.semester:
                 continue
             # to avoid REINFORCING types
             # todo: fix for later versions
@@ -88,12 +88,12 @@ class TimetableOptimizer:
                 continue
             if self.is_course_at_blocked_times(course):
                 continue
-            courses_dict[course.code][course.session_type.name].append(course)
+            courses_dict[course.code][course.lesson_type.label].append(course)
             courses_list.append(course)
         self.__populate_day_to_hours_to_course_dict(courses_list)
         return courses_list
 
-    def __populate_day_to_hours_to_course_dict(self, courses: QuerySet[Course], jump: int = 1, jump_by: str = 'hours'):
+    def __populate_day_to_hours_to_course_dict(self, courses: QuerySet[Lesson], jump: int = 1, jump_by: str = 'hours'):
         for course in courses:
             for session_time in course.session_times.all():
                 for hour in session_time.get_hours_list(jump=jump, jump_by=jump_by):
@@ -126,7 +126,7 @@ class TimetableOptimizer:
         intermediate_days_vars = []
         for day in day_courses_took_place:
             i = self.model.Intermediate(self.model.if3(-self.model.sum(day_courses_took_place[day]), one, zero),
-                                        f'{day.name}_inter')
+                                        f'{day.enum.name}_inter')
             intermediate_days_vars.append(i)
         self.model.Equation(self.model.sum(intermediate_days_vars) <= max_days)
         self.model.Equation(self.model.sum(intermediate_days_vars) > 0)

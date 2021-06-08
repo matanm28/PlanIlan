@@ -1,15 +1,13 @@
 import itertools
 from collections import defaultdict, deque
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple
 
 from codetiming import Timer
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q
 from gekko import Gekko
 
-from plan_ilan.apps.timetable_generator.models import Timetable, BlockedTimePeriod
-from plan_ilan.apps.web_site.models import Course, Semester
-from plan_ilan.apps.timetable_generator.timetable_optimizer.optimized_course import OptimizedCourse
-from plan_ilan.apps.timetable_generator.timetable_optimizer.utils import Interval
+from plan_ilan.apps.timetable_generator.models import Timetable, BlockedTimePeriod, TimeInterval
+from plan_ilan.apps.web_site.models import Course, Semester, Lesson, Day
 
 EPSILON = 1e-3
 
@@ -19,7 +17,9 @@ class TimetableOptimizer:
         self.timetable = timetable
         self.model = Gekko(remote=False)
         self.model_ready = False
+        self.__is_done = False
         self.objective = []
+        self.__solutions = deque()
         self.course_vars = {}
 
         self.mandatory_dict = defaultdict(lambda: defaultdict(list))
@@ -27,10 +27,19 @@ class TimetableOptimizer:
         self.course_code_to_var_keys = defaultdict(list)
         self.semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(list))
 
-        self.rankings = self.__convert_rankings(rankings)
+        # self.rankings = self.__convert_rankings(rankings)
+        self.__populate_courses_dicts()
 
+    @property
+    def is_done(self) -> bool:
+        return self.__is_done
 
-        self.__populate_courses_dicts(mandatory, elective)
+    @property
+    def solutions(self) -> List[Tuple[List[str], Dict]]:
+        if not self.is_done:
+            # todo: change to async
+            raise ValueError('You need to solve before getting the solutions')
+        return [(solution.copy(), meta_info.copy()) for solution, meta_info in self.__solutions]
 
     @property
     def max_days(self) -> int:
@@ -51,6 +60,7 @@ class TimetableOptimizer:
     def __prepare_model_for_solve(self):
         self.__create_gekko_variables()
         self.__populate_course_code_to_vars()
+        self.__populate_rankings()
         self.__populate_model()
         self.__solve_in_binary_mode()
         self.model_ready = True
@@ -61,55 +71,42 @@ class TimetableOptimizer:
             self.__prepare_model_for_solve()
         self.model.solve(debug=False)
         # so best solution is first
-        solutions = deque()
         while self.is_solved:
-            solution = self.__proccess_var_values_to_solution()
+            solution = [var for key, item in self.course_vars.items() if sum(item.VALUE.value) == 1 for var in key]
             meta_info = {'is_solved': self.is_solved, 'objective_score': self.objective_score, 'iterations': self.iterations}
-            solutions.appendleft((solution, meta_info))
+            self.__solutions.appendleft((solution, meta_info))
             # add objective to optimize better than last time
             self.model.Equation(self.model.sum(self.objective) > self.objective_score + EPSILON)
             # try starting from last solution values
             self.model.options.COLDSTART = 1
             self.model.solve(debug=False)
-        return solutions
-
-    def __proccess_var_values_to_solution(self):
-        solution = []
-        for key, item in self.course_vars.items():
-            if sum(item.VALUE.choice) == 1:
-                solution.extend(key)
-        return solution
+        self.__is_done = True
+        return self.solutions
 
     @classmethod
-    def get_courses_from_codes_list(cls, courses: List[str], rankings: Dict) -> List[OptimizedCourse]:
-        courses_query_set = Course.objects.filter(code__in=courses)
-        optimized_course_list = [OptimizedCourse.from_course_model(course, rankings) for course in courses_query_set]
-        return optimized_course_list
+    def __lessons_from_ranked_lessons(cls, lessons: QuerySet[Lesson]):
+        return Lesson.objects.filter(pk__in=lessons.values_list('lesson', flat=True)).distinct()
 
-    def __populate_courses_dicts(self, mandatory: List[str], elective: List[str]) -> List[Course]:
-        mandatory_courses = Course.objects.filter(code__in=mandatory)
-        mandatory_courses_list = self.__build_dict_after_filtering(mandatory_courses, self.mandatory_dict)
-        elective_courses = Course.objects.filter(code__in=elective)
-        elective_courses_list = self.__build_dict_after_filtering(elective_courses, self.elective_dict)
-        return mandatory_courses_list + elective_courses_list
+    def __populate_courses_dicts(self) -> List[Course]:
+        self.__build_dict_after_filtering(self.__lessons_from_ranked_lessons(self.timetable.mandatory_lessons),
+                                          self.mandatory_dict)
+        self.__build_dict_after_filtering(self.__lessons_from_ranked_lessons(self.timetable.elective_lessons),
+                                          self.elective_dict)
 
-    def __build_dict_after_filtering(self, courses_query_set: QuerySet[Course], courses_dict: Dict) -> List[Course]:
+    def __build_dict_after_filtering(self, lessons: QuerySet[Lesson], courses_dict: Dict) -> List[Course]:
         courses_list = []
-        for course in courses_query_set:
-            if course.semester != self.semester:
-                continue
+        for lesson in lessons.filter(session_times__semester=self.semester):
             # to avoid REINFORCING types
             # todo: fix for later versions
-            if course.points == 0:
+            if lesson.points == 0:
                 continue
-            if self.is_course_at_blocked_times(course):
+            if self.is_lesson_at_blocked_time(lesson):
                 continue
-            courses_dict[course.code][course.session_type.name].append(course)
-            courses_list.append(course)
+            courses_dict[lesson.code][lesson.lesson_type.label].append(lesson)
+            courses_list.append(lesson)
         self.__populate_day_to_hours_to_course_dict(courses_list)
-        return courses_list
 
-    def __populate_day_to_hours_to_course_dict(self, courses: QuerySet[Course], jump: int = 1, jump_by: str = 'hours'):
+    def __populate_day_to_hours_to_course_dict(self, courses: QuerySet[Lesson], jump: int = 1, jump_by: str = 'hours'):
         for course in courses:
             for session_time in course.session_times.all():
                 for hour in session_time.get_hours_list(jump=jump, jump_by=jump_by):
@@ -142,7 +139,7 @@ class TimetableOptimizer:
         intermediate_days_vars = []
         for day in day_courses_took_place:
             i = self.model.Intermediate(self.model.if3(-self.model.sum(day_courses_took_place[day]), one, zero),
-                                        f'{day.name}_inter')
+                                        f'{day.enum.name}_inter')
             intermediate_days_vars.append(i)
         self.model.Equation(self.model.sum(intermediate_days_vars) <= max_days)
         self.model.Equation(self.model.sum(intermediate_days_vars) > 0)
@@ -186,6 +183,7 @@ class TimetableOptimizer:
 
     def __create_dict_vars(self, name: str, entries: List, low_bound: int = 0, up_bound: int = 1) -> Dict:
         gekko_vars = {}
+        # is set really needed?
         for entry in entries:
             var = self.model.Var(lb=low_bound, ub=up_bound, integer=True, name=f'{name}_{entry}')
             gekko_vars[entry] = var
@@ -201,23 +199,17 @@ class TimetableOptimizer:
             return itertools.product(*lists)
 
     @staticmethod
-    def __convert_course_tuple_to_id(course_tuple: Tuple):
-        if len(course_tuple) == 2:
-            return course_tuple[0].code_and_group, course_tuple[1].code_and_group
-        return course_tuple[0].code_and_group,
+    def __convert_course_tuple_to_id(lessons: Tuple[Lesson]):
+        return tuple(lesson.code_and_group for lesson in lessons)
 
-    def __get_ranking_for_course_id(self, course_tuple: Tuple):
-        if len(course_tuple) == 2:
-            ranking = self.rankings[course_tuple[0]] + self.rankings[course_tuple[1]]
-        else:
-            ranking = self.rankings[course_tuple[0]]
-        return ranking
+    def __get_ranking_for_course_id(self, code_and_group_tuple: Tuple):
+        return sum([self.rankings[code_and_group] for code_and_group in code_and_group_tuple])
 
     def __populate_course_code_to_vars(self):
-        for course in list(self.mandatory_dict) + list(self.elective_dict):
+        for code_and_group in list(self.mandatory_dict) + list(self.elective_dict):
             for var_key in self.course_vars:
-                if course in var_key[0]:
-                    self.course_code_to_var_keys[course].append(var_key)
+                if code_and_group in var_key[0]:
+                    self.course_code_to_var_keys[code_and_group].append(var_key)
 
     def __get_courses_code_to_points_dict(self):
         course_code_to_points = {}
@@ -235,23 +227,22 @@ class TimetableOptimizer:
                 id_to_containing_vars[t].append(key)
         return id_to_containing_vars
 
-    def is_course_at_blocked_times(self, course: Course) -> bool:
-        for session_time in course.session_times.all():
-            day = str(session_time.day)
-            if day not in self.blocked_time_periods.keys():
-                return False
-            blocked_hour_at_day = self.blocked_time_periods[day]
-            for hour in session_time.get_hours_list(jump=1, jump_by='hours'):
-                if str(hour) in blocked_hour_at_day:
+    def is_lesson_at_blocked_time(self, lesson: Lesson) -> bool:
+        common_days = Day.objects.filter(Q(number__in=lesson.days) & Q(number__in=self.timetable.blocked_days))
+        if not common_days.exists():
+            return False
+        blocked_times = self.blocked_time_periods.filter(day__in=common_days)
+        for blocked_time_period in TimeInterval.objects.filter(blocked_time_periods__in=blocked_times):
+            for lesson_time in lesson.session_times.filter(day__in=common_days):
+                t_interval = TimeInterval(start=lesson_time.start_time, end=lesson_time.end_time)
+                if blocked_time_period.is_overlapping(t_interval):
                     return True
         return False
 
-    @classmethod
-    def __convert_rankings(cls, rankings: Dict) -> defaultdict:
-        new_rankings = defaultdict(lambda: 1)
-        for key, value in rankings.items():
-            new_rankings[key] = value
-        return new_rankings
+    def __populate_rankings(self):
+        self.rankings = defaultdict(lambda: 1)
+        for ranked_lesson in self.timetable.all_ranked_lessons:
+            self.rankings[ranked_lesson.code_and_group] = ranked_lesson.rank
 
     @property
     def objective_score(self) -> float:

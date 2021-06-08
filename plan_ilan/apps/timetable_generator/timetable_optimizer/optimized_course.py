@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List, Dict
 
-from plan_ilan.apps.plan_ilan_site.models import LessonTime, Course
+from plan_ilan.apps.web_site.models import LessonTime, Lesson
 
-from plan_ilan.apps.plan_ilan_site.models import LessonTypeEnum, DAYS
+from plan_ilan.apps.web_site.models import LessonTypeEnum, DAYS
 
 
 @dataclass(unsafe_hash=True)
@@ -16,9 +16,9 @@ class OptimizedCourse:
     ranking: float = field(default=0.0, hash=False, compare=False)
 
     @classmethod
-    def from_course_model(cls, course: Course, rankings: Dict = None):
-        optimized_course = OptimizedCourse(course.code, course.group, course.teacher.title_and_name, course.session_type,
-                                           course.session_times)
+    def from_course_model(cls, lesson: Lesson, rankings: Dict = None):
+        optimized_course = OptimizedCourse(lesson.code, lesson.group, lesson.teacher.title_and_name, lesson.lesson_type,
+                                           lesson.session_times)
         if rankings:
             optimized_course.ranking = rankings[optimized_course.teacher] + rankings[optimized_course.code]
         return optimized_course
