@@ -1,17 +1,20 @@
 .scrollbar {
     float: left;
-    /*!*height: 450px;*!*/
-    /*!*height: 44rem;*!*/
-    /*height: 80rem;*/
-    /*!*width: 32rem;*!*/
     height: 100%;
     width: 100%;
     padding: 0.5em;
-    /*width: auto;*/
-    /*background: #fff;*/
     overflow-y: auto;
     overflow-x: auto;
 }
+
+/*.scrollbar-comments {*/
+/*    padding: 0 !important;*/
+/*    height: 86% !important;*/
+/*    float: left;*/
+/*    width: 100%;*/
+/*    overflow-y: auto;*/
+/*    overflow-x: auto;*/
+/*}*/
 
 /*.force-overflow {*/
 /*    min-height: 70rem;*/
