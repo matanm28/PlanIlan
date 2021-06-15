@@ -15,11 +15,13 @@ Including another URLconf
 """
 
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.urls import path, include
 
 from . import settings
 
 urlpatterns = [
+                  path('admin/', admin.site.urls),
                   path('api/', include('plan_ilan.apps.api.urls')),
                   path('', include('plan_ilan.apps.web_site.urls')),
                   path('', include('plan_ilan.apps.timetable_generator.urls')),
