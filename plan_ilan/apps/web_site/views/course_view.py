@@ -12,6 +12,10 @@ class CourseDetailView(generic.DetailView):
     model = Course
     template_name = "plan_ilan/course_detail.html"
 
+    def get_success_url(self):
+        self.object = self.get_object()
+        return reverse_lazy('course_detail', kwargs={'pk': self.object.pk}, )
+
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
         course_rating = CourseRating.objects.filter(course=context['course'])
@@ -26,3 +30,22 @@ class CourseDetailView(generic.DetailView):
         context['lessons'] = lessons
         context['teacher_list'] = teacher_list
         return context
+
+    # TODO: change to course case
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if request.POST.get('action', '') == 'edit':
+            update_review_and_rating(request)
+        elif request.POST.get('PostID', ''):
+            return JsonResponse(add_or_remove_like(request), safe=False)
+        elif request.POST.get('Rating_object_ID', ''):
+            save_comment_and_rating(request)
+        return HttpResponseRedirect(reverse('course_detail', kwargs={'pk': self.object.pk}))
+
+    def get(self, request, *args, **kwargs):
+        if request.is_ajax() and request.user.is_authenticated:
+            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
+            json_likes_list = serializers.serialize("json", all_likes)
+            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
+        else:
+            return super(CourseDetailView, self).get(request, *args, **kwargs)
