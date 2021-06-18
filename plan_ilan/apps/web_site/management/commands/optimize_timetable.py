@@ -8,9 +8,10 @@ from typing import Dict
 from codetiming import Timer
 from django.core.management import BaseCommand
 
-from plan_ilan.apps.web_site.models import SemesterEnum, DAYS, Course
-from plan_ilan.apps.timetable_generator.timetable_optimizer import TimetableOptimizer
-from plan_ilan.apps.timetable_generator.timetable_optimizer import Interval
+from plan_ilan.apps.timetable_generator.models import Timetable
+from plan_ilan.apps.web_site.models import SemesterEnum, DAYS, Course, Lesson
+from plan_ilan.apps.timetable_generator.timetable_optimizer.optimizer import TimetableOptimizer
+from plan_ilan.apps.timetable_generator.timetable_optimizer.utils import Interval
 
 DEFAULT_JSON_ENTRIES = {
     'rankings': defaultdict(lambda: 0),
@@ -78,6 +79,8 @@ class OptimizeTimetableCommand(BaseCommand):
 
     @Timer(text='Script finished after total of {:.4f} seconds')
     def handle(self, *args, **options):
+        t = Timetable.objects.first()
+        t.get_solutions()
         if 'timetable_data' in options:
             data = options['timetable_data']
         else:
@@ -108,15 +111,15 @@ class OptimizeTimetableCommand(BaseCommand):
 
     @staticmethod
     def process_solution(solution):
-        courses = []
+        lessons = []
         results = [s.split('-') for s in solution]
         for code, group in results:
-            courses.extend(Course.objects.filter(code=code, group=group))
+            lessons.extend(Lesson.objects.filter(course__code=code, group=group))
         semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(lambda: defaultdict()))
-        for course in courses:
-            for session_time in course.session_times.all():
-                for hour in session_time.get_hours_list(jump=1, jump_by='hours'):
-                    semester_to_day_to_hours_to_courses_dict[session_time.semester][session_time.day][hour] = course
+        for lesson in lessons:
+            for lesson_time in lesson.session_times.all():
+                for hour in lesson_time.get_hours_list(jump=1, jump_by='hours'):
+                    semester_to_day_to_hours_to_courses_dict[lesson_time.semester][lesson_time.day][hour] = lesson
         return semester_to_day_to_hours_to_courses_dict
 
     @staticmethod
@@ -126,7 +129,7 @@ class OptimizeTimetableCommand(BaseCommand):
         for semester in sorted(semester_to_day_to_hours_to_courses):
             print(f'Semester {semester}')
             for day in sorted(semester_to_day_to_hours_to_courses[semester]):
-                print(f'{DAYS.from_int(day).name}:')
+                print(f'{day.full_label}:')
                 for hour in sorted(semester_to_day_to_hours_to_courses[semester][day]):
                     print(f'{hour}: {semester_to_day_to_hours_to_courses[semester][day][hour]}')
 
@@ -135,10 +138,10 @@ class OptimizeTimetableCommand(BaseCommand):
         timetable_dict = {}
         json_dict['timetable'] = timetable_dict
         for semester in sorted(res):
-            semester_name = SemesterEnum.from_int(semester).name
+            semester_name = semester.label
             timetable_dict[semester_name] = {}
             for day in sorted(res[semester]):
-                day_name = DAYS.from_int(day).name
+                day_name = day.full_label
                 timetable_dict[semester_name][day_name] = {}
                 for hour in sorted(res[semester][day]):
                     timetable_dict[semester_name][day_name][str(hour)] = str(res[semester][day][hour])

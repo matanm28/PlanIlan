@@ -1,9 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
-from rest_framework.views import APIView
 
 from . import views
-from plan_ilan import settings
 
 
 class Router(routers.DefaultRouter):
@@ -23,7 +21,15 @@ router.register(r'lessons', views.LessonViewSet)
 router.register(r'locations', views.LocationViewSet)
 router.register(r'lesson-times', views.LessonTimeViewSet)
 
+# default_router = routers.DefaultRouter()
+# default_router.register(r'timetables', views.TimetableViewSet)
+# default_router.register(r'blocked_time_periods', views.BlockedTimePeriodViewSet)
+# default_router.register(r'ranked_lessons', views.RankedLessonViewSet)
+# default_router.register(r'time_intervals', views.TimeIntervalViewSet)
+# default_router.register(r'intervals', views.IntervalViewSet)
+
 urlpatterns = [
     path('', include(router.urls)),
+    # path('', include(default_router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

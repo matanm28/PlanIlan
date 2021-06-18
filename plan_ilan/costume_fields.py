@@ -3,7 +3,7 @@ from typing import Union
 
 from django.db import models
 
-
+# todo: delete
 class ImprovedTimeField(models.TimeField):
     def __add__(self, other: timedelta) -> time:
         if isinstance(other, timedelta):

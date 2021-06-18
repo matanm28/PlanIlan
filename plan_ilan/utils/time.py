@@ -1,5 +1,26 @@
 import math
 from dataclasses import dataclass, field
+from datetime import timedelta, time, date, datetime
+from typing import Union
+
+
+class TimeUtils:
+    @staticmethod
+    def add_to_time(lhs: time, rhs: timedelta) -> time:
+        if isinstance(lhs, timedelta):
+            return (datetime.combine(date.today(), rhs) - lhs).time()
+        else:
+            raise ValueError('other should be timedelta')
+
+    @staticmethod
+    def subtract_from_time(lhs: time, rhs: Union[timedelta, time]) -> Union[time, float]:
+        if isinstance(rhs, timedelta):
+            return (datetime.combine(date.today(), lhs) - rhs).time()
+        elif isinstance(rhs, time):
+            today = date.today()
+            return (datetime.combine(today, lhs) - datetime.combine(today, rhs)).total_seconds()
+        else:
+            raise ValueError('other should be Union[timedelta, time]')
 
 
 @dataclass(order=True)

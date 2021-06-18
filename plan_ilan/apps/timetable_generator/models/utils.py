@@ -2,8 +2,9 @@ from datetime import datetime
 
 from django.db import models
 
-from plan_ilan.apps.web_site.models import BaseModel
 from plan_ilan import costume_fields
+from plan_ilan.apps.web_site.models import BaseModel
+from plan_ilan.utils.time import TimeUtils
 
 
 class TimeInterval(BaseModel):
@@ -27,7 +28,10 @@ class TimeInterval(BaseModel):
         # return later.start <= earlier.end
 
     def get_overlap(self, other: 'TimeInterval') -> float:
-        return max(0, min(self.end, other.end) - max(self.start, other.start))
+        return max(0, TimeUtils.subtract_from_time(min(self.end, other.end), max(self.start, other.start)))
+
+    def __str__(self):
+        return f'{self.start.strftime("%H:%M")}-{self.end.strftime("%H:%M")}'
 
     class Meta:
         ordering = ['start', 'end']
@@ -44,7 +48,7 @@ class Interval(BaseModel):
             left, right = right, left
         interval, created = cls.objects.get_or_create(left=round(left, 1), right=round(right, 1))
         cls.log_created(interval, created)
-        return Interval
+        return interval
 
     @property
     def size(self) -> float:
