@@ -1,0 +1,40 @@
+{% extends 'plan_ilan/base.html' %}
+{% block css_block %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'timetable_generator/css/collapse_style.css' %}">
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'timetable_generator/js/collapsible.js' %}" defer></script>
+{% endblock %}
+<title>{% block title %}בנה מערכת שעות{% endblock %}</title>
+{% block content %}
+    <div class="container">
+        <form method="post" action="{% url 'pick-courses' %}">
+            {% csrf_token %}
+            <h2>בחר מחלקות לקורסי חובה</h2>
+            {% for dep in departments %}
+                <label for="{{ dep }}">
+                    <input type="checkbox" id="{{ dep }}" value="{{ dep }}" name="mandatory-deps">
+                    {{ dep }}
+                </label>
+                <br>
+            {% endfor %}
+            <br>
+            <h2>בחר מחלקות לקורסי בחירה</h2>
+            {% for dep in departments %}
+                <label for="{{ dep }}">
+                    <input type="checkbox" id="{{ dep }}" value="{{ dep }}" name="elective-deps">
+                    {{ dep }}
+                </label>
+                <br>
+            {% endfor %}
+            <a class="btn login_btn" type="submit" href="{% url 'first-form' %}">הקודם</a>
+            <button class="btn btn-primary" type="submit">הבא</button>
+        </form>
+    </div>
+{% endblock %}

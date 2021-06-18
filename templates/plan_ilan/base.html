@@ -14,7 +14,7 @@
     {% endblock %}
     {% block js_block %}
     {% endblock %}
-    <title>{% block title %}דף הבית{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
 <nav class="navbar" style="padding: 1%">
@@ -37,7 +37,7 @@
         <a class="act" aria-current="page" href="{% url 'home' %}">דף הבית </a>
         <a class="act" aria-current="page" href="{% url 'search' %}">חיפוש</a>
         {% if user.is_authenticated %}
-            <a class="act" aria-current="page" href="{% url 'timetable' %}">בנה מערכת שעות</a>
+            <a class="act" aria-current="page" href="{% url 'first-form' %}">בנה מערכת שעות</a>
         {% endif %}
         <a class="act" aria-current="page" href="{% url 'about' %}">אודות</a>
     </div>
