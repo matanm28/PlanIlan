@@ -27,9 +27,6 @@ class TimetableOptimizer:
         self.course_code_to_var_keys = defaultdict(list)
         self.semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(list))
 
-        # self.rankings = self.__convert_rankings(rankings)
-        self.__populate_courses_dicts()
-
     @property
     def is_done(self) -> bool:
         return self.__is_done
@@ -58,6 +55,7 @@ class TimetableOptimizer:
         return self.timetable.elective_points_bound
 
     def __prepare_model_for_solve(self):
+        self.__populate_courses_dicts()
         self.__create_gekko_variables()
         self.__populate_course_code_to_vars()
         self.__populate_rankings()
@@ -70,6 +68,9 @@ class TimetableOptimizer:
         if not self.model_ready:
             self.__prepare_model_for_solve()
         self.model.solve(debug=False)
+        if not self.is_solved:
+            self.model.options.COLDSTART = 1
+            self.model.solve(debug=False)
         # so best solution is first
         while self.is_solved:
             solution = [var for key, item in self.course_vars.items() if sum(item.VALUE.value) == 1 for var in key]
@@ -94,7 +95,7 @@ class TimetableOptimizer:
                                           self.elective_dict)
 
     def __build_dict_after_filtering(self, lessons: QuerySet[Lesson], courses_dict: Dict) -> List[Course]:
-        courses_list = []
+        lessons_list = []
         for lesson in lessons.filter(session_times__semester=self.semester):
             # to avoid REINFORCING types
             # todo: fix for later versions
@@ -103,14 +104,14 @@ class TimetableOptimizer:
             if self.is_lesson_at_blocked_time(lesson):
                 continue
             courses_dict[lesson.code][lesson.lesson_type.label].append(lesson)
-            courses_list.append(lesson)
-        self.__populate_day_to_hours_to_course_dict(courses_list)
+            lessons_list.append(lesson)
+        self.__populate_day_to_hours_to_course_dict(lessons_list)
 
-    def __populate_day_to_hours_to_course_dict(self, courses: QuerySet[Lesson], jump: int = 1, jump_by: str = 'hours'):
-        for course in courses:
-            for session_time in course.session_times.all():
+    def __populate_day_to_hours_to_course_dict(self, lessons: QuerySet[Lesson], jump: int = 1, jump_by: str = 'hours'):
+        for lesson in lessons:
+            for session_time in lesson.session_times.all():
                 for hour in session_time.get_hours_list(jump=jump, jump_by=jump_by):
-                    self.semester_to_day_to_hours_to_courses_dict[session_time.day][hour].append(course)
+                    self.semester_to_day_to_hours_to_courses_dict[session_time.day][hour].append(lesson)
 
     def __populate_model(self):
         self.objective = [self.__get_ranking_for_course_id(key) * var for key, var in self.course_vars.items()]
@@ -176,9 +177,6 @@ class TimetableOptimizer:
             products = self.__get_lists_cartesian_product(list(self.elective_dict[key].values()))
             temp = [self.__convert_course_tuple_to_id(product) for product in products]
             combs.extend(temp)
-        # we need to make sure that the tuple string representation for courses with both
-        # TIRGUL and LECTURE is consistent, s.t one or the other always show up first, otherwise
-        # it'll be mess to access the values every time.
         self.course_vars = self.__create_dict_vars('courses', combs)
 
     def __create_dict_vars(self, name: str, entries: List, low_bound: int = 0, up_bound: int = 1) -> Dict:

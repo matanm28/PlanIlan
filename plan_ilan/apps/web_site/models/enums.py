@@ -90,6 +90,18 @@ class EnumModel(BaseModel):
     def __str__(self):
         return self.label
 
+    def __lt__(self, other: 'EnumModel'):
+        return self.enum < other.enum
+
+    def __gt__(self, other: 'EnumModel'):
+        return self.enum > other.enum
+
+    def __le__(self, other: 'EnumModel'):
+        return self.enum <= other.enum
+
+    def __ge__(self, other: 'EnumModel'):
+        return self.enum >= other.enum
+
     class Meta:
         abstract = True
         unique_together = ['number', 'label']
@@ -340,6 +352,7 @@ class ExamPeriod(EnumModel):
         instance, created = ExamPeriod.objects.get_or_create(number=enum.value, label=enum.label)
         cls.log_created(instance, created)
         return instance
+
 
 class LessonTypeEnum(LabeledIntegerEnum):
     LECTURE = 0, _('הרצאה')
