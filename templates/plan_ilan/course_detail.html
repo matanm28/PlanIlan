@@ -112,7 +112,7 @@
                                                     <i class="fas fa-pen"></i></span>
                                             </button>
                                         {% endifequal %}
-                                        <button type="button" class="btn-like btn-xs" id="heart_teacher_{{ review.id }}"
+                                        <button type="button" class="btn-like btn-xs" id="heart_course_{{ review.id }}"
                                                 name="heart-like" onclick="changeHeart(this)"
                                                 title="אהבתי">
                                             <span class="glyphicon glyphicon-ok"><i class="fas fa-thumbs-up"></i></span>
@@ -186,13 +186,13 @@
                 {% else %}
                     <form class="rate-form" method="post">
                         {% csrf_token %}
-                        <label for="headline_{{ t.id }}">
+                        <label for="headline_{{ course.code }}">
                             <input class="form-control" type="text" placeholder="כותרת..."
-                                   id="headline_{{ course.id }}">
+                                   id="headline_{{ course.code }}">
                         </label>
                         <br>
                         <label for="commentArea" style="padding: 1%">
-                            <textarea class="form-control" id="commentArea_{{ course.id }}" placeholder="תוכן..."
+                            <textarea class="form-control" id="commentArea_{{ course.code }}" placeholder="תוכן..."
                                       rows="3"></textarea>
                         </label>
                         <div id="star_ratings">
@@ -207,7 +207,7 @@
                             <button type="submit" class="fa fa-star fa-2x star-btn" id="fifth-star_{{ t.id }}"
                                     onmouseover="changeStar(this)"></button>
                         </div>
-                        <button id="course_review_{{ course.id }}" class="btn send_btn"
+                        <button id="course_review_{{ course.code }}" class="btn send_btn"
                                 onclick="sendData(this)">שלח
                         </button>
                     </form>

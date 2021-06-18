@@ -31,7 +31,6 @@ class CourseDetailView(generic.DetailView):
         context['teacher_list'] = teacher_list
         return context
 
-    # TODO: change to course case
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         if request.POST.get('action', '') == 'edit':
