@@ -1,0 +1,42 @@
+{% extends 'plan_ilan/base.html' %}
+{% block css_block %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
+{% endblock %}
+{% block title %}בנה מערכת שעות{% endblock %}
+{% block content %}
+    <div class="container">
+        <form method="post" action="{% url 'pick-lessons' saved_data %}" class="form">
+            {% csrf_token %}
+            <h2>בחר קורסי חובה</h2>
+            <br>
+            {% for course in course_mandatory %}
+                <label for="{{ course.code }}">
+                    <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="mand">
+                    {{ course }}
+                </label>
+                <br>
+            {% endfor %}
+            <br>
+            <h2>בחר קורסי בחירה</h2>
+            {% for course in course_elective %}
+                <label for="{{ course.code }}">
+                    <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="elect">
+                    {{ course }}
+                </label>
+                <br>
+            {% endfor %}
+            <br>
+            <a class="btn login_btn" type="submit" href="{% url 'pick-deps' %}">הקודם</a>
+            <input class="btn login_btn" type="submit" value="הבא" formmethod="POST">
+        </form>
+    </div>
+    <br>
+{% endblock %}

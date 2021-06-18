@@ -1,0 +1,85 @@
+{% extends 'plan_ilan/base.html' %}
+{% block css_block %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'timetable_generator/css/collapse_style.css' %}">
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'timetable_generator/js/collapsible.js' %}" defer></script>
+{% endblock %}
+<title>{% block title %}בנה מערכת שעות{% endblock %}</title>
+{% block content %}
+    <div class="container">
+        <form method="post" action="{% url 'build-timetable' saved_data %}" class="form">
+            {% csrf_token %}
+            <h2>בחר שיעורי חובה</h2>
+            <br>
+            <div class="accordion">
+                {% for course in mand_list %}
+                    <button type="button" class="collapsible">{{ course.name }}</button>
+                    <div class="content">
+                        {% for lesson in course.lessons.all %}
+                            <label for="check-{{ course.code }}">
+                                <input type="checkbox" id="check-{{ course.code }}" value="{{ lesson.pk }}"
+                                       name="mand-lessons">
+                                סוג שיעור:
+                                {{ lesson.lesson_type }}
+                                , מורה:
+                                {{ lesson.teacher }}
+                                {% for time in lesson.session_times.all %}
+                                    , יום:
+                                    {{ time.day }}
+                                    , בין השעות:
+                                    {{ time.start_time }}
+                                    ל:
+                                    {{ time.end_time }}
+                                {% endfor %}
+                            </label>
+                            <label for="quantity">, דרג את החשיבות (כל מספר שתבחר):</label>
+                            <input type="number" name="rank-mand-lesson" class="quantity" min="" max="" value="1">
+                            <br>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <br>
+                <h2>בחר שיעורי בחירה</h2>
+                <br>
+                <div class="accordion">
+                    {% for course in elect_list %}
+                        <button type="button" class="collapsible">{{ course.name }}</button>
+                        <div class="content">
+                            {% for lesson in course.lessons.all %}
+                                <label for="check-{{ course.code }}">
+                                    <input type="checkbox" id="check-{{ course.code }}" value="{{ lesson.pk }}"
+                                           name="elect-lessons">
+                                    סוג שיעור:
+                                    {{ lesson.lesson_type }}
+                                    , מורה:
+                                    {{ lesson.teacher }}
+                                    {% for time in lesson.session_times.all %}
+                                        , יום:
+                                        {{ time.day }}
+                                        , בין השעות:
+                                        {{ time.start_time }}
+                                        ל:
+                                        {{ time.end_time }}
+                                    {% endfor %}
+                                </label>
+                                <label for="quantity">, דרג את החשיבות (כל מספר שתבחר):</label>
+                                <input type="number" name="rank-elect-lesson" class="quantity" min="" max="" value="1">
+                                <br>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <br>
+                    <a class="btn login_btn" type="submit" href="{% url 'pick-courses' %}">הקודם</a>
+                    <input class="btn login_btn" type="submit" value="הבא">
+                </div>
+        </form>
+    </div>
+    <br>
+{% endblock %}

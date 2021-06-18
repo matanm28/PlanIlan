@@ -1,0 +1,42 @@
+{% extends 'plan_ilan/base.html' %}
+{% load widget_tweaks %}
+{% block css_block %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/scrollbar_style.css' %}"/>
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+{% endblock %}
+{% block title %}בנה מערכת שעות{% endblock %}
+{% block content %}
+    <div class="container">
+        <h2>פרטים ראשוניים</h2>
+        <form method="get" action="{% url 'pick-deps' %}">
+            {% csrf_token %}
+            <div class="field">
+                <label>סמסטר:</label>
+                <div class="control">
+                    <select name="semester">
+                        {% for sem in semesters %}
+                            <option value="{{ sem }}">{{ sem }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="field">
+                <label>שם מערכת השעות:</label>
+                <input type="text" name="table-name">
+            </div>
+            <br>
+            <div class="field">
+                <label>ימי לימוד בשבוע שאת\ה מעוניין ללמוד:</label>
+                <input type="number" name="week-days" min="1" max="6">
+            </div>
+            <button class="btn btn-primary" type="submit">הבא</button>
+        </form>
+    </div>
+{% endblock %}
