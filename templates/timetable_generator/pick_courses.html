@@ -13,29 +13,52 @@
 {% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
     <div class="container">
-        <form method="post" action="{% url 'pick-lessons' saved_data %}" class="form">
-            {% csrf_token %}
-            <h2>בחר קורסי חובה</h2>
-            <br>
-            {% for course in course_mandatory %}
-                <label for="{{ course.code }}">
-                    <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="mand">
-                    {{ course }}
-                </label>
-                <br>
-            {% endfor %}
-            <br>
-            <h2>בחר קורסי בחירה</h2>
-            {% for course in course_elective %}
-                <label for="{{ course.code }}">
-                    <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="elect">
-                    {{ course }}
-                </label>
-                <br>
-            {% endfor %}
-            <br>
-            <a class="btn login_btn" type="submit" href="{% url 'pick-deps' %}">הקודם</a>
-            <input class="btn login_btn" type="submit" value="הבא" formmethod="POST">
+        <form method="post" class="form">
+            <div class="row">
+                {% csrf_token %}
+                <div class="col-6">
+                    <h2>בחר קורסי חובה</h2>
+                    <br>
+                    {% regroup course_mandatory by department as mandatory_courses %}
+                    {% for course_group in mandatory_courses %}
+                        <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
+                        <br>
+                        {% for course in course_group.list %}
+                            <label for="{{ course.code }}">
+                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="mand">
+                                {{ course }}
+                            </label>
+                            <br>
+                        {% endfor %}
+                        <br>
+                    {% endfor %}
+                    <br>
+                </div>
+                <div class="col-6">
+                    <h2>בחר קורסי בחירה</h2>
+                    <br>
+                    {% regroup course_elective by department as elective_courses %}
+                    {% for course_group in elective_courses %}
+                        <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
+                        <br>
+                        {% for course in course_group.list %}
+                            <label for="{{ course.code }}">
+                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="elect">
+                                {{ course }}
+                            </label>
+                            <br>
+                        {% endfor %}
+                        <br>
+                    {% endfor %}
+                    <br>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col align-self-center">
+                    <a class="btn login_btn" type="submit" href="{% url 'pick-deps' %}">הקודם</a>
+                    <input class="btn login_btn" type="submit" value="הבא" formmethod="POST">
+                </div>
+            </div>
         </form>
     </div>
     <br>

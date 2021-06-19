@@ -12,5 +12,6 @@ class FirstForm(forms.Form):
 
 
 class DepartmentsForm(forms.Form):
-    departments = forms.ModelMultipleChoiceField(Department.objects.all().order_by('label'), label='בחר מחלקות',
+    departments = forms.ModelMultipleChoiceField(Department.with_courses().order_by('label'), label='בחר מחלקות',
                                                  widget=forms.CheckboxSelectMultiple)
+
