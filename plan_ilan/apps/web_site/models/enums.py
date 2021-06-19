@@ -1,4 +1,4 @@
-from typing import Tuple, Type
+from typing import Tuple, Type, List, Union, Any
 
 from django.db import models
 from django.db.models.signals import pre_save
@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from plan_ilan.apps.web_site.decorators import receiver_subclasses
 from plan_ilan.exceptaions.enum_not_exist_error import EnumNotExistError
 from . import BaseModel
+from ..managers import CounterManger
 
 
 class LabeledTextEnum(models.TextChoices):
@@ -37,7 +38,7 @@ class LabeledIntegerEnum(models.IntegerChoices):
     @classmethod
     def from_string(cls, search_value: str) -> 'LabeledIntegerEnum':
         for enum in cls:
-            if search_value in enum.label:
+            if search_value == enum.label:
                 return enum
         raise EnumNotExistError(cls, search_value, cls.from_string)
 
@@ -81,8 +82,12 @@ class EnumModel(BaseModel):
         return self.get_enum_class().from_int(self.number)
 
     @classmethod
+    def not_in_choices_enums(cls) -> List[LabeledIntegerEnum]:
+        return []
+
+    @classmethod
     def choices(cls):
-        return cls.objects.all()
+        return cls.objects.exclude(pk__in=cls.not_in_choices_enums()).all()
 
     def __repr__(self):
         return f'number:{self.number}, label:{self.label}'
@@ -90,17 +95,48 @@ class EnumModel(BaseModel):
     def __str__(self):
         return self.label
 
-    def __lt__(self, other: 'EnumModel'):
-        return self.enum < other.enum
+    def __assert_others_type(self, other: Any):
+        assert isinstance(other, (EnumModel, LabeledIntegerEnum, int, str)) \
+            , (f'{self.__class__.__name__} can only be compared with [{self.__class__.__name__},'
+               f'{self.get_enum_class().__name__}, int, str]')
 
-    def __gt__(self, other: 'EnumModel'):
-        return self.enum > other.enum
+    def __resolve_other(self, other: Union['EnumModel', LabeledIntegerEnum, int, str], assert_type=True):
+        if assert_type:
+            self.__assert_others_type(other)
+        ret_obj = None
+        if isinstance(other, EnumModel):
+            ret_obj = other.enum
+        elif isinstance(other, (LabeledIntegerEnum, int)):
+            ret_obj = other
+        elif isinstance(other, str):
+            try:
+                ret_obj = self.get_enum_class().from_string(other)
+            except EnumNotExistError:
+                pass
+        return ret_obj
 
-    def __le__(self, other: 'EnumModel'):
-        return self.enum <= other.enum
+    def __lt__(self, other: Union['EnumModel', LabeledIntegerEnum, int, str]):
+        resolved_other = self.__resolve_other(other)
+        return self.enum < resolved_other
 
-    def __ge__(self, other: 'EnumModel'):
-        return self.enum >= other.enum
+    def __le__(self, other: Union['EnumModel', LabeledIntegerEnum, int, str]):
+        resolved_other = self.__resolve_other(other)
+        return self.enum <= resolved_other
+
+    def __gt__(self, other: Union['EnumModel', LabeledIntegerEnum, int, str]):
+        resolved_other = self.__resolve_other(other)
+        return self.enum > resolved_other
+
+    def __ge__(self, other: Union['EnumModel', LabeledIntegerEnum, int, str]):
+        resolved_other = self.__resolve_other(other)
+        return self.enum >= resolved_other
+
+    def __eq__(self, other: Union['EnumModel', LabeledIntegerEnum, int, str]):
+        resolved_other = self.__resolve_other(other, assert_type=False)
+        return resolved_other is not None and self.enum == resolved_other
+
+    def __ne__(self, o: Union['EnumModel', LabeledIntegerEnum, int, str]) -> bool:
+        return not self == o
 
     class Meta:
         abstract = True
@@ -237,6 +273,8 @@ class DepartmentEnum(LabeledIntegerEnum):
 
 
 class Department(EnumModel):
+    objects = CounterManger('courses')
+
     class Meta(EnumModel.Meta):
         db_table = 'departments'
 
@@ -252,8 +290,12 @@ class Department(EnumModel):
         return instance
 
     @classmethod
-    def choices(cls):
-        return Department.objects.exclude(pk=DepartmentEnum.NULL_DEPARTMENT).all()
+    def not_in_choices_enums(cls) -> List[LabeledIntegerEnum]:
+        return [DepartmentEnum.NULL_DEPARTMENT]
+
+    @classmethod
+    def with_courses(cls):
+        return cls.objects.with_count.filter(courses_count__gt=0).all()
 
 
 class FacultyEnum(LabeledIntegerEnum):
@@ -278,6 +320,8 @@ class FacultyEnum(LabeledIntegerEnum):
 
 
 class Faculty(EnumModel):
+    objects = CounterManger('courses')
+
     class Meta(EnumModel.Meta):
         db_table = 'faculties'
 
@@ -293,8 +337,12 @@ class Faculty(EnumModel):
         return instance
 
     @classmethod
-    def choices(cls):
-        return Faculty.objects.exclude(pk=FacultyEnum.UNKNOWN).all()
+    def not_in_choices_enums(cls) -> List[LabeledIntegerEnum]:
+        return [FacultyEnum.UNKNOWN]
+
+    @classmethod
+    def with_courses(cls):
+        return cls.objects.with_count.filter(courses_count__gt=0).all()
 
 
 class SemesterEnum(LabeledIntegerEnum):
@@ -428,6 +476,10 @@ class Title(EnumModel):
         instance, created = Title.objects.get_or_create(number=enum.value, label=enum.label)
         cls.log_created(instance, created)
         return instance
+
+    @classmethod
+    def not_in_choices_enums(cls) -> List[LabeledIntegerEnum]:
+        return [TitleEnum.BLANK]
 
 
 @receiver_subclasses(pre_save, EnumModel, 'prevent_save_if_enum_not_valid', weak=False)

@@ -1,26 +1,37 @@
+import json
 from abc import abstractmethod
-from typing import Dict, List
+from typing import Dict, List, Tuple, Iterable
 
-from django.http import HttpResponseBadRequest
+from django.db.models import QuerySet
+from django.http import HttpResponseBadRequest, QueryDict, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.utils.http import urlencode
 
 from plan_ilan.apps.web_site.decorators import authenticated_user
-from plan_ilan.apps.web_site.models import Lesson, Course, Account, Department, Semester
+from plan_ilan.apps.web_site.models import Lesson, Course, Account, Department, Semester, SemesterEnum
 from .models import RankedLesson, Timetable
 from .forms import FirstForm, DepartmentsForm
 
 
 def reverse_querystring(view, urlconf=None, args=None, kwargs=None, current_app=None, query_kwargs=None):
-    '''Custom reverse to handle query strings.
+    '''
+    Custom reverse to handle query strings.
     Usage:
         reverse('app.views.my_view', kwargs={'pk': 123}, query_kwargs={'search': 'Bob'})
+    origin: https://gist.github.com/benbacardi/227f924ec1d9bedd242b
     '''
     base_url = reverse(view, urlconf=urlconf, args=args, kwargs=kwargs, current_app=current_app)
     if query_kwargs:
-        return f'{base_url}?{urlencode(query_kwargs)}'
+        query_dict = QueryDict(mutable=True)
+        for key, item in query_kwargs.items():
+            if not isinstance(item, Iterable):
+                query_dict.update({key: item})
+                break
+            for value in item:
+                query_dict.appendlist(key, value)
+        return f'{base_url}?{query_dict.urlencode()}'
     return base_url
 
 
@@ -63,36 +74,47 @@ class PickDepartmentsView(AuthenticatedUserTemplateView):
 
     def post(self, request, *args, **kwargs):
         timetable = get_object_or_404(Timetable, pk=self.request.session.get('timetable_pk', None))
-        form = DepartmentsForm(self.request.POST)
-        if not form.is_valid():
-            return HttpResponseBadRequest(form.errors.as_data())
-        query_dict = {'departments': form.cleaned_data.get('departments', [])}
+        mandatory = DepartmentsForm(data=self.request.POST, prefix='mandatory')
+        elective = DepartmentsForm(data=self.request.POST, prefix='elective')
+        if not mandatory.is_valid():
+            return HttpResponseBadRequest(mandatory.errors.as_data())
+        if not elective.is_valid():
+            return HttpResponseBadRequest(elective.errors.as_data())
+        query_dict = {
+            'mandatory': mandatory.cleaned_data.get('departments', Department.objects.none()).values_list('number', flat=True),
+            'elective': elective.cleaned_data.get('departments', Department.objects.none()).values_list('number', flat=True),
+        }
         return redirect(reverse_querystring('pick-courses', query_kwargs=query_dict))
 
     def get_context(self, **kwargs) -> Dict:
-        return {'form': DepartmentsForm()}
-
-
-@authenticated_user
-def pick_departments(request):
-    semester = get_object_or_404(Semester, label=request.GET.get('semester'))
-    table_name = request.GET.get('table-name')
-    learn_days = int(request.GET.get('week-days'))
-    user = get_object_or_404(Account, user=request.user)
-    timetable_user = Timetable.temporal_create(account=user, name=table_name, semester=semester,
-                                               max_num_of_days=learn_days)
-    timetable_user.save()
-    context = {"departments": Department.choices()}
-    return reverse_querystring('pick_courses', query_kwargs=context)
+        return {
+            'mandatory_form': DepartmentsForm(prefix='mandatory'),
+            'elective_form': DepartmentsForm(prefix='elective')
+        }
 
 
 @authenticated_user
 def pick_courses(request):
-    timetable_user = Timetable.objects.filter(common_info__account=Account.objects.get(user=request.user)).first()
-    course_elective = Course.objects.filter(department__in=request.POST.getlist("mandatory-deps"),
-                                            lessons__session_times__semester=timetable_user.semester)
-    course_mandatory = Course.objects.filter(department__in=request.POST.getlist("elective-deps"),
-                                             lessons__session_times__semester=timetable_user.semester)
+    if request.META['QUERY_STRING']:
+        request.session['data'] = request.GET.urlencode()
+        return HttpResponseRedirect(reverse('pick-courses'))
+    query_dict = QueryDict(request.session.get('data', None))
+    if not query_dict:
+        pass
+    timetable = get_object_or_404(Timetable, pk=request.session.get('timetable_pk', None))
+    valid_semesters = [timetable.semester]
+    if timetable.semester in [SemesterEnum.FIRST, SemesterEnum.SECOND]:
+        valid_semesters.append(SemesterEnum.YEARLY)
+    course_mandatory = (Course.objects
+                        .filter(department__in=query_dict.getlist('mandatory', []),
+                                lessons__session_times__semester__in=valid_semesters)
+                        .distinct()
+                        .order_by('department', 'name'))
+    course_elective = (Course.objects
+                       .filter(department__in=query_dict.getlist('elective', []),
+                               lessons__session_times__semester__in=valid_semesters)
+                       .distinct()
+                       .order_by('department', 'name'))
     context = {"course_elective": course_elective, "course_mandatory": course_mandatory}
     return render(request, 'timetable_generator/pick_courses.html', context)
 

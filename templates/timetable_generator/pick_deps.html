@@ -11,15 +11,27 @@
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'timetable_generator/js/collapsible.js' %}" defer></script>
 {% endblock %}
-<title>{% block title %}בנה מערכת שעות{% endblock %}</title>
+{% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
     <div class="container">
         <form method="post" class="form">
             {% csrf_token %}
-            <h2>בחר מחלקות לקורסי חובה</h2>
-            {{ form.as_p }}
-            <a class="btn login_btn" type="submit" href="{% url 'first-form' %}">הקודם</a>
-            <button class="btn btn-primary" type="submit">הבא</button>
+            <div class="row">
+                <div class="col-6">
+                    <p class="display-4 lead">בחר מחלקות לקורסי חובה</p>
+                    {{ mandatory_form.as_p }}
+                </div>
+                <div class="col-6">
+                    <p class="display-4 lead">בחר מחלקות לקורסי בחירה</p>
+                    {{ elective_form.as_p }}
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col align-self-center">
+                    <a class="btn login_btn" type="submit" href="{% url 'first-form' %}">הקודם</a>
+                    <button class="btn btn-primary" type="submit">הבא</button>
+                </div>
+            </div>
         </form>
     </div>
 {% endblock %}
