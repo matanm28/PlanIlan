@@ -16,15 +16,17 @@ RankedLessonList = Union[QuerySet[RankedLesson], List[RankedLesson]]
 class TimetableCommonInfo(BaseModel):
     account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='timetables')
     name = models.CharField(max_length=255)
+    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='common_info')
 
     @classmethod
-    def create(cls, account: Account, name: str) -> 'TimetableCommonInfo':
-        common_info, created = cls.objects.get_or_create(account=account, name=name)
+    def create(cls, account: Account, name: str, semester: Semester) -> 'TimetableCommonInfo':
+        common_info, created = cls.objects.get_or_create(account=account, name=name, semester=semester)
         cls.log_created(common_info, created)
         return common_info
 
     class Meta:
-        ordering = ['account', 'name', 'pk']
+        ordering = ['account', 'semester', 'name', 'pk']
+        unique_together = ['account', 'name', 'semester']
         db_table = 'timetables_common_infos'
 
 
@@ -44,15 +46,14 @@ class Timetable(TimeStampedModel, BaseModel):
     elective_points_bound = models.ForeignKey(Interval, on_delete=models.CASCADE,
                                               default=get_default_elective_points_bound,
                                               related_name='timetables')
-    semester = models.ForeignKey(Semester, on_delete=models.CASCADE, related_name='timetables')
     max_num_of_days = models.PositiveSmallIntegerField(default=6)
 
     @classmethod
     def create(cls, account: Account, name: str, mandatory_lessons: RankedLessonList,
                elective_lessons: RankedLessonList, blocked_time_periods: List[BlockedTimeTuple],
                elective_points_bound: Interval, semester: Semester, max_num_of_days: int) -> 'Timetable':
-        common_info = TimetableCommonInfo.create(account=account, name=name)
-        timetable, created = cls.objects.update_or_create(common_info=common_info, semester=semester,
+        common_info = TimetableCommonInfo.create(account=account, name=name, semester=semester)
+        timetable, created = cls.objects.update_or_create(common_info=common_info,
                                                           defaults={
                                                               'elective_points_bound': elective_points_bound,
                                                               'max_num_of_days': max_num_of_days
@@ -67,8 +68,8 @@ class Timetable(TimeStampedModel, BaseModel):
 
     @classmethod
     def temporal_create(cls, account: Account, name: str, semester: Semester, max_num_of_days: int) -> 'Timetable':
-        common_info = TimetableCommonInfo.create(account=account, name=name)
-        timetable, created = cls.objects.update_or_create(common_info=common_info, semester=semester,
+        common_info = TimetableCommonInfo.create(account=account, name=name, semester=semester)
+        timetable, created = cls.objects.update_or_create(common_info=common_info,
                                                           defaults={'max_num_of_days': max_num_of_days})
         cls.log_created(timetable, created)
         return timetable
@@ -94,7 +95,7 @@ class Timetable(TimeStampedModel, BaseModel):
         return solutions.order_by('-score')
 
     class Meta:
-        ordering = ['common_info', 'semester', 'created']
+        ordering = ['common_info', 'created']
         db_table = 'timetables'
 
     @property
@@ -134,6 +135,10 @@ class Timetable(TimeStampedModel, BaseModel):
     def blocked_days(self) -> QuerySet[Day]:
         return self.blocked_time_periods.values_list('day').distinct()
 
+    @property
+    def semester(self):
+        return self.common_info.semester
+
 
 class TimetableSolution(TimeStampedModel, BaseModel):
     common_info = models.ForeignKey(TimetableCommonInfo, on_delete=models.CASCADE, related_name='solutions')
@@ -158,6 +163,10 @@ class TimetableSolution(TimeStampedModel, BaseModel):
     @property
     def name(self):
         return self.common_info.name
+
+    @property
+    def semester(self):
+        return self.common_info.semester
 
     class Meta:
         ordering = ['-score', 'created', 'modified', 'pk']

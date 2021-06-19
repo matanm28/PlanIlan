@@ -14,25 +14,10 @@
 <title>{% block title %}בנה מערכת שעות{% endblock %}</title>
 {% block content %}
     <div class="container">
-        <form method="post" action="{% url 'pick-courses' %}">
+        <form method="post" class="form">
             {% csrf_token %}
             <h2>בחר מחלקות לקורסי חובה</h2>
-            {% for dep in departments %}
-                <label for="{{ dep }}">
-                    <input type="checkbox" id="{{ dep }}" value="{{ dep }}" name="mandatory-deps">
-                    {{ dep }}
-                </label>
-                <br>
-            {% endfor %}
-            <br>
-            <h2>בחר מחלקות לקורסי בחירה</h2>
-            {% for dep in departments %}
-                <label for="{{ dep }}">
-                    <input type="checkbox" id="{{ dep }}" value="{{ dep }}" name="elective-deps">
-                    {{ dep }}
-                </label>
-                <br>
-            {% endfor %}
+            {{ form.as_p }}
             <a class="btn login_btn" type="submit" href="{% url 'first-form' %}">הקודם</a>
             <button class="btn btn-primary" type="submit">הבא</button>
         </form>
