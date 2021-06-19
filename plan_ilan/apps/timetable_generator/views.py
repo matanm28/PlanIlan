@@ -1,14 +1,76 @@
-from django.shortcuts import render, get_object_or_404
+from abc import abstractmethod
+from typing import Dict, List
+
+from django.http import HttpResponseBadRequest
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.views.generic import TemplateView
+from django.utils.http import urlencode
 
 from plan_ilan.apps.web_site.decorators import authenticated_user
 from plan_ilan.apps.web_site.models import Lesson, Course, Account, Department, Semester
 from .models import RankedLesson, Timetable
+from .forms import FirstForm, DepartmentsForm
 
 
-@authenticated_user
-def first_form(request):
-    context = {'semesters': Semester.objects.all()}
-    return render(request, 'timetable_generator/first_form.html', context)
+def reverse_querystring(view, urlconf=None, args=None, kwargs=None, current_app=None, query_kwargs=None):
+    '''Custom reverse to handle query strings.
+    Usage:
+        reverse('app.views.my_view', kwargs={'pk': 123}, query_kwargs={'search': 'Bob'})
+    '''
+    base_url = reverse(view, urlconf=urlconf, args=args, kwargs=kwargs, current_app=current_app)
+    if query_kwargs:
+        return f'{base_url}?{urlencode(query_kwargs)}'
+    return base_url
+
+
+class AuthenticatedUserTemplateView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('home')
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = self.get_context()
+        return {**super().get_context_data(**kwargs), **context}
+
+    @abstractmethod
+    def get_context(self) -> Dict:
+        pass
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+class FirstView(AuthenticatedUserTemplateView):
+    template_name = 'timetable_generator/first_form.html'
+
+    def get_context(self):
+        return {'form': FirstForm()}
+
+    def post(self, request, *args, **kwargs):
+        form = FirstForm(self.request.POST)
+        if not form.is_valid():
+            return HttpResponseBadRequest(form.errors.as_data())
+        account = get_object_or_404(Account, user=self.request.user)
+        timetable = Timetable.temporal_create(account=account, **form.cleaned_data)
+        self.request.session['timetable_pk'] = timetable.pk
+        return redirect('pick-deps')
+
+
+class PickDepartmentsView(AuthenticatedUserTemplateView):
+    template_name = 'timetable_generator/pick_deps.html'
+
+    def post(self, request, *args, **kwargs):
+        timetable = get_object_or_404(Timetable, pk=self.request.session.get('timetable_pk', None))
+        form = DepartmentsForm(self.request.POST)
+        if not form.is_valid():
+            return HttpResponseBadRequest(form.errors.as_data())
+        query_dict = {'departments': form.cleaned_data.get('departments', [])}
+        return redirect(reverse_querystring('pick-courses', query_kwargs=query_dict))
+
+    def get_context(self, **kwargs) -> Dict:
+        return {'form': DepartmentsForm()}
 
 
 @authenticated_user
@@ -21,7 +83,7 @@ def pick_departments(request):
                                                max_num_of_days=learn_days)
     timetable_user.save()
     context = {"departments": Department.choices()}
-    return render(request, 'timetable_generator/pick_deps.html', context)
+    return reverse_querystring('pick_courses', query_kwargs=context)
 
 
 @authenticated_user

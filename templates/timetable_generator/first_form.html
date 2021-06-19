@@ -14,28 +14,9 @@
 {% block content %}
     <div class="container">
         <h2>פרטים ראשוניים</h2>
-        <form method="get" action="{% url 'pick-deps' %}">
+        <form method="POST" class="form">
             {% csrf_token %}
-            <div class="field">
-                <label>סמסטר:</label>
-                <div class="control">
-                    <select name="semester">
-                        {% for sem in semesters %}
-                            <option value="{{ sem }}">{{ sem }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <br>
-            <div class="field">
-                <label>שם מערכת השעות:</label>
-                <input type="text" name="table-name">
-            </div>
-            <br>
-            <div class="field">
-                <label>ימי לימוד בשבוע שאת\ה מעוניין ללמוד:</label>
-                <input type="number" name="week-days" min="1" max="6">
-            </div>
+            {{ form.as_p }}
             <button class="btn btn-primary" type="submit">הבא</button>
         </form>
     </div>
