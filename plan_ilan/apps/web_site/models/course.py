@@ -51,6 +51,9 @@ class Course(BaseModel):
     def get_lessons(self):
         return self.lessons.all()
 
+    def get_exams_as_string(self, sep='; '):
+        return sep.join([e.__str__() for e in self.exams.all()])
+
     @property
     def slug(self):
         return self.code
@@ -149,6 +152,9 @@ class Lesson(BaseModel):
             raise Exception('teacher index is invalid')
         return teachers_list[index]
 
+    def get_teachers(self):
+        return self.teachers.all()
+
     def __repr__(self):
         return str(self)
 
@@ -177,3 +183,12 @@ class Lesson(BaseModel):
     @property
     def days(self) -> QuerySet[Day]:
         return self.session_times.values_list('day', flat=True).distinct()
+
+    def get_teachers_as_string(self, delim=', ') -> str:
+        return delim.join(self.teachers.values_list('name', flat=True))
+
+    def get_session_times(self):
+        return self.session_times.all()
+
+    def get_locations(self):
+        return self.locations.all()
