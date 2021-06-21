@@ -92,7 +92,7 @@ class Teacher(BaseModel):
         return delim.join(self.departments.values_list('label', flat=True))
 
     @property
-    def has_valid_image(self)->bool:
+    def has_valid_image(self) -> bool:
         return bool(self.image)
 
     def __repr__(self):
@@ -100,4 +100,3 @@ class Teacher(BaseModel):
 
     def __str__(self):
         return f'{self.title_and_name}'
-

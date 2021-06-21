@@ -48,12 +48,83 @@
                             &nbsp<strong>מחלקה:</strong> {{ course.department }}
                         </p>
                     </div>
+                    {% for lesson in lessons %}
+                        <div class="list-group-item" style="height: fit-content">
+                            <p data-bs-toggle="collapse" href="#lesson_{{ lesson.group }}" role="button"
+                               aria-expanded="false"
+                               aria-controls="lesson_{{ lesson.group }}"><span class="btn-group icon"
+                                                                               style="padding: 3px"><i
+                                    class="fas fa-users fa-2x"
+                                    aria-hidden="true"></i></span>
+                                &nbsp<strong> שיעור מס' {{ lesson.group }}</strong>
+                            </p>
+                            {#                            <p>#}
+                            {#                                <a data-bs-toggle="collapse" href="#lesson_{{ lesson.group }}" role="button"#}
+                            {#                                   aria-expanded="false"#}
+                            {#                                   aria-controls="lesson_{{ lesson.group }}">#}
+                            {#                                    שיעור מס' {{ lesson.group }}#}
+                            {#                                </a>#}
+                            {#                            </p>#}
+                            <div class="collapse" id="lesson_{{ lesson.group }}" style="position: relative">
+                                <div class="list-group-flush">
+                                    <div class="list-group-item">
+                                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px; background: black"><i
+                                                class="fas fa-question fa-1x"
+                                                aria-hidden="true"></i></span>
+                                            &nbsp<strong>סוג מפגש:</strong> {{ lesson.type }}
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px; background: black"><i
+                                                class="fas fa-hand-point-up fa-1x"
+                                                aria-hidden="true"></i></span>
+                                            &nbsp<strong>נ"ז:</strong> {{ lesson.points }}
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px; background: black"><i
+                                                class="fas fa-chalkboard-teacher fa-1x"
+                                                aria-hidden="true"></i></span>
+                                            {% if lesson.teachers.0 > 1 %}
+                                                &nbsp<strong>מרצים:</strong> {{ lesson.teachers.1 }}
+                                            {% elif lesson.teachers.0 == 1 %}
+                                                &nbsp<strong>מרצה:</strong> {{ lesson.teachers.1 }}
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px; background: black"><i
+                                                class="fas fa-map-marked-alt fa-1x"
+                                                aria-hidden="true"></i></span>
+                                            &nbsp<strong>מיקום:</strong> {{ lesson.locations }}
+                                        </p>
+                                    </div>
+                                    <div class="list-group-item">
+                                        <p class="mb-0"><span class="btn-group icon" style="padding: 3px; background: black"><i
+                                                class="fas fa-calendar-alt fa-1x"
+                                                aria-hidden="true"></i></span>
+                                            &nbsp<strong>זמני המפגש:</strong> {{ lesson.session }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% if course_exams|length > 0 %}
+                        <div class="list-group-item">
+                            <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
+                                    class="fas fa-book-open fa-2x"
+                                    aria-hidden="true"></i></span>
+                                &nbsp<strong>בחינה:</strong> {{ course_exams }}
+                            </p>
+                        </div>
+                    {% endif %}
                     {% if course.syllabus_link %}
                         <div class="list-group-item">
                             <p class="mb-0"><span class="btn-group icon" style="padding: 3px"><i
                                     class="fas fa-globe fa-2x"
                                     aria-hidden="true"></i></span>
-                                &nbsp<strong>סילבוס:</strong> {{ course.syllabus_link }}
+                                &nbsp<strong>סילבוס:</strong>&nbsp<a href={{ course.syllabus_link }}>לחצו כאן</a>
                             </p>
                         </div>
                     {% endif %}
@@ -217,36 +288,36 @@
     </div>
 
 
-{#    {% for rate in coure_rating %}#}
-{#        {{ rate.id }}#}
-{#    {% endfor %}#}
-{#    <br>#}
-{#    {% for review in course_reviews %}#}
-{#        {{ review.id }}#}
-{#    {% endfor %}#}
-{#    <br>#}
-{#    {{ users_rated }}#}
-{#    <br>#}
-{#    {{ lessons }}#}
-{#    <br>#}
-{#    {{ teacher_list }}#}
+    {#        {% for rate in coure_rating %}#}
+    {#            {{ rate.id }}#}
+    {#        {% endfor %}#}
+    {#    <br>#}
+    {#    {% for review in course_reviews %}#}
+    {#        {{ review.id }}#}
+    {#    {% endfor %}#}
+    {#    <br>#}
+    {#    {{ users_rated }}#}
+    {#    <br>#}
+    {#    {{ lessons }}#}
+    {#    <br>#}
+    {#    {{ teacher_list }}#}
 
 
 
 
-{#    <p>#}
-{#        <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"#}
-{#           aria-controls="collapseExample">#}
-{#            Link with href#}
-{#        </a>#}
-{#        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"#}
-{#                aria-expanded="false" aria-controls="collapseExample">#}
-{#            Button with data-bs-target#}
-{#        </button>#}
-{#    </p>#}
-{#    <div class="collapse" id="collapseExample">#}
-{#        <div class="card card-body">#}
-{#            Some placeholder content for the collapse component.#}
-{#        </div>#}
-{#    </div>#}
+    {#        <p>#}
+    {#            <a class="btn btn-link" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"#}
+    {#               aria-controls="collapseExample">#}
+    {#                Link with href#}
+    {#            </a>#}
+    {#            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"#}
+    {#                    aria-expanded="false" aria-controls="collapseExample">#}
+    {#                Button with data-bs-target#}
+    {#            </button>#}
+    {#        </p>#}
+    {#        <div class="collapse" id="collapseExample">#}
+    {#            <div class="card card-body">#}
+    {#                Some placeholder content for the collapse component.#}
+    {#            </div>#}
+    {#        </div>#}
 {% endblock %}

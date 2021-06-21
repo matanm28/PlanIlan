@@ -38,7 +38,7 @@ class Location(BaseModel):
             cls.create_thread_safe.mutex.release()
 
     def __str__(self) -> str:
-        return f'{self.building_name}, בניין{self.building_number}, כיתה {self.class_number}' if not self.is_zoom_class else "אונליין"
+        return f'{self.building_name}, בניין {self.building_number}, כיתה {self.class_number}' if not self.is_zoom_class else "אונליין"
 
     @property
     def is_zoom_class(self):
