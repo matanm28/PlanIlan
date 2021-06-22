@@ -14,18 +14,18 @@
 <title>{% block title %}בנה מערכת שעות{% endblock %}</title>
 {% block content %}
     <div class="container">
-        <form method="post" action="{% url 'build-timetable' saved_data %}" class="form">
+        <form method="post" class="form">
             {% csrf_token %}
             <h2>בחר שיעורי חובה</h2>
             <br>
             <div class="accordion">
-                {% for course in mand_list %}
+                {% for course in mandatory_courses %}
                     <button type="button" class="collapsible">{{ course.name }}</button>
                     <div class="content">
                         {% for lesson in course.lessons.all %}
                             <label for="check-{{ course.code }}">
                                 <input type="checkbox" id="check-{{ course.code }}" value="{{ lesson.pk }}"
-                                       name="mand-lessons">
+                                       name="mandatory-lessons">
                                 סוג שיעור:
                                 {{ lesson.lesson_type }}
                                 , מורה:
@@ -49,13 +49,13 @@
                 <h2>בחר שיעורי בחירה</h2>
                 <br>
                 <div class="accordion">
-                    {% for course in elect_list %}
+                    {% for course in elective_courses %}
                         <button type="button" class="collapsible">{{ course.name }}</button>
                         <div class="content">
                             {% for lesson in course.lessons.all %}
                                 <label for="check-{{ course.code }}">
                                     <input type="checkbox" id="check-{{ course.code }}" value="{{ lesson.pk }}"
-                                           name="elect-lessons">
+                                           name="elective-lessons">
                                     סוג שיעור:
                                     {{ lesson.lesson_type }}
                                     , מורה:

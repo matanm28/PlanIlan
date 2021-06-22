@@ -25,7 +25,7 @@
                         <br>
                         {% for course in course_group.list %}
                             <label for="{{ course.code }}">
-                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="mand">
+                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="mandatory">
                                 {{ course }}
                             </label>
                             <br>
@@ -43,7 +43,7 @@
                         <br>
                         {% for course in course_group.list %}
                             <label for="{{ course.code }}">
-                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="elect">
+                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="elective">
                                 {{ course }}
                             </label>
                             <br>
