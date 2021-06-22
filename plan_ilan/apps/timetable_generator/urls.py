@@ -1,8 +1,6 @@
 from django.urls import path, register_converter, re_path
 
-from plan_ilan.apps.timetable_generator import views, converters
-
-register_converter(converters.CommaSeparatedIntegerListConverter, 'int_list')
+from plan_ilan.apps.timetable_generator import views
 
 urlpatterns = [
     path('timetable/', views.FirstView.as_view(), name='first-form'),
