@@ -71,14 +71,14 @@
                                     <a class="float-left"><strong>{{ review.author }}</strong></a>
                                 {% endif %}
                                 {% for rating in teacher_rating %}
-                                    {% ifequal rating.user review.author %}
+                                    {% if rating.user == review.author and rating.teacher == review.teacher %}
                                         {% with ''|center:rating.value as range %}
                                             {% for _ in range %}
                                                 <span class="float-right"><i
                                                         class="text-warning fa fa-star"></i></span>
                                             {% endfor %}
                                         {% endwith %}
-                                    {% endifequal %}
+                                    {% endif %}
                                 {% endfor %}
                                 <h4><strong>{{ review.headline }}</strong></h4>
                                 <p>{{ review.text }}</p>
@@ -173,15 +173,15 @@
                                 {% else %}
                                     <a class="float-left"><strong>{{ review.author }}</strong></a>
                                 {% endif %}
-                                {% for rating in teacher_rating %}
-                                    {% ifequal rating.user review.author %}
+                                {% for rating in course_rating %}
+                                    {% if rating.user == review.author and rating.course == review.course %}
                                         {% with ''|center:rating.value as range %}
                                             {% for _ in range %}
                                                 <span class="float-right"><i
                                                         class="text-warning fa fa-star"></i></span>
                                             {% endfor %}
                                         {% endwith %}
-                                    {% endifequal %}
+                                    {% endif %}
                                 {% endfor %}
                                 <h4><strong>{{ review.headline }}</strong></h4>
                                 <p>{{ review.text }}</p>
@@ -201,7 +201,7 @@
                                             </button>
                                         {% endifequal %}
                                         <button type="button" class="btn-like btn-xs"
-                                                id="heart_teacher_{{ review.id }}"
+                                                id="heart_course_{{ review.id }}"
                                                 name="heart-like" onclick="changeHeart(this)"
                                                 title="אהבתי">
                                                     <span class="glyphicon glyphicon-ok"><i
