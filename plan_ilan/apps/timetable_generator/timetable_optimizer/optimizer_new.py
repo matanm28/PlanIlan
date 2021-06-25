@@ -1,13 +1,13 @@
 import itertools
 from collections import defaultdict, deque
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union, Iterator
 
 from codetiming import Timer
 from django.db.models import QuerySet, Q
 from gekko import Gekko
 
 from plan_ilan.apps.timetable_generator.models import Timetable, BlockedTimePeriod, TimeInterval
-from plan_ilan.apps.web_site.models import Course, Semester, Lesson, Day
+from plan_ilan.apps.web_site.models import Course, Lesson, Day, SemesterEnum
 
 EPSILON = 1e-3
 
@@ -47,8 +47,8 @@ class TimetableOptimizer:
         return self.timetable.blocked_time_periods
 
     @property
-    def semester(self) -> Semester:
-        return self.timetable.semester
+    def valid_semesters(self) -> List[SemesterEnum]:
+        return self.timetable.valid_semesters
 
     @property
     def elective_points_bound(self):
@@ -74,7 +74,8 @@ class TimetableOptimizer:
         # so best solution is first
         while self.is_solved:
             solution = [var for key, item in self.course_vars.items() if sum(item.VALUE.value) == 1 for var in key]
-            meta_info = {'is_solved': self.is_solved, 'objective_score': self.objective_score, 'iterations': self.iterations}
+            meta_info = {'is_solved': self.is_solved, 'objective_score': self.objective_score,
+                         'iterations': self.iterations}
             self.__solutions.appendleft((solution, meta_info))
             # add objective to optimize better than last time
             self.model.Equation(self.model.sum(self.objective) > self.objective_score + EPSILON)
@@ -88,15 +89,15 @@ class TimetableOptimizer:
     def __lessons_from_ranked_lessons(cls, lessons: QuerySet[Lesson]):
         return Lesson.objects.filter(pk__in=lessons.values_list('lesson', flat=True)).distinct()
 
-    def __populate_courses_dicts(self) -> List[Course]:
+    def __populate_courses_dicts(self):
         self.__build_dict_after_filtering(self.__lessons_from_ranked_lessons(self.timetable.mandatory_lessons),
                                           self.mandatory_dict)
         self.__build_dict_after_filtering(self.__lessons_from_ranked_lessons(self.timetable.elective_lessons),
                                           self.elective_dict)
 
-    def __build_dict_after_filtering(self, lessons: QuerySet[Lesson], courses_dict: Dict) -> List[Course]:
+    def __build_dict_after_filtering(self, lessons: QuerySet[Lesson], courses_dict: Dict):
         lessons_list = []
-        for lesson in lessons.filter(session_times__semester=self.semester):
+        for lesson in lessons.filter(session_times__semester__in=self.valid_semesters):
             # to avoid REINFORCING types
             # todo: fix for later versions
             if lesson.points == 0:
@@ -107,7 +108,8 @@ class TimetableOptimizer:
             lessons_list.append(lesson)
         self.__populate_day_to_hours_to_course_dict(lessons_list)
 
-    def __populate_day_to_hours_to_course_dict(self, lessons: QuerySet[Lesson], jump: int = 1, jump_by: str = 'hours'):
+    def __populate_day_to_hours_to_course_dict(self, lessons: Union[List[Lesson], QuerySet[Lesson]], jump: int = 1,
+                                               jump_by: str = 'hours'):
         for lesson in lessons:
             for session_time in lesson.session_times.all():
                 for hour in session_time.get_hours_list(jump=jump, jump_by=jump_by):
@@ -157,7 +159,8 @@ class TimetableOptimizer:
 
     def __define_take_one_or_less_of_each_elective_course_rules(self):
         for course_code in self.elective_dict:
-            take_only_one_elective = [self.course_vars[var_key] for var_key in self.course_code_to_var_keys[course_code]]
+            take_only_one_elective = [self.course_vars[var_key] for var_key in
+                                      self.course_code_to_var_keys[course_code]]
             # constraints for taking not more than one of the same elective course
             self.model.Equation(self.model.sum(take_only_one_elective) <= 1)
 
@@ -188,7 +191,7 @@ class TimetableOptimizer:
         return gekko_vars
 
     @staticmethod
-    def __get_lists_cartesian_product(lists: List) -> List:
+    def __get_lists_cartesian_product(lists: List) -> Iterator:
         if not lists:
             return []
         if len(lists) == 1:

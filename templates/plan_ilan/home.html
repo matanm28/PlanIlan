@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/teacher_and_course_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/likes_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/animation_font_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/edit_comment_modal.css' %}"/>
 {% endblock %}
 {% block js_block %}
@@ -21,306 +22,248 @@
 {% endblock %}
 {% block title %}דף הבית{% endblock %}
 {% block content %}
-    <h1>ברוכים הבאים לאתר הסטודנטים של בר-אילן</h1>
-    <!-- Button trigger modal -->
-    <div class="container sectional-wrapper">
-        <div class="row">
-            <div class="col-md-3 col-md-offset-1 aside-section">
-                <div class="widget blog-widget">
-                    <h2 class="widget-header">תגובות אחרונות</h2>
-                    <div class="card-comment">
-                        <h1 class="tab-title"><b>תגובות מורים</b></h1>
-                        <div class="scrollbar scrollbar-primary" style="height: 86%; padding: 0">
-                            <ul class="list-group list-group-flush">
-                                {% for review in teacher_comments %}
-                                    <li class="list-group-item">
-                                        {% if review.author.first_name %}
-                                            <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
-                                        {% else %}
-                                            <a class="float-left"><strong>{{ review.author }}</strong></a>
-                                        {% endif %}
-                                        {% for rating in teacher_rating %}
-                                            {% ifequal rating.user review.author %}
-                                                {% with ''|center:rating.value as range %}
-                                                    {% for _ in range %}
-                                                        <span class="float-right"><i
-                                                                class="text-warning fa fa-star"></i></span>
-                                                    {% endfor %}
-                                                {% endwith %}
-                                            {% endifequal %}
-                                        {% endfor %}
-                                        <h4><strong>{{ review.headline }}</strong></h4>
-                                        <p>{{ review.text }}</p>
-                                        {% if request.user.is_authenticated %}
-                                            <div class="action">
-                                                {% ifequal request.user review.author.user %}
-                                                    <button type="button" id="delete_{{ review.id }}"
-                                                            onclick="delete_comment(this)" class="btn-trash btn-xs"
-                                                            title="מחק">
+    {#    <div class="title-container">#}
+    {#        <span class="mytext1">ברוכים הבאים לאתר הסטודנטים</span>#}
+    {#        <span class="mytext2"> Alrazy </span>#}
+    {#    </div>#}
+    <div class="row">
+        {# in svg:    viewBox="0 0 960 300"#}
+        <svg>
+            <symbol id="t-text">
+                <text text-anchor="middle" x="50%" y="100%">ברוכים הבאים
+                </text>
+            </symbol>
+            <g class="g-ants">
+                <use xlink:href="#t-text" class="text-copy"></use>
+                <use xlink:href="#t-text" class="text-copy"></use>
+                <use xlink:href="#t-text" class="text-copy"></use>
+                <use xlink:href="#t-text" class="text-copy"></use>
+                <use xlink:href="#t-text" class="text-copy"></use>
+            </g>
+        </svg>
+        <svg style="font: 4em 'BN Cloud'">
+            <symbol id="s-text">
+                <text text-anchor="middle" x="50%" y="50%">לאתר הסטודנטים של בר אילן</text>
+            </symbol>
+            <g class="g-ants">
+                <use xlink:href="#s-text" class="text-copy"></use>
+                <use xlink:href="#s-text" class="text-copy"></use>
+                <use xlink:href="#s-text" class="text-copy"></use>
+                <use xlink:href="#s-text" class="text-copy"></use>
+                <use xlink:href="#s-text" class="text-copy"></use>
+            </g>
+        </svg>
+    </div>
+    <div class="row">
+        <h2 class="widget-header">תגובות אחרונות</h2>
+        <div class="col" style="width: 50%">
+            <div class="card-comment">
+                <h1 class="tab-title"><b>תגובות מורים</b></h1>
+                <div class="scrollbar scrollbar-primary" style="height: 86%; padding: 0">
+                    <ul class="list-group list-group-flush">
+                        {% for review in teacher_comments %}
+                            <b style="text-align: center; color: #777777"><i>תגובה
+                                על {{ review.teacher }}</i></b>
+                            <li class="list-group-item">
+                                {% if review.author.first_name %}
+                                    <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
+                                {% else %}
+                                    <a class="float-left"><strong>{{ review.author }}</strong></a>
+                                {% endif %}
+                                {% for rating in teacher_rating %}
+                                    {% if rating.user == review.author and rating.teacher == review.teacher %}
+                                        {% with ''|center:rating.value as range %}
+                                            {% for _ in range %}
+                                                <span class="float-right"><i
+                                                        class="text-warning fa fa-star"></i></span>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% endif %}
+                                {% endfor %}
+                                <h4><strong>{{ review.headline }}</strong></h4>
+                                <p>{{ review.text }}</p>
+                                {% if request.user.is_authenticated %}
+                                    <div class="action">
+                                        {% ifequal request.user review.author.user %}
+                                            <button type="button" id="delete_{{ review.id }}"
+                                                    onclick="delete_comment(this)" class="btn-trash btn-xs"
+                                                    title="מחק">
                                                 <span class="glyphicon glyphicon-trash">
                                                     <i class="fas fa-trash"></i></span>
-                                                    </button>
-                                                    <button type="button" class="btn-edit btn-xs" title="ערוך"
-                                                            id="btn_{{ review.id }}" onclick="openRateModal(this)">
+                                            </button>
+                                            <button type="button" class="btn-edit btn-xs" title="ערוך"
+                                                    id="btn_{{ review.id }}" onclick="openRateModal(this)">
                                                 <span class="glyphicon glyphicon-pencil">
                                                     <i class="fas fa-pen"></i></span>
-                                                    </button>
-                                                {% endifequal %}
-                                                <button type="button" class="btn-like btn-xs"
-                                                        id="heart_teacher_{{ review.id }}"
-                                                        name="heart-like" onclick="changeHeart(this)"
-                                                        title="אהבתי">
+                                            </button>
+                                        {% endifequal %}
+                                        <button type="button" class="btn-like btn-xs"
+                                                id="heart_teacher_{{ review.id }}"
+                                                name="heart-like" onclick="changeHeart(this)"
+                                                title="אהבתי">
                                                     <span class="glyphicon glyphicon-ok"><i
                                                             class="fas fa-thumbs-up"></i></span>
-                                                </button>
-                                                <p class="liked" id="amount_{{ review.id }}"
-                                                   style="color: #0c56d0; padding: 0 5px">{{ review.amount_of_likes }}
-                                                    אנשים
-                                                    אהבו את זה</p>
-                                            </div>
-                                        {% endif %}
-                                    </li>
-                                    <div id="rateModal_{{ review.id }}" class="modal">
-                                        <!-- Modal content -->
-                                        <div class="modal-content">
+                                        </button>
+                                        <p class="liked" id="amount_{{ review.id }}"
+                                           style="color: #0c56d0; padding: 0 5px">{{ review.amount_of_likes }}
+                                            אנשים
+                                            אהבו את זה</p>
+                                    </div>
+                                {% endif %}
+                            </li>
+                            <div id="rateModal_{{ review.id }}" class="modal">
+                                <!-- Modal content -->
+                                <div class="modal-content">
                             <span class="close" id="closeRate_{{ review.id }}"
                                   onclick="closeRateModal(this)">&times;</span>
-                                            <div>
-                                                <form class="rate-form" method="post">
-                                                    {% csrf_token %}
-                                                    <label for="headline_{{ review.id }}">כותרת:
-                                                        <input type="text" id="headline_{{ review.id }}">
-                                                    </label>
-                                                    <br>
-                                                    <label for="commentArea">הוסף תגובה:</label>
-                                                    <textarea class="form-control" id="commentArea_{{ review.id }}"
-                                                              rows="3"></textarea>
-                                                    <br>
-                                                    <label>דרג:</label>
-                                                    <div>
-                                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                                id="first-star_{{ review.id }}"
-                                                                onmouseover="changeStar(this)"></button>
-                                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                                id="second-star_{{ review.id }}"
-                                                                onmouseover="changeStar(this)"></button>
-                                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                                id="third-star_{{ review.id }}"
-                                                                onmouseover="changeStar(this)"></button>
-                                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                                id="fourth-star_{{ review.id }}"
-                                                                onmouseover="changeStar(this)"></button>
-                                                        <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                                id="fifth-star_{{ review.id }}"
-                                                                onmouseover="changeStar(this)"></button>
-                                                    </div>
-                                                    <br>
-                                                    <button id="course_edit_{{ review.id }}"
-                                                            class="btn btn-outline-primary"
-                                                            onclick="sendData(this)">שלח!
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-{#                    <h3>תגובות מורים</h3>#}
-{#                    {% for review in teacher_comments %}#}
-{#                        <div class="card">#}
-{#                            <div class="card-body">#}
-{#                                <div class="row">#}
-{#                                    <div class="col-md-2">#}
-{#                                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg"#}
-{#                                             class="img img-rounded img-fluid"#}
-{#                                             alt=""/>#}
-{#                                    </div>#}
-{#                                    <div class="col-md-10">#}
-{#                                        <p>#}
-{#                                            {% if review.author.first_name %}#}
-{#                                                <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>#}
-{#                                            {% else %}#}
-{#                                                <a class="float-left"><strong>{{ review.author }}</strong></a>#}
-{#                                            {% endif %}#}
-{#                                            {% for rating in teacher_rating %}#}
-{#                                                {% if rating.user == review.author and rating.teacher == review.teacher %}#}
-{#                                                    {% with ''|center:rating.value as range %}#}
-{#                                                        {% for _ in range %}#}
-{#                                                            <span class="float-right"><i#}
-{#                                                                    class="text-warning fa fa-star"></i></span>#}
-{#                                                        {% endfor %}#}
-{#                                                    {% endwith %}#}
-{#                                                {% endif %}#}
-{#                                            {% endfor %}#}
-{##}
-{#                                        </p>#}
-{#                                        <div class="clearfix"></div>#}
-{#                                        <p><strong>{{ review.headline }}</strong></p>#}
-{#                                        <p>{{ review.text }}</p>#}
-{#                                        {% if request.user.is_authenticated %}#}
-{#                                            <button type="submit" class="fa fa-heart heart-btn"#}
-{#                                                    id="heart_teacher_{{ review.id }}"#}
-{#                                                    name="heart-like" onclick="changeHeart(this)"></button>#}
-{#                                            <p class="liked" id="amount_{{ review.id }}">{{ review.amount_of_likes }}#}
-{#                                                אנשים אהבו את זה</p>#}
-{#                                            <br>#}
-{#                                            {% ifequal request.user review.author.user %}#}
-{#                                                <button id="delete_{{ review.id }}"#}
-{#                                                        class="fas fa-trash close-btn-groups trash"#}
-{#                                                        onclick="delete_comment(this)"></button>#}
-{#                                                <br>#}
-{#                                                <button type="button" id="btn_{{ review.id }}" class="btn btn-link"#}
-{#                                                        onclick="openRateModal(this)">ערוך#}
-{#                                                </button>#}
-{#                                            {% endifequal %}#}
-{#                                        {% endif %}#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div id="rateModal_{{ review.id }}" class="modal">#}
-{#                            <!-- Modal content -->#}
-{#                            <div class="modal-content">#}
-{#                                <span class="close" id="closeRate_{{ review.id }}" onclick="closeRateModal(this)">&times;</span>#}
-{#                                <div>#}
-{#                                    <form class="rate-form" method="post">#}
-{#                                        {% csrf_token %}#}
-{#                                        <label for="headline_{{ review.id }}">כותרת:#}
-{#                                            <input type="text" id="headline_{{ review.id }}">#}
-{#                                        </label>#}
-{#                                        <br>#}
-{#                                        <label for="commentArea">הוסף תגובה:</label>#}
-{#                                        <textarea class="form-control" id="commentArea_{{ review.id }}"#}
-{#                                                  rows="3"></textarea>#}
-{#                                        <br>#}
-{#                                        <label>דרג:</label>#}
-{#                                        <div>#}
-{#                                            <button type="submit" class="fa fa-star fa-2x star-btn"#}
-{#                                                    id="first-star_{{ review.id }}"#}
-{#                                                    onmouseover="changeStar(this)"></button>#}
-{#                                            <button type="submit" class="fa fa-star fa-2x star-btn"#}
-{#                                                    id="second-star_{{ review.id }}"#}
-{#                                                    onmouseover="changeStar(this)"></button>#}
-{#                                            <button type="submit" class="fa fa-star fa-2x star-btn"#}
-{#                                                    id="third-star_{{ review.id }}"#}
-{#                                                    onmouseover="changeStar(this)"></button>#}
-{#                                            <button type="submit" class="fa fa-star fa-2x star-btn"#}
-{#                                                    id="fourth-star_{{ review.id }}"#}
-{#                                                    onmouseover="changeStar(this)"></button>#}
-{#                                            <button type="submit" class="fa fa-star fa-2x star-btn"#}
-{#                                                    id="fifth-star_{{ review.id }}"#}
-{#                                                    onmouseover="changeStar(this)"></button>#}
-{#                                        </div>#}
-{#                                        <br>#}
-{#                                        <button id="teacher_edit_{{ review.id }}" class="btn btn-outline-primary"#}
-{#                                                onclick="sendData(this)">שלח!#}
-{#                                        </button>#}
-{#                                    </form>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-                    <h3>תגובות קורסים</h3>
-                    {% for review in course_comments %}
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg"
-                                             class="img img-rounded img-fluid"
-                                             alt=""/>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <p>
-                                            {% if review.author.first_name %}
-                                                <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
-                                            {% else %}
-                                                <a class="float-left"><strong>{{ review.author }}</strong></a>
-                                            {% endif %}
-                                            {% for rating in course_rating %}
-                                                {% if rating.user == review.author and rating.course == review.course %}
-                                                    {% with ''|center:rating.value as range %}
-                                                        {% for _ in range %}
-                                                            <span class="float-right"><i
-                                                                    class="text-warning fa fa-star"></i></span>
-                                                        {% endfor %}
-                                                    {% endwith %}
-                                                {% endif %}
-                                            {% endfor %}
-
-                                        </p>
-                                        <div class="clearfix"></div>
-                                        <p><strong>{{ review.headline }}</strong></p>
-                                        <p>{{ review.text }}</p>
-                                        {% if request.user.is_authenticated %}
-                                            <button type="submit" class="fa fa-heart heart-btn"
-                                                    id="heart_course_{{ review.id }}"
-                                                    name="heart-like" onclick="changeHeart(this)"></button>
-                                            <p id="amount_{{ review.id }}" class="liked">{{ review.amount_of_likes }}
-                                                אנשים אהבו את זה</p>
+                                    <div>
+                                        <form class="rate-form" method="post">
+                                            {% csrf_token %}
+                                            <label for="headline_{{ review.id }}">כותרת:
+                                                <input type="text" id="headline_{{ review.id }}">
+                                            </label>
                                             <br>
-                                            {% ifequal request.user review.author.user %}
-                                                <button id="delete_{{ review.id }}"
-                                                        class="fas fa-trash close-btn-groups trash"
-                                                        onclick="delete_comment(this)"></button>
-                                                <br>
-                                                <button type="button" class="btn btn-link" onclick="openRateModal(this)"
-                                                        id="rateBtn_{{ review.id }}">ערוך
-                                                </button>
-                                            {% endifequal %}
-                                        {% endif %}
+                                            <label for="commentArea">הוסף תגובה:</label>
+                                            <textarea class="form-control" id="commentArea_{{ review.id }}"
+                                                      rows="3"></textarea>
+                                            <br>
+                                            <label>דרג:</label>
+                                            <div>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="first-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="second-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="third-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="fourth-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="fifth-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                            </div>
+                                            <br>
+                                            <button id="course_edit_{{ review.id }}"
+                                                    class="btn btn-outline-primary"
+                                                    onclick="sendData(this)">שלח!
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="rateModal_{{ review.id }}" class="modal">
-                            <!-- Modal content -->
-                            <div class="modal-content">
-                                <span class="close" id="closeRate_{{ review.id }}" onclick="closeRateModal(this)">&times;</span>
-                                <div>
-                                    <form class="rate-form" method="post">
-                                        {% csrf_token %}
-                                        <label for="headline_{{ review.id }}">כותרת:
-                                            <input type="text" id="headline_{{ review.id }}">
-                                        </label>
-                                        <br>
-                                        <label for="commentArea">הוסף תגובה:</label>
-                                        <textarea class="form-control" id="commentArea_{{ review.id }}"
-                                                  rows="3"></textarea>
-                                        <br>
-                                        <label>דרג:</label>
-                                        <div>
-                                            <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                    id="first-star_{{ review.id }}"
-                                                    onmouseover="changeStar(this)"></button>
-                                            <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                    id="second-star_{{ review.id }}"
-                                                    onmouseover="changeStar(this)"></button>
-                                            <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                    id="third-star_{{ review.id }}"
-                                                    onmouseover="changeStar(this)"></button>
-                                            <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                    id="fourth-star_{{ review.id }}"
-                                                    onmouseover="changeStar(this)"></button>
-                                            <button type="submit" class="fa fa-star fa-2x star-btn"
-                                                    id="fifth-star_{{ review.id }}"
-                                                    onmouseover="changeStar(this)"></button>
-                                        </div>
-                                        <br>
-                                        <button id="course_edit_{{ review.id }}" class="btn btn-outline-primary"
-                                                onclick="sendData(this)">שלח!
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="width: 50%">
+            <div class="card-comment">
+                <h1 class="tab-title"><b>תגובות קורסים</b></h1>
+                <div class="scrollbar scrollbar-primary" style="height: 86%; padding: 0">
+                    <ul class="list-group list-group-flush">
+                        {% for review in course_comments %}
+                            <b style="text-align: center; color: #777777"><i>תגובה
+                                על {{ review.course }}</i></b>
+                            <li class="list-group-item">
+                                {% if review.author.first_name %}
+                                    <a class="float-left"><strong>{{ review.author.first_name }}</strong></a>
+                                {% else %}
+                                    <a class="float-left"><strong>{{ review.author }}</strong></a>
+                                {% endif %}
+                                {% for rating in course_rating %}
+                                    {% if rating.user == review.author and rating.course == review.course %}
+                                        {% with ''|center:rating.value as range %}
+                                            {% for _ in range %}
+                                                <span class="float-right"><i
+                                                        class="text-warning fa fa-star"></i></span>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% endif %}
+                                {% endfor %}
+                                <h4><strong>{{ review.headline }}</strong></h4>
+                                <p>{{ review.text }}</p>
+                                {% if request.user.is_authenticated %}
+                                    <div class="action">
+                                        {% ifequal request.user review.author.user %}
+                                            <button type="button" id="delete_{{ review.id }}"
+                                                    onclick="delete_comment(this)" class="btn-trash btn-xs"
+                                                    title="מחק">
+                                                <span class="glyphicon glyphicon-trash">
+                                                    <i class="fas fa-trash"></i></span>
+                                            </button>
+                                            <button type="button" class="btn-edit btn-xs" title="ערוך"
+                                                    id="btn_{{ review.id }}" onclick="openRateModal(this)">
+                                                <span class="glyphicon glyphicon-pencil">
+                                                    <i class="fas fa-pen"></i></span>
+                                            </button>
+                                        {% endifequal %}
+                                        <button type="button" class="btn-like btn-xs"
+                                                id="heart_course_{{ review.id }}"
+                                                name="heart-like" onclick="changeHeart(this)"
+                                                title="אהבתי">
+                                                    <span class="glyphicon glyphicon-ok"><i
+                                                            class="fas fa-thumbs-up"></i></span>
                                         </button>
-                                    </form>
+                                        <p class="liked" id="amount_{{ review.id }}"
+                                           style="color: #0c56d0; padding: 0 5px">{{ review.amount_of_likes }}
+                                            אנשים
+                                            אהבו את זה</p>
+                                    </div>
+                                {% endif %}
+                            </li>
+                            <div id="rateModal_{{ review.id }}" class="modal">
+                                <!-- Modal content -->
+                                <div class="modal-content">
+                            <span class="close" id="closeRate_{{ review.id }}"
+                                  onclick="closeRateModal(this)">&times;</span>
+                                    <div>
+                                        <form class="rate-form" method="post">
+                                            {% csrf_token %}
+                                            <label for="headline_{{ review.id }}">כותרת:
+                                                <input type="text" id="headline_{{ review.id }}">
+                                            </label>
+                                            <br>
+                                            <label for="commentArea">הוסף תגובה:</label>
+                                            <textarea class="form-control" id="commentArea_{{ review.id }}"
+                                                      rows="3"></textarea>
+                                            <br>
+                                            <label>דרג:</label>
+                                            <div>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="first-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="second-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="third-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="fourth-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                                <button type="submit" class="fa fa-star fa-2x star-btn"
+                                                        id="fifth-star_{{ review.id }}"
+                                                        onmouseover="changeStar(this)"></button>
+                                            </div>
+                                            <br>
+                                            <button id="course_edit_{{ review.id }}"
+                                                    class="btn btn-outline-primary"
+                                                    onclick="sendData(this)">שלח!
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+
     <h2 class="widget-header">מורים מובילים</h2>
     <div class="container">
         <div class="row">

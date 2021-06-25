@@ -138,6 +138,9 @@ class EnumModel(BaseModel):
     def __ne__(self, o: Union['EnumModel', LabeledIntegerEnum, int, str]) -> bool:
         return not self == o
 
+    def __hash__(self):
+        return super().__hash__()
+
     class Meta:
         abstract = True
         unique_together = ['number', 'label']

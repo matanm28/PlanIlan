@@ -50,3 +50,4 @@ class BaseModel(models.Model):
         for field in fields:
             fields_str.append(f'{field.attname}: {getattr(self, field.attname)}')
         return ', '.join(fields_str)
+

@@ -2,13 +2,18 @@
 {% block css_block %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' %}">
+    <link rel="stylesheet" href="{% static 'timetable_generator/css/pick_courses.css' %}">
 {% endblock %}
 {% block js_block %}
     {% load static %}
     <script type="text/javascript"
             src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'node_modules/bootstrap-slider/dist/bootstrap-slider.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'timetable_generator/js/pick_courses.js' %}" defer></script>
+
 {% endblock %}
 {% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
@@ -25,7 +30,8 @@
                         <br>
                         {% for course in course_group.list %}
                             <label for="{{ course.code }}">
-                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="mand">
+                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
+                                       name="mandatory">
                                 {{ course }}
                             </label>
                             <br>
@@ -34,25 +40,33 @@
                     {% endfor %}
                     <br>
                 </div>
-                <div class="col-6">
-                    <h2>בחר קורסי בחירה</h2>
-                    <br>
-                    {% regroup course_elective by department as elective_courses %}
-                    {% for course_group in elective_courses %}
-                        <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
+                {% if course_elective %}
+                    <div class="col-6">
+                        <h2>בחר קורסי בחירה</h2>
                         <br>
-                        {% for course in course_group.list %}
-                            <label for="{{ course.code }}">
-                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}" name="elect">
-                                {{ course }}
-                            </label>
+                        <label for="elective_points_range">הגדר תקרה לנק"ז של קורסי הבחירה: </label>
+                        <br>
+                        <p class="lead" id="left">0 נקודות</p>
+                        <input class="multi-range" id="elective_points_range" name="elective_points" min="0" max="50">
+                        <p class="lead" id="right">50 נקודות</p>
+                        {% regroup course_elective by department as elective_courses %}
+                        {% for course_group in elective_courses %}
+                            <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
+                            <br>
+                            {% for course in course_group.list %}
+                                <label for="{{ course.code }}">
+                                    <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
+                                           name="elective">
+                                    {{ course }}
+                                </label>
+                                <br>
+                            {% endfor %}
                             <br>
                         {% endfor %}
                         <br>
-                    {% endfor %}
-                    <br>
-                </div>
-            </div>
+                    </div>
+                    </div>
+                {% endif %}
             <div class="row align-items-center">
                 <div class="col align-self-center">
                     <a class="btn login_btn" type="submit" href="{% url 'pick-deps' %}">הקודם</a>

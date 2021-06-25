@@ -1,0 +1,16 @@
+#points_slider .slider-track-high {
+    background: gray;
+}
+
+#points_slider .slider-track-low {
+    background: gray;
+}
+
+#points_slider .slider-selection {
+    background: lightgreen;
+}
+
+
+.slider-horizontal{
+    width: 100% !important;
+}
