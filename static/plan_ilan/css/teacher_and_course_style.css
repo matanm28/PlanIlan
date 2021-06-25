@@ -98,6 +98,13 @@
     position: absolute;
 }
 
+.home-title {
+    font-family: "BN Cloud", serif;
+    width: 100%;
+    height: fit-content;
+    color: #FDB731;
+}
+
 .card-comment {
     border: 4px solid rgb(214, 97, 97);
     border-radius: 0.5rem !important;
