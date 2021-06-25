@@ -8,7 +8,7 @@ from model_utils.models import TimeStampedModel
 from plan_ilan.apps.timetable_generator.models import TimeInterval
 from plan_ilan.apps.timetable_generator.models.ranked_lesson import RankedLesson
 from plan_ilan.apps.timetable_generator.models.utils import Interval
-from plan_ilan.apps.web_site.models import BaseModel, Account, Semester, Course, Lesson, Day
+from plan_ilan.apps.web_site.models import BaseModel, Account, Semester, Course, Lesson, Day, SemesterEnum
 
 RankedLessonList = Union[QuerySet[RankedLesson], List[RankedLesson]]
 
@@ -138,6 +138,13 @@ class Timetable(TimeStampedModel, BaseModel):
     @property
     def semester(self):
         return self.common_info.semester
+
+    @property
+    def valid_semesters(self)->List[SemesterEnum]:
+        valid_semesters = [self.semester]
+        if self.semester in [SemesterEnum.FIRST, SemesterEnum.SECOND]:
+            valid_semesters.append(SemesterEnum.YEARLY)
+        return valid_semesters
 
 
 class TimetableSolution(TimeStampedModel, BaseModel):

@@ -17,51 +17,25 @@
         <form method="post" class="form">
             {% csrf_token %}
             <h2>בחר שיעורי חובה</h2>
-            <br>
+            <p>כל הקורסים שבחרת מהעמוד הקודם נמצאים כאן, כאשר תחת כל שיעור ישנם כל המופעים שלו. כברירת מחדל, כל השיעורים
+                מסומנים. במידה ולא תרצה פתרון שיכיל שיעור מסוים, אנא הורד ממנו את הסימון.</p>
             <div class="accordion">
                 {% for course in mandatory_courses %}
-                    <button type="button" class="collapsible">{{ course.name }}</button>
+                    <button type="button" class="collapsible">{{ course.name }} - {{ course.code }}</button>
                     <div class="content">
-                        {% for lesson in course.lessons.all %}
-                            <label for="check-{{ course.code }}">
-                                <input type="checkbox" id="check-{{ course.code }}" value="{{ lesson.pk }}"
-                                       name="mandatory-lessons">
-                                סוג שיעור:
-                                {{ lesson.lesson_type }}
-                                , מורה:
-                                {{ lesson.teacher }}
-                                {% for time in lesson.session_times.all %}
-                                    , יום:
-                                    {{ time.day }}
-                                    , בין השעות:
-                                    {{ time.start_time }}
-                                    ל:
-                                    {{ time.end_time }}
-                                {% endfor %}
-                            </label>
-                            <label for="quantity">, דרג את החשיבות (כל מספר שתבחר):</label>
-                            <input type="number" name="rank-mand-lesson" class="quantity" min="" max="" value="1">
-                            <br>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-                <br>
-                <h2>בחר שיעורי בחירה</h2>
-                <br>
-                <div class="accordion">
-                    {% for course in elective_courses %}
-                        <button type="button" class="collapsible">{{ course.name }}</button>
-                        <div class="content">
-                            {% for lesson in course.lessons.all %}
-                                <label for="check-{{ course.code }}">
-                                    <input type="checkbox" id="check-{{ course.code }}" value="{{ lesson.pk }}"
-                                           name="elective-lessons">
-                                    סוג שיעור:
-                                    {{ lesson.lesson_type }}
-                                    , מורה:
+                        {% regroup course.lessons.all by lesson_type as grouped_lessons %}
+                        {% for lesson_group in grouped_lessons %}
+                            <p class="lead"><u>{{ lesson_group.grouper }}</u></p>
+                            {% for lesson in lesson_group.list %}
+                                <label for="check_{{ lesson.code_and_group }}">
+                                    <input type="checkbox" id="check_{{ lesson.code_and_group }}"
+                                           value="{{ lesson.pk }}"
+                                           name="mandatory-lessons" checked>
+                                    מורה:
                                     {{ lesson.teacher }}
+                                    <label><u>זמני השיעור:</u></label>
                                     {% for time in lesson.session_times.all %}
-                                        , יום:
+                                        יום:
                                         {{ time.day }}
                                         , בין השעות:
                                         {{ time.start_time }}
@@ -70,15 +44,54 @@
                                     {% endfor %}
                                 </label>
                                 <label for="quantity">, דרג את החשיבות (כל מספר שתבחר):</label>
-                                <input type="number" name="rank-elect-lesson" class="quantity" min="" max="" value="1">
+                                <input type="number" name="rank-mandatory-lesson" class="quantity" min="" max=""
+                                       value="1">
                                 <br>
                             {% endfor %}
-                        </div>
-                    {% endfor %}
-                    <br>
-                    <a class="btn login_btn" type="submit" href="{% url 'pick-courses' %}">הקודם</a>
-                    <input class="btn login_btn" type="submit" value="הבא">
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <br>
+                <h2>בחר שיעורי בחירה</h2>
+                <br>
+                {% if elective_courses %}
+                    <div class="accordion">
+                        {% for course in elective_courses %}
+                            <button type="button" class="collapsible">{{ course.name }} - {{ course.code }}</button>
+                            <div class="content">
+                                {% regroup course.lessons.all by lesson_type as grouped_lessons %}
+                                {% for lesson_group in grouped_lessons %}
+                                    <p class="lead"><u>{{ lesson_group.grouper }}</u></p>
+                                    {% for lesson in lesson_group.list %}
+                                        <label for="check_{{ lesson.code_and_group }}">
+                                            <input type="checkbox" id="check_{{ lesson.code_and_group }}"
+                                                   value="{{ lesson.pk }}"
+                                                   name="elective-lessons" checked>
+                                            מורה:
+                                            {{ lesson.teacher }}
+                                            <label><u>זמני השיעור:</u></label>
+                                            {% for time in lesson.session_times.all %}
+                                                יום:
+                                                {{ time.day }}
+                                                , בין השעות:
+                                                {{ time.start_time }}
+                                                ל:
+                                                {{ time.end_time }}
+                                            {% endfor %}
+                                        </label>
+                                        <label for="quantity">, דרג את החשיבות (כל מספר שתבחר):</label>
+                                        <input type="number" name="rank-elective-lesson" class="quantity" min="" max=""
+                                               value="1">
+                                        <br>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        <br>
+                        <a class="btn login_btn" type="submit" href="{% url 'pick-courses' %}">הקודם</a>
+                        <input class="btn login_btn" type="submit" value="הבא">
+                    </div>
+                {% endif %}
             </div>
         </form>
     </div>
