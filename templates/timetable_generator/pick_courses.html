@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css' %}">
     <link rel="stylesheet" href="{% static 'timetable_generator/css/pick_courses.css' %}">
+    <link rel="stylesheet" href="{% static 'timetable_generator/css/timetable_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
     {% load static %}
@@ -17,63 +18,71 @@
 {% endblock %}
 {% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
-    <div class="container">
-        <form method="post" class="form">
-            <div class="row">
-                {% csrf_token %}
-                <div class="col-6">
-                    <h2>בחר קורסי חובה</h2>
-                    <br>
-                    {% regroup course_mandatory by department as mandatory_courses %}
-                    {% for course_group in mandatory_courses %}
-                        <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
-                        <br>
-                        {% for course in course_group.list %}
-                            <label for="{{ course.code }}">
-                                <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
-                                       name="mandatory">
-                                {{ course }}
-                            </label>
-                            <br>
-                        {% endfor %}
-                        <br>
-                    {% endfor %}
-                    <br>
-                </div>
-                {% if course_elective %}
-                    <div class="col-6">
-                        <h2>בחר קורסי בחירה</h2>
-                        <br>
-                        <label for="elective_points_range">הגדר תקרה לנק"ז של קורסי הבחירה: </label>
-                        <br>
-                        <p class="lead" id="left">0 נקודות</p>
-                        <input class="multi-range" id="elective_points_range" name="elective_points" min="0" max="50">
-                        <p class="lead" id="right">50 נקודות</p>
-                        {% regroup course_elective by department as elective_courses %}
-                        {% for course_group in elective_courses %}
-                            <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
-                            <br>
-                            {% for course in course_group.list %}
-                                <label for="{{ course.code }}">
-                                    <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
-                                           name="elective">
-                                    {{ course }}
-                                </label>
+    <div class="bg_image"></div>
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="user_card">
+                {% if messages %}
+                    <script>
+                        alert("יש לבחור לפחות קורס חובה/בחירה אחד")
+                    </script>
+                {% endif %}
+                <h1 class="display-3" style="text-align: center"><b>בחצי הדרך! בחרו קורסים שאתם מעוניינים שיהיו במערכות
+                    השעות שלכם</b></h1>
+                <form method="post" class="form">
+                    <div class="row">
+                        {% csrf_token %}
+                        <div class="col-6">
+                            <h2 style="text-align: center"><u>קורסי חובה</u></h2>
+                            {% regroup course_mandatory by department as mandatory_courses %}
+                            {% for course_group in mandatory_courses %}
+                                <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
+                                {% for course in course_group.list %}
+                                    <label for="{{ course.code }}">
+                                        <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
+                                               name="mandatory">
+                                        {{ course }}
+                                    </label>
+                                    <br>
+                                {% endfor %}
                                 <br>
                             {% endfor %}
                             <br>
-                        {% endfor %}
-                        <br>
+                        </div>
+                        {% if course_elective %}
+                            <div class="col-6">
+                                <h2 style="text-align: center"><u>קורסי בחירה</u></h2>
+                                <div class="range-point" style="padding: 0 2px; width: 90%; margin-bottom: 10%">
+                                    <p class="mb-0">הגדר טווח לנק"ז של קורסי הבחירה:</p>
+                                    <input class="multi-ranges-basic" id="elective_points_range"
+                                           name="elective_points" min="0" max="50" style="width: 100%">
+                                    <p class="lead" id="left" style="float: left">0 נקודות</p>
+                                    <p class="lead" id="right" style="float: right">50 נקודות</p>
+                                </div>
+                                {% regroup course_elective by department as elective_courses %}
+                                {% for course_group in elective_courses %}
+                                    <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
+                                    {% for course in course_group.list %}
+                                        <label for="{{ course.code }}">
+                                            <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
+                                                   name="elective">
+                                            {{ course }}
+                                        </label>
+                                        <br>
+                                    {% endfor %}
+                                    <br>
+                                {% endfor %}
+                            </div>
+                            </div>
+                        {% endif %}
+                    <div class="row align-items-center">
+                        <div class="col align-self-center">
+                            <a class="btn btn-light" type="submit" href="{% url 'pick-deps' %}">הקודם</a>
+                            <input class="btn btn-light" type="submit" value="הבא" formmethod="POST">
+                        </div>
                     </div>
-                    </div>
-                {% endif %}
-            <div class="row align-items-center">
-                <div class="col align-self-center">
-                    <a class="btn login_btn" type="submit" href="{% url 'pick-deps' %}">הקודם</a>
-                    <input class="btn login_btn" type="submit" value="הבא" formmethod="POST">
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
-    <br>
 {% endblock %}

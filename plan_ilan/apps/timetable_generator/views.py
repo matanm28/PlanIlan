@@ -148,6 +148,11 @@ class PickCoursesView(QueryStringHandlingTemplateView):
         timetable.save()
         mandatory_courses = request.POST.getlist('mandatory', [])
         elective_courses = request.POST.getlist('elective', [])
+        query_dict = QueryDict(self.request.session.get(f'data_{self.view_name}', None))
+        elective_deps = query_dict.getlist('elective', [])
+        if not mandatory_courses or (not elective_courses and elective_deps):
+            messages.info(request, 'יש לבחור לפחות קורס חובה/בחירה אחד')
+            return redirect('pick-courses')
         course_dict = {
             'mandatory': Course.objects.filter(code__in=mandatory_courses).values_list('code', flat=True),
             'elective': Course.objects.filter(code__in=elective_courses).values_list('code', flat=True),
