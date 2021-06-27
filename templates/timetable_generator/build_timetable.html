@@ -8,7 +8,7 @@
     <script type="text/javascript"
             src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'timetable_generator/js/build_timetable.js' %}"></script>
+    <script type="text/javascript" src="{% static 'timetable_generator/js/build_timetable.js' %}" defer></script>
 {% endblock %}
 <title>{% block title %}בנה מערכת שעות{% endblock %}</title>
 {% block content %}
@@ -17,8 +17,8 @@
             {% for solution in solutions %}
                 <a class="nav-link {% if forloop.first %}active{% endif %}" id="solution_{{ forloop.counter }}_tab"
                    data-toggle="pill" href="#solution_{{ forloop.counter }}_content" role="tab"
-                   aria-controls="solution_{{ forloop.counter }}"
-                   aria-selected="{{ forloop.first }}">{{ solution.display_name }}</a>
+                   aria-controls="solution_{{ forloop.counter }}_content"
+                   aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">{{ solution.display_name }}</a>
             {% endfor %}
         </div>
         <div class="tab-content" id="pillsTabContent">

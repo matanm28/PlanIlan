@@ -154,6 +154,7 @@ class TimetableSolution(TimeStampedModel, BaseModel):
     score = models.FloatField(editable=False)
     iterations = models.IntegerField(editable=False)
     is_solved = models.BooleanField(editable=False)
+    possibly_invalid = models.BooleanField(editable=False, default=False)
 
     @classmethod
     def create(cls, common_info: TimetableCommonInfo, ranked_lessons: QuerySet[RankedLesson], iterations: int,
