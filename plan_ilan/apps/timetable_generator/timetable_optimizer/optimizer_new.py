@@ -7,7 +7,7 @@ from django.db.models import QuerySet, Q
 from gekko import Gekko
 
 from plan_ilan.apps.timetable_generator.models import Timetable, BlockedTimePeriod, TimeInterval
-from plan_ilan.apps.web_site.models import Course, Lesson, Day, SemesterEnum
+from plan_ilan.apps.web_site.models import Lesson, Day, SemesterEnum
 
 EPSILON = 1e-3
 
@@ -25,7 +25,7 @@ class TimetableOptimizer:
         self.mandatory_dict = defaultdict(lambda: defaultdict(list))
         self.elective_dict = defaultdict(lambda: defaultdict(list))
         self.course_code_to_var_keys = defaultdict(list)
-        self.semester_to_day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(list))
+        self.day_to_hours_to_courses_dict = defaultdict(lambda: defaultdict(list))
 
     @property
     def is_done(self) -> bool:
@@ -60,7 +60,13 @@ class TimetableOptimizer:
         self.__populate_course_code_to_vars()
         self.__populate_rankings()
         self.__populate_model()
-        self.__solve_in_binary_mode()
+        self.solve_in_binary_mode()
+        self.model.solver_options = ['minlp_maximum_iterations 500', 'minlp_gap_tol 0.01', 'nlp_maximum_iterations 50']
+        self.model.options.SEQUENTIAL = 1
+        self.model.options.MAX_MEMORY = 8
+        self.model.options.MAX_TIME = 10
+        self.model.options.MAX_ITER = 500
+
         self.model_ready = True
 
     @Timer('solve')
@@ -69,21 +75,30 @@ class TimetableOptimizer:
             self.__prepare_model_for_solve()
         self.model.solve(debug=False)
         if not self.is_solved:
-            self.model.options.COLDSTART = 1
+            # brute force again
             self.model.solve(debug=False)
         # so best solution is first
         while self.is_solved:
-            solution = [var for key, item in self.course_vars.items() if sum(item.VALUE.value) == 1 for var in key]
-            meta_info = {'is_solved': self.is_solved, 'objective_score': self.objective_score,
-                         'iterations': self.iterations}
-            self.__solutions.appendleft((solution, meta_info))
+            self.__process_solution()
             # add objective to optimize better than last time
             self.model.Equation(self.model.sum(self.objective) > self.objective_score + EPSILON)
             # try starting from last solution values
             self.model.options.COLDSTART = 1
+            self.solve_in_binary_mode()
             self.model.solve(debug=False)
+        if not self.__solutions:
+            self.model.options.RTOL = 1
+            self.model.solve(debug=False)
+            if self.is_solved:
+                self.__process_solution()
         self.__is_done = True
         return self.solutions
+
+    def __process_solution(self):
+        solution = [var for key, item in self.course_vars.items() if sum(item.VALUE.value) == 1 for var in key]
+        meta_info = {'is_solved': self.is_solved, 'objective_score': self.objective_score,
+                     'iterations': self.iterations, 'possibly_invalid': self.model.options.RTOL == 1}
+        self.__solutions.appendleft((solution, meta_info))
 
     @classmethod
     def __lessons_from_ranked_lessons(cls, lessons: QuerySet[Lesson]):
@@ -113,7 +128,7 @@ class TimetableOptimizer:
         for lesson in lessons:
             for session_time in lesson.session_times.all():
                 for hour in session_time.get_hours_list(jump=jump, jump_by=jump_by):
-                    self.semester_to_day_to_hours_to_courses_dict[session_time.day][hour].append(lesson)
+                    self.day_to_hours_to_courses_dict[session_time.day][hour].append(lesson)
 
     def __populate_model(self):
         self.objective = [self.__get_ranking_for_course_id(key) * var for key, var in self.course_vars.items()]
@@ -129,11 +144,11 @@ class TimetableOptimizer:
         one = self.model.Const(1, 'one')
         max_days = self.model.Const(self.max_days, 'max_days')
         day_courses_took_place = {}
-        for day in self.semester_to_day_to_hours_to_courses_dict:
+        for day in self.day_to_hours_to_courses_dict:
             courses_vars_in_day = []
-            for hour in self.semester_to_day_to_hours_to_courses_dict[day]:
+            for hour in self.day_to_hours_to_courses_dict[day]:
                 courses_in_hour = []
-                for course in self.semester_to_day_to_hours_to_courses_dict[day][hour]:
+                for course in self.day_to_hours_to_courses_dict[day][hour]:
                     relevant_vars = [self.course_vars[key] for key in id_to_containing_vars[course.code_and_group]]
                     courses_in_hour.extend(relevant_vars)
                 self.model.Equation(self.model.sum(courses_in_hour) <= one)
@@ -145,9 +160,10 @@ class TimetableOptimizer:
                                         f'{day.enum.name}_inter')
             intermediate_days_vars.append(i)
         self.model.Equation(self.model.sum(intermediate_days_vars) <= max_days)
-        self.model.Equation(self.model.sum(intermediate_days_vars) > 0)
 
     def __define_elective_points_bounds_rules(self):
+        if not self.elective_dict:
+            return
         # constraint for taking the right amount of elective points
         course_code_to_points = self.__get_courses_code_to_points_dict()
         points_elective_constraint = []
@@ -186,7 +202,7 @@ class TimetableOptimizer:
         gekko_vars = {}
         # is set really needed?
         for entry in entries:
-            var = self.model.Var(lb=low_bound, ub=up_bound, integer=True, name=f'{name}_{entry}')
+            var = self.model.Var(value=1, lb=low_bound, ub=up_bound, integer=True, name=f'{name}_{entry}')
             gekko_vars[entry] = var
         return gekko_vars
 
@@ -251,7 +267,7 @@ class TimetableOptimizer:
 
     @property
     def is_solved(self) -> bool:
-        return self.model.options.APPINFO == 0 and self.objective_score > 0
+        return self.model.options.SOLVESTATUS == 1 and self.objective_score > 0
 
     @property
     def iterations(self) -> int:
@@ -266,7 +282,7 @@ class TimetableOptimizer:
         if isinstance(value, int) and value >= 1:
             self.model.options.MAX_ITER = value
 
-    def __solve_in_binary_mode(self):
+    def solve_in_binary_mode(self):
         self.model.options.SOLVER = 1  # solves MINLP
 
     def solve_in_continuous_mode(self):
