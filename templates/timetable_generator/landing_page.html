@@ -1,0 +1,25 @@
+{% extends 'plan_ilan/base.html' %}
+{% block css_block %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+{% endblock %}
+{% block js_block %}
+    {% load static %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+{% endblock %}
+<title>{% block title %}בנה מערכת שעות{% endblock %}</title>
+{% block content %}
+    <h2>ברוך שובך! אנחנו רואים שכבר ישנן מערכות שעות שקיימות אצלנו במערכת. תוכל לבחור אם לצפות באחת קיימת כעת, או ליצור
+        אחת חדשה</h2>
+    <form method="post" class="form">
+        {% csrf_token %}
+        <h3>בחר מערכת שעות קיימת:</h3>
+        {% for name in timetable_names %}
+            <input class="btn login_btn" type="submit" name="old_timetable" value="{{ name }}">
+        {% endfor %}
+        <h3>צור מערכת שעות חדשה:</h3>
+        <input class="btn login_btn" type="submit" name="new_timetable" value="בנה מערכת שעות">
+    </form>
+{% endblock %}
