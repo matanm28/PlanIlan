@@ -3,6 +3,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'timetable_generator/css/collapse_style.css' %}">
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/timetable_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
     {% load static %}
@@ -13,25 +14,44 @@
 {% endblock %}
 {% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
-    <div class="container">
-        <form method="post" class="form">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-6">
-                    <p class="display-4 lead">בחר מחלקות לקורסי חובה</p>
-                    {{ mandatory_form.as_p }}
-                </div>
-                <div class="col-6">
-                    <p class="display-4 lead">בחר מחלקות לקורסי בחירה</p>
-                    {{ elective_form.as_p }}
-                </div>
+    {% load static %}
+    <div class="bg_image"></div>
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="user_card">
+                {% if messages %}
+                    <script>
+                        alert("יש לבחור לפחות מחלקה אחת לקורסי חובה")
+                    </script>
+                {% endif %}
+                <h1 class="display-3" style="text-align: center"><b>כעת יש לבחור מחלקות שאתם מעוניינים שיהיו במערכת שעות
+                    שלכם</b></h1>
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col" style="width: 50%">
+                            <h2 style="text-align: center"><u>מחלקות לקורסי חובה</u></h2>
+                            {#                            {{ mandatory_form.as_p }}#}
+                            {% for field in mandatory_form.visible_fields %}
+                                {{ field }}
+                            {% endfor %}
+                        </div>
+                        <div class="col" style="width: 50%">
+                            <h2 style="text-align: center"><u>מחלקות לקורסי חובה</u></h2>
+                            {#                            {{ elective_form.as_p }}#}
+                            {% for field in elective_form.visible_fields %}
+                                {{ field }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col align-self-center">
+                            <a class="btn btn-light" type="submit" href="{% url 'first-form' %}"><b>הקודם</b></a>
+                            <button class="btn btn-light" type="submit"><b>הבא</b></button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="row align-items-center">
-                <div class="col align-self-center">
-                    <a class="btn login_btn" type="submit" href="{% url 'first-form' %}">הקודם</a>
-                    <button class="btn btn-primary" type="submit">הבא</button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 {% endblock %}
