@@ -230,8 +230,7 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
                 dict_list.append(lessons_list)
             l.append(dict_list)
 
-        return {'mandatory_lessons': mandatory_lessons, "elective_lessons": elective_lessons, 'solutions': solutions,
-                'solution_dict': l}
+        return {'solutions': solutions, 'solution_dict': l}
 
 
 class LandingPageView(QueryStringHandlingTemplateView):
@@ -248,5 +247,5 @@ class LandingPageView(QueryStringHandlingTemplateView):
             self.request.session['is_landing_page'] = True
             return redirect('first-form')
         timetable_dict = {'ready_timetable': Timetable.objects.get(common_info__name=
-                                                                   request.POST.get('old_timetable')).values_list('pk')}
+                                                                   request.POST.get('old_timetable')).pk}
         return redirect(reverse_querystring('build-timetable', query_kwargs=timetable_dict))
