@@ -1,17 +1,26 @@
 .collapsible {
-    background-color: #de6e6e;
-    color: white;
+    background-color: inherit;
+    color: #de6e6e;
     cursor: pointer;
-    padding: 18px;
+    padding: 2%;
     width: 100%;
-    border: none;
+    /*border: none;*/
+    border: 2px solid #de6e6e;
+    border-radius: 5px;
+    margin: 5px;
     text-align: right;
     outline: none;
     font-size: 15px;
 }
 
+.accordion .content {
+    border-radius: 5px;
+    background-color: revert;
+}
+
 .active, .collapsible:hover {
-    background-color: #dbbdbd;
+    background-color: #de6e6e;
+    color: #ffffff;
 }
 
 .collapsible:after {
@@ -19,7 +28,8 @@
     color: white;
     font-weight: bold;
     float: left;
-    margin-left: 5px;
+    border-radius: 5px;
+    /*margin-left: 5px;*/
 }
 
 .active:after {
