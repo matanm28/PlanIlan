@@ -5,6 +5,7 @@ from django.http import HttpResponseBadRequest, QueryDict, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
+from django.contrib import messages
 
 from plan_ilan.apps.web_site.models import Lesson, Course, Account, Department
 from .forms import FirstForm, DepartmentsForm
@@ -98,9 +99,10 @@ class PickDepartmentsView(AuthenticatedUserTemplateView):
         mandatory = DepartmentsForm(data=self.request.POST, prefix='mandatory')
         elective = DepartmentsForm(accept_empty=True, data=self.request.POST, prefix='elective')
         if not mandatory.is_valid():
-            return HttpResponseBadRequest(mandatory.errors.as_data())
-        if not elective.is_valid():
-            return HttpResponseBadRequest(elective.errors.as_data())
+            messages.info(request, 'יש לבחור לפחות מחלקת חובה אחת')
+            return redirect('pick-deps')
+            # return HttpResponseBadRequest("test")
+        elective.full_clean()
         query_dict = {
             'mandatory': mandatory.cleaned_data.get('departments', Department.objects.none()).values_list('number',
                                                                                                           flat=True),
