@@ -52,9 +52,9 @@
                     </div>
                 {% endfor %}
                 <br>
-                <h2>בחר שיעורי בחירה</h2>
-                <br>
                 {% if elective_courses %}
+                    <h2>בחר שיעורי בחירה</h2>
+                    <br>
                     <div class="accordion">
                         {% for course in elective_courses %}
                             <button type="button" class="collapsible">{{ course.name }} - {{ course.code }}</button>
@@ -88,10 +88,10 @@
                             </div>
                         {% endfor %}
                         <br>
-                        <a class="btn login_btn" type="submit" href="{% url 'pick-courses' %}">הקודם</a>
-                        <input class="btn login_btn" type="submit" value="הבא">
                     </div>
                 {% endif %}
+                <a class="btn login_btn" type="submit" href="{% url 'pick-courses' %}">הקודם</a>
+                <input class="btn login_btn" type="submit" value="הבא">
             </div>
         </form>
     </div>

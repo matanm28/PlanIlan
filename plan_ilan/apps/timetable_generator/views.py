@@ -71,7 +71,15 @@ class FirstView(AuthenticatedUserTemplateView):
     template_name = 'timetable_generator/first_form.html'
 
     def get_context(self):
-        return {'form': FirstForm()}
+        data = None
+        if 'timetable_pk' in self.request.session:
+            timetable = get_object_or_404(Timetable, pk=self.request.session['timetable_pk'])
+            data = {
+                'name': timetable.name,
+                'semester': timetable.semester,
+                'max_num_of_days': timetable.max_num_of_days
+            }
+        return {'form': FirstForm(initial=data), 'is_rerun': True}
 
     def post(self, request, *args, **kwargs):
         form = FirstForm(self.request.POST)
@@ -104,7 +112,7 @@ class PickDepartmentsView(AuthenticatedUserTemplateView):
     def get_context(self, **kwargs) -> Dict:
         return {
             'mandatory_form': DepartmentsForm(prefix='mandatory'),
-            'elective_form': DepartmentsForm(accept_empty=True, prefix='elective')
+            'elective_form': DepartmentsForm(prefix='elective')
         }
 
 
@@ -177,8 +185,8 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
 
     def get_context(self):
         query_dict = QueryDict(self.request.session.get(f'data_{self.view_name}', None))
-        mandatory_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('elective_lessons', []))
-        elective_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('mandatory_lessons', []))
+        mandatory_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('mandatory_lessons', []))
+        elective_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('elective_lessons', []))
         mandatory_ranks = query_dict.getlist('mandatory_ranks', [])
         elective_ranks = query_dict.getlist('elective_ranks', [])
         mandatory_ranked_lessons = [RankedLesson.create(lesson, rank)

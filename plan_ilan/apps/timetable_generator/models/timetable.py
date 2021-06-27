@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import time
 from typing import Union, List, Tuple
 
@@ -174,6 +175,21 @@ class TimetableSolution(TimeStampedModel, BaseModel):
     @property
     def semester(self):
         return self.common_info.semester
+
+    @property
+    def display_name(self):
+        return f'{self.name} ({self.score})'
+
+    @property
+    def as_dict(self):
+        ret = defaultdict(lambda: defaultdict(dict))
+        for lesson in self.lessons.all():
+            for lesson_time in lesson.session_times.all():
+                for hour in lesson_time.get_hours_list(jump=1, jump_by='hours'):
+                    ret[lesson_time.day][hour] = lesson
+        return ret
+
+
 
     class Meta:
         ordering = ['-score', 'created', 'modified', 'pk']

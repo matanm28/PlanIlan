@@ -88,7 +88,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DEVELOPMENT = True
+DEVELOPMENT = False
 IS_MATAN_MACHINE = socket.gethostname() == 'MAMALKA-FSYX3'
 DB_HOST = 'LOCAL' if DEVELOPMENT and IS_MATAN_MACHINE else 'AWS'
 db_information = dict(os.environ)

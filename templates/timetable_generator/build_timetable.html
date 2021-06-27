@@ -13,7 +13,38 @@
 {% endblock %}
 <title>{% block title %}בנה מערכת שעות{% endblock %}</title>
 {% block content %}
-    <div class="container">
-
-    </div>
+    {% if solutions %}
+        <div id="navPillsTabs" class="nav flex-column nav-pills">
+            {% for solution in solutions %}
+                <a class="nav-link {% if forloop.first %}active{% endif %}" id="solution_{{ forloop.counter }}_tab"
+                   data-toggle="pill" href="#solution_{{ forloop.counter }}_content" role="tab"
+                   aria-controls="solution_{{ forloop.counter }}"
+                   aria-selected="{{ forloop.first }}">{{ solution.display_name }}</a>
+            {% endfor %}
+        </div>
+        <div class="tab-content" id="pillsTabContent">
+            {% for solution in solutions %}
+                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                     id="solution_{{ forloop.counter }}_content"
+                     role="tabpanel" aria-labelledby="solution_{{ forloop.counter }}_tab">
+                <p class="lead"><u>{{ solution.display_name}}</u></p>
+                <p>ציון: {{ solution.score }}</p>
+                    <ul>
+                        {% for day,hours in solution.as_dict.items %}
+                            <li>{{ day.full_name }}:
+                                <ul>
+                                    {% for hour,lesson in hours.item %}
+                                        <li>{{ hour }}:{{ lesson.code_and_group }} - {{ lesson.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>מצטערים יא קאקר אין פתרון למערכת שעות שלך</p>
+        <button>בוא ננסה שוב</button>
+    {% endif %}
 {% endblock %}
