@@ -8,37 +8,43 @@
     <script type="text/javascript"
             src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'timetable_generator/js/build_timetable.js' %}" defer></script>
 {% endblock %}
 <title>{% block title %}בנה מערכת שעות{% endblock %}</title>
 {% block content %}
     {% if solutions %}
-        <div id="navPillsTabs" class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-            {% for solution in solutions %}
-                <a class="nav-link {% if forloop.first %}active{% endif %}" id="solution_{{ forloop.counter }}_tab"
-                   data-toggle="pill" href="#solution_{{ forloop.counter }}_content" role="tab"
-                   aria-controls="solution_{{ forloop.counter }}_content"
-                   aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">{{ solution.display_name }}</a>
-            {% endfor %}
+        <div class="d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                {% for solution in solutions %}
+                    <button class="nav-link {% if forloop.first %}active{% endif %}"
+                            id="solution{{ forloop.counter }}tab"
+                            data-bs-toggle="pill" data-bs-target="#solution{{ forloop.counter }}content" role="tab"
+                            aria-controls="solution{{ forloop.counter }}content" type="button"
+                            aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">{{ solution.display_name }}
+                    </button>
+                {% endfor %}
+            </div>
         </div>
-        <div class="tab-content" id="pillsTabContent">
+        <div class="tab-content" id="v-pills-tabContent">
             {% for solution in solutions %}
                 <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
-                     id="solution_{{ forloop.counter }}_content"
-                     role="tabpanel" aria-labelledby="solution_{{ forloop.counter }}_tab">
+                     id="solution{{ forloop.counter }}content"
+                     role="tabpanel" aria-labelledby="solution{{ forloop.counter }}tab">
                     <p class="lead"><u>{{ solution.display_name }}</u></p>
                     <p>ציון: {{ solution.score }}</p>
-                    <ul>
-                        {% for day,hours in solution.as_dict.items %}
-                            <li>{{ day.full_name }}:
-                                <ul>
-                                    {% for hour,lesson in hours.item %}
-                                        <li>{{ hour }}:{{ lesson.code_and_group }} - {{ lesson.name }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                    <div class="container">
+                        <ul>
+                            {% for var in solution_dict %}
+                                {{ var|unordered_list }}
+                                {#                            <li>{{ day }}:#}
+                                {#                                <ul>#}
+                                {#                                    {% for hour,lesson in hours.item %}#}
+                                {#                                        <li>{{ hour }}:{{ lesson.code_and_group }} - {{ lesson.name }}</li>#}
+                                {#                                    {% endfor %}#}
+                                {#                                </ul>#}
+                                {#                            </li>#}
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             {% endfor %}
         </div>

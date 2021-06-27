@@ -198,4 +198,18 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
         timetable.elective_lessons.set(elective_ranked_lessons)
         timetable.save()
         solutions = timetable.get_solutions()
-        return {'mandatory_lessons': mandatory_lessons, "elective_lessons": elective_lessons, 'solutions': solutions}
+        l = []
+        d = [s.as_dict for s in solutions.all()]
+        for sol in d:
+            dict_list = []
+            for day in sorted(sol.keys()):
+                lessons_list = []
+                for hour in sorted(sol[day].keys()):
+                    lessons_list.append(hour)
+                    lessons_list.append([sol[day][hour]])
+                dict_list.append(day)
+                dict_list.append(lessons_list)
+            l.append(dict_list)
+
+        return {'mandatory_lessons': mandatory_lessons, "elective_lessons": elective_lessons, 'solutions': solutions,
+                'solution_dict': l}

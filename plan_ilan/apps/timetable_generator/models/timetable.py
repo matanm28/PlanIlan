@@ -77,7 +77,7 @@ class Timetable(TimeStampedModel, BaseModel):
 
     def get_solutions(self, only_solved=True) -> QuerySet['TimetableSolution']:
         from plan_ilan.apps.timetable_generator.timetable_optimizer.optimizer_new import TimetableOptimizer
-        if True or not self.solutions.exists():
+        if not self.solutions.exists():
             optimizer = TimetableOptimizer(self)
             optimizer_solutions = optimizer.solve()
             timetable_solutions = []
@@ -141,7 +141,7 @@ class Timetable(TimeStampedModel, BaseModel):
         return self.common_info.semester
 
     @property
-    def valid_semesters(self)->List[SemesterEnum]:
+    def valid_semesters(self) -> List[SemesterEnum]:
         valid_semesters = [self.semester]
         if self.semester in [SemesterEnum.FIRST, SemesterEnum.SECOND]:
             valid_semesters.append(SemesterEnum.YEARLY)
@@ -158,9 +158,11 @@ class TimetableSolution(TimeStampedModel, BaseModel):
 
     @classmethod
     def create(cls, common_info: TimetableCommonInfo, ranked_lessons: QuerySet[RankedLesson], iterations: int,
-               is_solved: bool, objective_score: float) -> 'TimetableSolution':
+               is_solved: bool, objective_score: float, possibly_invalid: bool) -> 'TimetableSolution':
         solution, created = cls.objects.get_or_create(common_info=common_info, score=round(objective_score, 3),
-                                                      iterations=iterations, defaults={'is_solved': is_solved})
+                                                      iterations=iterations,
+                                                      defaults={'is_solved': is_solved,
+                                                                'possibly_invalid': possibly_invalid})
         solution.lessons.set(ranked_lessons.values_list('lesson', flat=True))
         cls.log_created(solution, created)
         return solution
@@ -185,12 +187,9 @@ class TimetableSolution(TimeStampedModel, BaseModel):
     def as_dict(self):
         ret = defaultdict(lambda: defaultdict(dict))
         for lesson in self.lessons.all():
-            for lesson_time in lesson.session_times.all():
-                for hour in lesson_time.get_hours_list(jump=1, jump_by='hours'):
-                    ret[lesson_time.day][hour] = lesson
+            for lesson_time in lesson.session_times.all().order_by('start_time'):
+                ret[lesson_time.day][lesson_time.time_str()] = lesson
         return ret
-
-
 
     class Meta:
         ordering = ['-score', 'created', 'modified', 'pk']
