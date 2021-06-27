@@ -1,11 +1,11 @@
 from abc import abstractmethod
 from typing import Dict, Iterable
 
+from django.contrib import messages
 from django.http import HttpResponseBadRequest, QueryDict, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
-from django.contrib import messages
 
 from plan_ilan.apps.web_site.models import Lesson, Course, Account, Department
 from .forms import FirstForm, DepartmentsForm
@@ -81,6 +81,15 @@ class FirstView(AuthenticatedUserTemplateView):
                 'max_num_of_days': timetable.max_num_of_days
             }
         return {'form': FirstForm(initial=data), 'is_rerun': True}
+
+    def get(self, request, *args, **kwargs):
+        account = get_object_or_404(Account, user=self.request.user)
+        timetables = Timetable.objects.filter(common_info__account=account)
+        if timetables.exists() and 'is_landing_page' in self.request.session and \
+                not self.request.session['is_landing_page']:
+            return redirect('landing-page')
+        self.request.session['is_landing_page'] = False
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = FirstForm(self.request.POST)
@@ -187,18 +196,21 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
 
     def get_context(self):
         query_dict = QueryDict(self.request.session.get(f'data_{self.view_name}', None))
-        mandatory_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('mandatory_lessons', []))
-        elective_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('elective_lessons', []))
-        mandatory_ranks = query_dict.getlist('mandatory_ranks', [])
-        elective_ranks = query_dict.getlist('elective_ranks', [])
-        mandatory_ranked_lessons = [RankedLesson.create(lesson, rank)
-                                    for rank, lesson in zip(mandatory_ranks, mandatory_lessons)]
-        elective_ranked_lessons = [RankedLesson.create(lesson, rank)
-                                   for rank, lesson in zip(elective_ranks, elective_lessons)]
-        timetable = get_object_or_404(Timetable, pk=self.request.session.get('timetable_pk', None))
-        timetable.mandatory_lessons.set(mandatory_ranked_lessons)
-        timetable.elective_lessons.set(elective_ranked_lessons)
-        timetable.save()
+        if query_dict.get('ready_timetable', None):
+            timetable = Timetable.objects.get(pk=query_dict.get('ready_timetable', None))
+        else:
+            mandatory_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('mandatory_lessons', []))
+            elective_lessons = Lesson.objects.filter(pk__in=query_dict.getlist('elective_lessons', []))
+            mandatory_ranks = query_dict.getlist('mandatory_ranks', [])
+            elective_ranks = query_dict.getlist('elective_ranks', [])
+            mandatory_ranked_lessons = [RankedLesson.create(lesson, rank)
+                                        for rank, lesson in zip(mandatory_ranks, mandatory_lessons)]
+            elective_ranked_lessons = [RankedLesson.create(lesson, rank)
+                                       for rank, lesson in zip(elective_ranks, elective_lessons)]
+            timetable = get_object_or_404(Timetable, pk=self.request.session.get('timetable_pk', None))
+            timetable.mandatory_lessons.set(mandatory_ranked_lessons)
+            timetable.elective_lessons.set(elective_ranked_lessons)
+            timetable.save()
         solutions = timetable.get_solutions()
         l = []
         d = [s.as_dict for s in solutions.all()]
@@ -215,3 +227,21 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
 
         return {'mandatory_lessons': mandatory_lessons, "elective_lessons": elective_lessons, 'solutions': solutions,
                 'solution_dict': l}
+
+
+class LandingPageView(QueryStringHandlingTemplateView):
+    template_name = 'timetable_generator/landing_page.html'
+    view_name = 'landing-page'
+
+    def get_context(self):
+        account = get_object_or_404(Account, user=self.request.user)
+        timetable_names = Timetable.objects.filter(common_info__account=account).values_list('common_info__name', flat=True)
+        return {"timetable_names": timetable_names}
+
+    def post(self, request, *args, **kwargs):
+        if 'new_timetable' in request.POST:
+            self.request.session['is_landing_page'] = True
+            return redirect('first-form')
+        timetable_dict = {'ready_timetable': Timetable.objects.get(common_info__name=
+                                                                   request.POST.get('old_timetable')).values_list('pk')}
+        return redirect(reverse_querystring('build-timetable', query_kwargs=timetable_dict))
