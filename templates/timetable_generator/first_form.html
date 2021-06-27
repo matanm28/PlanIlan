@@ -4,6 +4,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'plan_ilan/css/scrollbar_style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plan_ilan/css/timetable_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
     {% load static %}
@@ -12,12 +13,27 @@
 {% endblock %}
 {% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
-    <div class="container">
-        <h2>פרטים ראשוניים</h2>
-        <form method="POST" class="form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn btn-primary" type="submit">הבא</button>
-        </form>
+    {% load static %}
+    <div class="bg_image"></div>
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="user_card">
+                <h1>ברוכים הבאים לבניית מערכת שעות של plan-ilan</h1>
+                <h2>לפניכם 4 שלבים לבניית מערכת שעות אישית</h2>
+                <h2>תחילה יש למלא פרטים ראשוניים</h2>
+                <form method="POST" class="form">
+                    {% csrf_token %}
+                    {% for field in form.visible_fields %}
+                        <div class="input-group mb-2">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-cog fa-2x"></i></span>
+                            </div>
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <button class="btn btn-light" type="submit"><b>הבא</b></button>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
