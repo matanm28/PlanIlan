@@ -48,6 +48,7 @@ class Timetable(TimeStampedModel, BaseModel):
                                               default=get_default_elective_points_bound,
                                               related_name='timetables', null=True)
     max_num_of_days = models.PositiveSmallIntegerField(default=6)
+    is_done = models.BooleanField(default=False, null=True)
 
     @classmethod
     def create(cls, account: Account, name: str, mandatory_lessons: RankedLessonList,

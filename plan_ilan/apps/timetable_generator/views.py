@@ -83,14 +83,6 @@ class FirstView(AuthenticatedUserTemplateView):
         blocked_times_formset = BlockedTimesFormSet()
         return {'form': FirstForm(initial=data), 'is_rerun': True, 'blocked_times_formset': blocked_times_formset}
 
-    def get(self, request, *args, **kwargs):
-        account = get_object_or_404(Account, user=self.request.user)
-        timetables = Timetable.objects.filter(common_info__account=account)
-        if timetables.exists() and 'is_landing_page' in self.request.session and \
-                self.request.session['is_landing_page'] and 'timetable_pk' in self.request.session:
-            return redirect('landing-page')
-        return super().get(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         blocked_times_formset = BlockedTimesFormSet(self.request.POST)
         form = FirstForm(self.request.POST)
@@ -225,10 +217,9 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
             timetable = get_object_or_404(Timetable, pk=self.request.session.get('timetable_pk', None))
             timetable.mandatory_lessons.set(mandatory_ranked_lessons)
             timetable.elective_lessons.set(elective_ranked_lessons)
+            timetable.is_done = True
             timetable.save()
         solutions = timetable.get_solutions()
-        if solutions:
-            self.request.session['is_landing_page'] = True
         l = []
         d = [s.as_dict for s in solutions.all()]
         for sol in d:
@@ -251,15 +242,15 @@ class LandingPageView(QueryStringHandlingTemplateView):
 
     def get_context(self):
         account = get_object_or_404(Account, user=self.request.user)
-        timetable_names = Timetable.objects.filter(common_info__account=account).values_list('common_info__name',
-                                                                                             flat=True)
+        timetable_names = Timetable.objects.filter(common_info__account=account, is_done=True).values_list(
+            'common_info__name',
+            flat=True)
         return {"timetable_names": timetable_names}
 
     def post(self, request, *args, **kwargs):
         if 'new_timetable' in request.POST:
-            self.request.session['is_landing_page'] = False
-            del self.request.session['timetable_pk']
             return redirect('first-form')
+
         timetable_dict = {'ready_timetable': Timetable.objects.get(common_info__name=
                                                                    request.POST.get('old_timetable')).pk}
         return redirect(reverse_querystring('build-timetable', query_kwargs=timetable_dict))
