@@ -22,69 +22,116 @@
         <div class="sidenav" id="search_box">
             <a href="javascript:void(0)" class="closebtn" onclick="closeSearchBox()"
                style="color: white; margin-right: 0">&times;</a>
-            <div class="filter-by">
+            <div class="filter-by" style="height: 10%">
                 <button class="btn-choice" id="teacher_button" onclick="display_teacher_filter()">סגל</button>
                 <button class="btn-choice focus clicked" id="course_button" onclick="display_course_filter()">קורס
                 </button>
             </div>
-            <div class="scrollbar scrollbar-primary" style="height: 81%; background: rgb(214,97,97);">
+            <div class="scrollbar scrollbar-primary" style="height: 80%; background: rgb(214,97,97);">
                 <div id="course_filter">
                     <form method="get">
                         {% csrf_token %}
                         <div class="field">
-                            <label>מחלקה</label>
-                            <div class="control">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-book fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
                                 {% render_field lesson_filter.form.department %}
                             </div>
                         </div>
                         <div class="field">
-                            <label>שם הקורס</label>
-                            <div class="control">
-                                {% render_field lesson_filter.form.name class="input" placeholder="Enter name here" %}
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-key fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
+                                {% render_field lesson_filter.form.name class="input" %}
                             </div>
                         </div>
                         <div class="field">
-                            <label>טווח דירוג:</label>
-                            {% render_field lesson_filter.form.ratings %}
-                        </div>
-                        <div class="field">
-                            <label>שעת התחלה:</label>
-                            {% render_field lesson_filter.form.start_time type="time" %}
-                            <label>שעת סיום:</label>
-                            {% render_field lesson_filter.form.end_time type="time" %}
-                        </div>
-                        <div class="field">
-                            <label>קורס אונליין:</label>
-                            <div class="control">
-                                {% render_field lesson_filter.form.online %}
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-star fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
+                                {% render_field lesson_filter.form.ratings %}
                             </div>
                         </div>
                         <div class="field">
-                            <label>יום:</label>
-                            <div class="control">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-hourglass-start fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
+                                {% render_field lesson_filter.form.start_time type="time" %}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-hourglass-end fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
+                                {% render_field lesson_filter.form.end_time type="time" %}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-laptop fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
+                                {% render_field lesson_filter.form.online placeholder="Enter" %}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-calendar-day fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
                                 {% render_field lesson_filter.form.day %}
                             </div>
+                            {#                            <label>יום:</label>#}
+                            {#                            <div class="control">#}
+                            {#                                {% render_field lesson_filter.form.day %}#}
+                            {#                            </div>#}
                         </div>
                         <div class="field">
-                            <label>סמסטר:</label>
-                            <div class="control">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-calendar fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
                                 {% render_field lesson_filter.form.semester %}
                             </div>
+                            {#                            <label>סמסטר:</label>#}
+                            {#                            <div class="control">#}
+                            {#                                {% render_field lesson_filter.form.semester %}#}
+                            {#                            </div>#}
                         </div>
                         <div class="field">
-                            <label>סוג השיעור:</label>
-                            <div class="control">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-question fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
                                 {% render_field lesson_filter.form.session_type %}
                             </div>
                         </div>
                         <div class="field">
-                            <label>שם המרצה\מתרגל:</label>
-                            <div class="control">
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fas fa-user fa-2x"
+                                                                          style="color: #de6e6e"></i></span>
+                                </div>
                                 {% render_field lesson_filter.form.teachers %}
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit" name="form-search-course">חפש</button>
-                        <a href="{% url 'search' %}" style="float: left">ניקוי</a>
+                        <button class="btn btn-light" type="submit" style="width: 50%" name="form-search-course">חפש
+                        </button>
+                        <a href="{% url 'search' %}" style="float: left; color:white">ניקוי</a>
 
                     </form>
                 </div>
@@ -96,7 +143,7 @@
                                 <div class="input-group mb-2">
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="fas fa-user fa-2x"
-                                                                          style="color: white"></i></span>
+                                                                          style="color: #de6e6e"></i></span>
                                     </div>
                                     {% render_field teacher_filter.form.name %}
                                 </div>
@@ -106,7 +153,7 @@
                             <div class="input-group mb-2">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fas fa-star fa-2x"
-                                                                      style="color: white"></i></span>
+                                                                      style="color: #de6e6e"></i></span>
                                 </div>
                                 {% render_field teacher_filter.form.ratings %}
                             </div>
@@ -116,13 +163,14 @@
                                 <div class="input-group mb-2">
                                     <div class="input-group-append">
                                         <span class="input-group-text"><i class="fas fa-book fa-2x"
-                                                                          style="color: white"></i></span>
+                                                                          style="color: #de6e6e"></i></span>
                                     </div>
                                     {% render_field teacher_filter.form.faculty %}
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-light" type="submit" style="width: 50%" name="form-search-teacher">חפש</button>
+                        <button class="btn btn-light" type="submit" style="width: 50%" name="form-search-teacher">חפש
+                        </button>
                         <a href="{% url 'search' %}" style="float: left; color:white">ניקוי</a>
                     </form>
                 </div>

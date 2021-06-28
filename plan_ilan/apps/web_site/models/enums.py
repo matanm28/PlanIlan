@@ -87,7 +87,7 @@ class EnumModel(BaseModel):
 
     @classmethod
     def choices(cls):
-        return cls.objects.exclude(pk__in=cls.not_in_choices_enums()).all()
+        return cls.objects.exclude(pk__in=cls.not_in_choices_enums()).all().values_list('number', 'label')
 
     def __repr__(self):
         return f'number:{self.number}, label:{self.label}'
@@ -187,6 +187,10 @@ class Day(EnumModel):
     @property
     def full_label(self):
         return self.FULL_STRINGS[self.number - 1]
+
+    @classmethod
+    def choices(cls):
+        return [(day.number, day.full_label) for day in Day.objects.all()]
 
     def __repr__(self):
         return f'{super().__repr__()},full_label:{self.full_label}'
