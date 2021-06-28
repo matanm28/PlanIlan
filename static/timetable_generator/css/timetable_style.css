@@ -25,3 +25,12 @@
     -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 5px;
 }
+
+.new-timetable-card {
+    width: 100%;
+    height: fit-content;
+    padding: 2% 2% 2% 2%;
+    margin: 2% 2% 2% 2%;
+    border: 2px solid black;
+    border-radius: 5px;
+}
