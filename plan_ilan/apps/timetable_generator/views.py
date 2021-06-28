@@ -87,9 +87,8 @@ class FirstView(AuthenticatedUserTemplateView):
         account = get_object_or_404(Account, user=self.request.user)
         timetables = Timetable.objects.filter(common_info__account=account)
         if timetables.exists() and 'is_landing_page' in self.request.session and \
-                not self.request.session['is_landing_page']:
+                self.request.session['is_landing_page'] and 'timetable_pk' in self.request.session:
             return redirect('landing-page')
-        self.request.session['is_landing_page'] = False
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -228,6 +227,8 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
             timetable.elective_lessons.set(elective_ranked_lessons)
             timetable.save()
         solutions = timetable.get_solutions()
+        if solutions:
+            self.request.session['is_landing_page'] = True
         l = []
         d = [s.as_dict for s in solutions.all()]
         for sol in d:
@@ -256,7 +257,8 @@ class LandingPageView(QueryStringHandlingTemplateView):
 
     def post(self, request, *args, **kwargs):
         if 'new_timetable' in request.POST:
-            self.request.session['is_landing_page'] = True
+            self.request.session['is_landing_page'] = False
+            del self.request.session['timetable_pk']
             return redirect('first-form')
         timetable_dict = {'ready_timetable': Timetable.objects.get(common_info__name=
                                                                    request.POST.get('old_timetable')).pk}

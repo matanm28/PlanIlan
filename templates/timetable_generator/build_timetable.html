@@ -49,7 +49,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <p>מצטערים יא קאקר אין פתרון למערכת שעות שלך</p>
-        <button>בוא ננסה שוב</button>
+        <p>מצטערים אין פתרון למערכת שעות שלך</p>
+        <a class="btn btn-light" type="submit" href="{% url 'pick-deps' %}">בוא ננסה שוב</a>
     {% endif %}
 {% endblock %}
