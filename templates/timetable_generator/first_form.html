@@ -10,6 +10,8 @@
     {% load static %}
     <script type="text/javascript"
             src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'timetable_generator/js/first_form.js' %}" defer></script>
 {% endblock %}
 {% block title %}בנה מערכת שעות{% endblock %}
 {% block content %}
@@ -31,6 +33,21 @@
                             {{ field }}
                         </div>
                     {% endfor %}
+                    {{ blocked_times_formset.management_form }}
+                    {% for form in blocked_times_formset %}
+                        <div class="input-group mb-2" id="formset">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-cog fa-2x"></i></span>
+                            </div>
+                            {% for field in form.visible_fields %}
+                                {{ field }}
+                            {% endfor %}
+                            <button type="button" onclick="deleteForm(this)"
+                                    class="align-self-center btn btn-danger delete-image-form">מחק שורה
+                            </button>
+                        </div>
+                    {% endfor %}
+                    <button id="add-form" type="button">הוסף עוד זמנים</button>
                     <button class="btn btn-light" type="submit"><b>הבא</b></button>
                 </form>
             </div>

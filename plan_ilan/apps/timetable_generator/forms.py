@@ -1,7 +1,8 @@
 from django import forms
+from django.forms import formset_factory
 from django.forms.utils import ErrorList
 
-from plan_ilan.apps.web_site.models import Semester, Department
+from plan_ilan.apps.web_site.models import Semester, Department, Day
 
 
 class FirstForm(forms.Form):
@@ -15,6 +16,16 @@ class FirstForm(forms.Form):
                                          widget=forms.NumberInput(
                                              attrs={'placeholder': "...מס' ימי לימוד",
                                                     'style': 'width:14ch; text-align: center'}))
+
+
+class BlockedTimesForm(forms.Form):
+    day = forms.ModelChoiceField(Day.objects.all(), label='יום', empty_label="יום...",
+                                 error_messages={'required': 'נא לבחור יום'})
+    start = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+    end = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}))
+
+
+BlockedTimesFormSet = formset_factory(BlockedTimesForm)
 
 
 class DepartmentsForm(forms.Form):

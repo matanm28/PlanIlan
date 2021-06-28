@@ -46,7 +46,7 @@ class Timetable(TimeStampedModel, BaseModel):
     blocked_time_periods = models.ManyToManyField('BlockedTimePeriod', related_name='timetables')
     elective_points_bound = models.ForeignKey(Interval, on_delete=models.CASCADE,
                                               default=get_default_elective_points_bound,
-                                              related_name='timetables')
+                                              related_name='timetables', null=True)
     max_num_of_days = models.PositiveSmallIntegerField(default=6)
 
     @classmethod
@@ -65,14 +65,6 @@ class Timetable(TimeStampedModel, BaseModel):
         timetable.mandatory_lessons.set(mandatory_lessons)
         timetable.elective_lessons.set(elective_lessons)
         timetable.save()
-        return timetable
-
-    @classmethod
-    def temporal_create(cls, account: Account, name: str, semester: Semester, max_num_of_days: int) -> 'Timetable':
-        common_info = TimetableCommonInfo.create(account=account, name=name, semester=semester)
-        timetable, created = cls.objects.update_or_create(common_info=common_info,
-                                                          defaults={'max_num_of_days': max_num_of_days})
-        cls.log_created(timetable, created)
         return timetable
 
     def get_solutions(self, only_solved=True) -> QuerySet['TimetableSolution']:

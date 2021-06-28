@@ -8,8 +8,8 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 
 from plan_ilan.apps.web_site.models import Lesson, Course, Account, Department
-from .forms import FirstForm, DepartmentsForm
-from .models import RankedLesson, Timetable, Interval
+from .forms import FirstForm, DepartmentsForm, BlockedTimesFormSet
+from .models import RankedLesson, Timetable, Interval, TimeInterval
 
 
 def reverse_querystring(view, urlconf=None, args=None, kwargs=None, current_app=None, query_kwargs=None):
@@ -80,7 +80,8 @@ class FirstView(AuthenticatedUserTemplateView):
                 'semester': timetable.semester,
                 'max_num_of_days': timetable.max_num_of_days
             }
-        return {'form': FirstForm(initial=data), 'is_rerun': True}
+        blocked_times_formset = BlockedTimesFormSet()
+        return {'form': FirstForm(initial=data), 'is_rerun': True, 'blocked_times_formset': blocked_times_formset}
 
     def get(self, request, *args, **kwargs):
         account = get_object_or_404(Account, user=self.request.user)
@@ -92,11 +93,21 @@ class FirstView(AuthenticatedUserTemplateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        blocked_times_formset = BlockedTimesFormSet(self.request.POST)
         form = FirstForm(self.request.POST)
-        if not form.is_valid():
+        if not form.is_valid() or not blocked_times_formset.is_valid():
             return HttpResponseBadRequest(form.errors.as_data())
+        blocked_times_dict = {}
+        for block in blocked_times_formset.cleaned_data:
+            time_interval = TimeInterval.create(block['start'], block['end'])
+            if block['day'] in blocked_times_dict:
+                blocked_times_dict[block['day']].append(time_interval)
+            else:
+                blocked_times_dict[block['day']] = [time_interval]
+        blocked_times = list(blocked_times_dict.items())
         account = get_object_or_404(Account, user=self.request.user)
-        timetable = Timetable.temporal_create(account=account, **form.cleaned_data)
+        timetable = Timetable.create(account=account, **form.cleaned_data, blocked_time_periods=blocked_times,
+                                     elective_lessons=[], mandatory_lessons=[], elective_points_bound=None)
         self.request.session['timetable_pk'] = timetable.pk
         return redirect('pick-deps')
 
@@ -239,7 +250,8 @@ class LandingPageView(QueryStringHandlingTemplateView):
 
     def get_context(self):
         account = get_object_or_404(Account, user=self.request.user)
-        timetable_names = Timetable.objects.filter(common_info__account=account).values_list('common_info__name', flat=True)
+        timetable_names = Timetable.objects.filter(common_info__account=account).values_list('common_info__name',
+                                                                                             flat=True)
         return {"timetable_names": timetable_names}
 
     def post(self, request, *args, **kwargs):
