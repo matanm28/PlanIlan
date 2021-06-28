@@ -22,13 +22,16 @@
                     <form method="post" class="form">
                         {% csrf_token %}
                         {% for name in timetable_names %}
-                            <input class="btn btn-light" style="width: 100%; margin-bottom: 1%" type="submit" name="old_timetable"
+                            <input class="btn btn-light" style="width: 100%; margin-bottom: 1%" type="submit"
+                                   name="old_timetable"
                                    value="{{ name }}">
                         {% endfor %}
                     </form>
                 </div>
-                <input class="btn btn-light" type="submit" name="new_timetable" style="width: 100%"
-                       value="בנה מערכת שעות חדשה">
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    <input class="btn btn-light" type="submit" name="new_timetable" style="width: 100%"
+                           value="בנה מערכת שעות חדשה">
                 </form>
             </div>
         </div>
