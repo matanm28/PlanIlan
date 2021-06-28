@@ -34,6 +34,7 @@
                         </div>
                     {% endfor %}
                     {{ blocked_times_formset.management_form }}
+                    <span class="input-group-text" style="width: fit-content; margin-bottom: 1%">הזמנים שלא תרצו ללמוד בהם:</span>
                     {% for form in blocked_times_formset %}
                         <div class="input-group mb-2" id="formset">
                             <div class="input-group-append">
@@ -42,12 +43,12 @@
                             {% for field in form.visible_fields %}
                                 {{ field }}
                             {% endfor %}
-                            <button type="button" onclick="deleteForm(this)"
-                                    class="align-self-center btn btn-danger delete-image-form">מחק שורה
-                            </button>
+                            <span class="input-group-text" onclick="deleteForm(this)" title="מחק שורה"><i
+                                    class="fas fa-trash fa-2x"></i></span>
                         </div>
                     {% endfor %}
-                    <button id="add-form" type="button">הוסף עוד זמנים</button>
+
+                    <button id="add-form" class="btn btn-light" type="button"><b>הוסף עוד זמנים</b></button>
                     <button class="btn btn-light" type="submit"><b>הבא</b></button>
                 </form>
             </div>
