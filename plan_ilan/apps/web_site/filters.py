@@ -38,9 +38,15 @@ class CourseInstanceFilter(django_filters.FilterSet):
 
 
 class TeacherInstanceFilter(django_filters.FilterSet):
-    name = CharFilter(field_name='name', lookup_expr='icontains')
-    faculty = ChoiceFilter(field_name='faculty', choices=FacultyEnum.choices)
-    ratings = ChoiceFilter(field_name='ratings__value', choices=RATING_CHOICES, method='filter_ratings')
+    name = CharFilter(field_name='name', lookup_expr='icontains', widget=forms.TextInput(
+        attrs={'placeholder': "שם המרצה/המתרגל...",
+               'style': 'width:fit-content; text-align: center; border-radius: 5px;'}))
+    faculty = ChoiceFilter(field_name='faculty', choices=FacultyEnum.choices, empty_label="פקולטה...",
+                           widget=forms.Select(
+                               attrs={'style': 'width:fit-content; text-align: center; border-radius: 5px;'}))
+    ratings = ChoiceFilter(field_name='ratings__value', choices=RATING_CHOICES, method='filter_ratings',
+                           empty_label='דירוג החל מ...', widget=forms.Select(
+            attrs={'style': 'width:fit-content; text-align: center; border-radius: 5px;'}))
 
     def filter_ratings(self, queryset, name, value):
         return queryset.annotate(avg_rating=Avg(name)).filter(avg_rating__gte=value)

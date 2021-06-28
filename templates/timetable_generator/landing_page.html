@@ -2,6 +2,7 @@
 {% block css_block %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'timetable_generator/css/timetable_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
     {% load static %}
@@ -11,15 +12,25 @@
 {% endblock %}
 <title>{% block title %}בנה מערכת שעות{% endblock %}</title>
 {% block content %}
-    <h2>ברוך שובך! אנחנו רואים שכבר ישנן מערכות שעות שקיימות אצלנו במערכת. תוכל לבחור אם לצפות באחת קיימת כעת, או ליצור
-        אחת חדשה</h2>
-    <form method="post" class="form">
-        {% csrf_token %}
-        <h3>בחר מערכת שעות קיימת:</h3>
-        {% for name in timetable_names %}
-            <input class="btn login_btn" type="submit" name="old_timetable" value="{{ name }}">
-        {% endfor %}
-        <h3>צור מערכת שעות חדשה:</h3>
-        <input class="btn login_btn" type="submit" name="new_timetable" value="בנה מערכת שעות">
-    </form>
+    <div class="bg_image"></div>
+    <div class="container h-100">
+        <div class="d-flex justify-content-center h-100">
+            <div class="user_card">
+                <h1 class="display-3" style="text-align: center"><b>ברוכים השבים!</b></h1>
+                <div class="user_card" style="width: 100%; margin: 5% 0;">
+                    <h2 style="text-align: center">מערכות שעות שבנית בעבר</h2>
+                    <form method="post" class="form">
+                        {% csrf_token %}
+                        {% for name in timetable_names %}
+                            <input class="btn btn-light" style="width: 100%; margin-bottom: 1%" type="submit" name="old_timetable"
+                                   value="{{ name }}">
+                        {% endfor %}
+                    </form>
+                </div>
+                <input class="btn btn-light" type="submit" name="new_timetable" style="width: 100%"
+                       value="בנה מערכת שעות חדשה">
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

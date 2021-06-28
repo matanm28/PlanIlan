@@ -139,3 +139,10 @@
     color: #0000ff;
     text-decoration: underline;
 }
+
+.input-group-text {
+    background: white;
+    color: rgba(198, 30, 30, 0.7) !important;
+    border: 2px solid black;
+    border-radius: 0 0.25rem 0.25rem 0 !important;
+}
