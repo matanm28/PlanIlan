@@ -220,20 +220,20 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
             timetable.is_done = True
             timetable.save()
         solutions = timetable.get_solutions()
-        l = []
-        d = [s.as_dict for s in solutions.all()]
-        for sol in d:
-            dict_list = []
-            for day in sorted(sol.keys()):
-                lessons_list = []
-                for hour in sorted(sol[day].keys()):
-                    lessons_list.append(hour)
-                    lessons_list.append([sol[day][hour]])
-                dict_list.append(day)
-                dict_list.append(lessons_list)
-            l.append(dict_list)
-
-        return {'solutions': solutions, 'solution_dict': l}
+        # l = []
+        # d = [s.as_dict for s in solutions.all()]
+        d = [s.as_table_arr for s in solutions.all()]
+        # for sol in d:
+        #     dict_list = []
+        #     for day in sorted(sol.keys()):
+        #         lessons_list = []
+        #         for hour in sorted(sol[day].keys()):
+        #             lessons_list.append(hour)
+        #             lessons_list.append([sol[day][hour]])
+        #         dict_list.append(day)
+        #         dict_list.append(lessons_list)
+        #     l.append(dict_list)
+        return {'solutions': solutions, 'solution_arr': d}
 
 
 class LandingPageView(QueryStringHandlingTemplateView):
