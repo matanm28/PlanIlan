@@ -87,9 +87,11 @@ class FirstView(AuthenticatedUserTemplateView):
         blocked_times_formset = BlockedTimesFormSet(self.request.POST)
         form = FirstForm(self.request.POST)
         if not form.is_valid() or not blocked_times_formset.is_valid():
-            return HttpResponseBadRequest(form.errors.as_data())
+            return HttpResponseBadRequest("הטופס לא תקין. נא לחזור אחורה ולתקן את הטופס")
         blocked_times_dict = {}
         for block in blocked_times_formset.cleaned_data:
+            if not block:
+                continue
             time_interval = TimeInterval.create(block['start'], block['end'])
             if block['day'] in blocked_times_dict:
                 blocked_times_dict[block['day']].append(time_interval)

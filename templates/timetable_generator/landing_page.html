@@ -16,18 +16,26 @@
     <div class="container h-100">
         <div class="d-flex justify-content-center h-100">
             <div class="user_card">
-                <h1 class="display-3" style="text-align: center"><b>ברוכים השבים!</b></h1>
-                <div class="user_card" style="width: 100%; margin: 5% 0;">
-                    <h2 style="text-align: center">מערכות שעות שבנית בעבר</h2>
-                    <form method="post" class="form">
-                        {% csrf_token %}
-                        {% for name in timetable_names %}
-                            <input class="btn btn-light" style="width: 100%; margin-bottom: 1%" type="submit"
-                                   name="old_timetable"
-                                   value="{{ name }}">
-                        {% endfor %}
-                    </form>
-                </div>
+                {% if timetable_names %}
+                    <h1 class="display-3" style="text-align: center"><b>ברוכים השבים!</b></h1>
+                    <div class="user_card" style="width: 100%; margin: 5% 0;">
+                        <h2 style="text-align: center">מערכות שעות שבנית בעבר</h2>
+                        <form method="post" class="form">
+                            {% csrf_token %}
+                            {% for name in timetable_names %}
+                                <input class="btn btn-light" style="width: 100%; margin-bottom: 1%" type="submit"
+                                       name="old_timetable"
+                                       value="{{ name }}">
+                            {% endfor %}
+                        </form>
+                    </div>
+                {% else %}
+                    <h1>ברוכים הבאים לבניית מערכת שעות של plan-ilan</h1>
+                    <div class="user_card" style="width: 100%; margin: 5% 0;">
+                        <h2 style="text-align: center">לפניכם 4 שלבים לבניית מערכת שעות אישית</h2>
+                        <h2 style="text-align: center">לחצו על הכפתור "בנה מערכת שעות חדשה" כדי להתחיל</h2>
+                    </div>
+                {% endif %}
                 <form method="post" class="form">
                     {% csrf_token %}
                     <input class="btn btn-light" type="submit" name="new_timetable" style="width: 100%"
