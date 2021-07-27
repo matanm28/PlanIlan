@@ -216,7 +216,7 @@ EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 
 # MEDIA Configurations
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
 MEDIA_URL = '/media/'
 
 # used by debug-toolbar
@@ -233,4 +233,4 @@ REST_FRAMEWORK = {
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
-STATIC_URL = 'static'
+STATIC_URL = '/static/'
