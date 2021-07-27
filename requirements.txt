@@ -57,3 +57,4 @@ typing-extensions==3.7.4.3
 webdriver-manager==3.4.0
 Werkzeug==1.0.1
 yarl==1.6.3
+gunicorn
