@@ -1,11 +1,11 @@
 .idea
-logs
+logs/*.log
 /media
 /static/node_modules
 
 ## private files ##
-/tmp
-/tmp/!.gitkeep
+#/tmp
+#/tmp/!.gitkeep
 
 
 

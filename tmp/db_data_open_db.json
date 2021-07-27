@@ -1,0 +1,7 @@
+{
+  "DB_USER_NAME": "devs",
+  "DB_USER_PASSWORD": "Aa123456",
+  "DB_HOST_NAME": "plan-ilan-open-db.ckiihycoqnns.eu-central-1.rds.amazonaws.com",
+  "DB_PORT": 3306,
+  "DB_NAME": "plan_ilan_open_db"
+}

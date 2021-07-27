@@ -1,0 +1,4928 @@
+[
+  {
+    "pk": 143,
+    "name": "אבי טילמן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 1076,
+    "name": "אבי פיקאר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2227,
+    "name": "אבי שמידמן",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3563,
+    "name": "אביב גיג'",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 2222,
+    "name": "אביבה טל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3217,
+    "name": "אביה סויסה",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 3278,
+    "name": "אביחי דידי",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2977,
+    "name": "אביטל  גרוס שווד",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3372,
+    "name": "אבינועם מגן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2583,
+    "name": "אבינועם צדוק",
+    "title": 2,
+    "faculty": 6
+  },
+  {
+    "pk": 3596,
+    "name": "אביעד סיון",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 2096,
+    "name": "אבישי עובדיה",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 816,
+    "name": "אבן פלנברג",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3209,
+    "name": "אברהם בל",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2682,
+    "name": "אברהם ג'ייקוב",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3607,
+    "name": "אברהם גוטליב",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 4416,
+    "name": "אברהם גולדשטיין",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3588,
+    "name": "אברהם דל",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2937,
+    "name": "אברהם זיסויין",
+    "title": 2,
+    "faculty": 1
+  },
+  {
+    "pk": 3351,
+    "name": "אברהם טננבוים",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3417,
+    "name": "אברהם סמסון",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 937,
+    "name": "אברהם פאוסט",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 2963,
+    "name": "אברהם תואיתו",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3666,
+    "name": "אבתסאם ברכאת",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3438,
+    "name": "אדוה מסילתי",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3719,
+    "name": "אדם יואל זיידל",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2467,
+    "name": "אדם פרזיגר",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 3849,
+    "name": "אהובה בודאי",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 2499,
+    "name": "אהרן גימאני",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 2923,
+    "name": "אודליה אורבאום",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 749,
+    "name": "אוולין מור-המר",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3415,
+    "name": "אוון אליוט",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 1944,
+    "name": "אולגה גולדין",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3867,
+    "name": "אולגה גנזר",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3524,
+    "name": "אופיר אביזמל",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2636,
+    "name": "אופיר וובר",
+    "title": 2,
+    "faculty": 6
+  },
+  {
+    "pk": 2663,
+    "name": "אופיר חכים",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3690,
+    "name": "אופירה שור-לוי",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3215,
+    "name": "אור מלכה",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2411,
+    "name": "אור ספי",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 2578,
+    "name": "אור שפט",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 3732,
+    "name": "אוראל טהרי",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3304,
+    "name": "אורי אהרונסון",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3576,
+    "name": "אורי אריה הומינר",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3170,
+    "name": "אורי כרמי",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3346,
+    "name": "אורי ניר",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3464,
+    "name": "אורי קאופמן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3275,
+    "name": "אורי שרון",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2395,
+    "name": "אוריאל גוטסדינר",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 3665,
+    "name": "אורית גן",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3429,
+    "name": "אורלי אבני",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2090,
+    "name": "אורלי בנימין",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3599,
+    "name": "אורלי וייסברג",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3813,
+    "name": "אורן גליקמן",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3714,
+    "name": "אורן הרמן",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3324,
+    "name": "אורנה דויטש",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2945,
+    "name": "אורנית אברמוביץ",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3188,
+    "name": "איאד זחאלקה",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3311,
+    "name": "איה גורצקי",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 998,
+    "name": "אייל בהרד",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 2424,
+    "name": "אייל כהן",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 983,
+    "name": "אייל שרון",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 3398,
+    "name": "איילת בלכר פריגת",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 616,
+    "name": "איילת מקרוס",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3642,
+    "name": "איילת סיידלר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3465,
+    "name": "איילת סלע",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3227,
+    "name": "איילת פרל",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3519,
+    "name": "איילת שי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3366,
+    "name": "איל בן זקן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 741,
+    "name": "איל ברוך",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2413,
+    "name": "איל וולך",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 2170,
+    "name": "אילה עמיר",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3292,
+    "name": "אילן ביימן",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2013,
+    "name": "אילנה בן-עזרא",
+    "title": 0,
+    "faculty": 9
+  },
+  {
+    "pk": 3711,
+    "name": "אילנה ציון-גולומביק",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 1130,
+    "name": "אילנה קוזמינסקי",
+    "title": 4,
+    "faculty": 7
+  },
+  {
+    "pk": 2356,
+    "name": "אילנית גורדון",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3624,
+    "name": "אילת סג\"ל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3495,
+    "name": "אינאס כיאל-טרביה",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3703,
+    "name": "אינה בן-מאיר (סוחוטינסקי)",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3393,
+    "name": "איציק דסה",
+    "title": 3,
+    "faculty": 3
+  },
+  {
+    "pk": 1519,
+    "name": "איציק כהן",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 2447,
+    "name": "איריס מעון",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3861,
+    "name": "איריס פולק",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3287,
+    "name": "איריס קנאור",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3854,
+    "name": "איריס שנער",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3858,
+    "name": "איריס שרייבר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3213,
+    "name": "אירית נחום",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2353,
+    "name": "אירית שנבל אליאב",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3378,
+    "name": "איתי און",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3206,
+    "name": "איתי בר-סימן-טוב",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3365,
+    "name": "איתי גבאי",
+    "title": 3,
+    "faculty": 3
+  },
+  {
+    "pk": 3160,
+    "name": "איתי גרינולד",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3715,
+    "name": "איתי הורביץ",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3403,
+    "name": "איתי ליפשיץ",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3307,
+    "name": "איתמר בן נעם",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2362,
+    "name": "איתמר לוי-פרנק",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 481,
+    "name": "איתמר ריקובר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3273,
+    "name": "איתמר שילה",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2002,
+    "name": "איתן אגמון",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3544,
+    "name": "אלה הגר מעוז",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3005,
+    "name": "אלון בוכהולץ",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3384,
+    "name": "אלון ברש",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3298,
+    "name": "אלון גלרט",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3809,
+    "name": "אלון טומשין",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 2609,
+    "name": "אלון קורנגרין",
+    "title": 2,
+    "faculty": 1
+  },
+  {
+    "pk": 3254,
+    "name": "אלונה חגאי פריי",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3395,
+    "name": "אלונה קורמן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3606,
+    "name": "אלחנן שילה",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2116,
+    "name": "אלי אהרוני",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 3605,
+    "name": "אלי גורפינקל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3753,
+    "name": "אלי ורון",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 2899,
+    "name": "אלי זכריה",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2050,
+    "name": "אליהו חלסצ'י",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 2179,
+    "name": "אליעז כהן",
+    "title": 3,
+    "faculty": 9
+  },
+  {
+    "pk": 3088,
+    "name": "אלישבע בנשק-דוקוב",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 1860,
+    "name": "אלישבע רוסמן-סטולמן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2576,
+    "name": "אלישע האס",
+    "title": 2,
+    "faculty": 1
+  },
+  {
+    "pk": 4112,
+    "name": "אלכסיי בלוב",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 3137,
+    "name": "אלכסנדרה גליק עזריה",
+    "title": 4,
+    "faculty": 6
+  },
+  {
+    "pk": 3299,
+    "name": "אלמוג חגג",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2218,
+    "name": "אלמוג כשר",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 2183,
+    "name": "אלעד בוכריס",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 3058,
+    "name": "אמונה רוזנטל",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3546,
+    "name": "אמיר קופרמן",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3586,
+    "name": "אמיר קושניר",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3528,
+    "name": "אמיתי אוברמן",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3373,
+    "name": "אמנון הראל",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3230,
+    "name": "אנה אנדרייב",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 1863,
+    "name": "אנה גייפמן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3488,
+    "name": "אנה דניאל שרמן",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3183,
+    "name": "אנה פוטוריאן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3496,
+    "name": "אניה אדריאנה קונסטנטינוב",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3582,
+    "name": "אנתוני לודר",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3540,
+    "name": "אסטלה פטפניאן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 768,
+    "name": "אסנת חן בן-יצחק",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 1525,
+    "name": "אסנת קרן",
+    "title": 2,
+    "faculty": 6
+  },
+  {
+    "pk": 3685,
+    "name": "אסף אוזן",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 2597,
+    "name": "אסף אלבו",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 3306,
+    "name": "אסף אלרום",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3004,
+    "name": "אסף אשכנזי",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3208,
+    "name": "אסף הראל",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2344,
+    "name": "אסתר אורליאן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2433,
+    "name": "אסתר צדוק",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3181,
+    "name": "אסתר שמול",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3652,
+    "name": "אפרים זאנד",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2425,
+    "name": "אפרת אהרונוב-מאג'ר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 792,
+    "name": "אפרת הראל",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 750,
+    "name": "אפרת הריסון",
+    "title": 4,
+    "faculty": 2
+  },
+  {
+    "pk": 3847,
+    "name": "אפרת ורדי",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3352,
+    "name": "אפרת לקסר",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2252,
+    "name": "אפרת רם טיקטין",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 2652,
+    "name": "ארז יצחק לבנון",
+    "title": 2,
+    "faculty": 1
+  },
+  {
+    "pk": 3649,
+    "name": "ארז פלג",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3301,
+    "name": "אריאל בנדור",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3231,
+    "name": "אריאל יעל",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 752,
+    "name": "אריאל לוין",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2125,
+    "name": "אריה אידלמן",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 3459,
+    "name": "אריק שינוול",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3570,
+    "name": "ארנון בלום",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3190,
+    "name": "אשר רוטנברג",
+    "title": 3,
+    "faculty": 3
+  },
+  {
+    "pk": 3017,
+    "name": "אתגר אתי לוי",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3827,
+    "name": "בועז מילר",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3515,
+    "name": "בוריס ברנט",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3530,
+    "name": "בלה גרוס",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3249,
+    "name": "בן דלוגץ",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3620,
+    "name": "בן ציון ברבי",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2669,
+    "name": "בן-ציון כץ",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3212,
+    "name": "בנימין שמואלי",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3636,
+    "name": "בעז שפיגל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3717,
+    "name": "בעז תמיר",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3260,
+    "name": "בר אטרקצ'י",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3650,
+    "name": "ברוך אלסטר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3476,
+    "name": "ברוך פוליס",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3621,
+    "name": "ברוך פינקלשטיין",
+    "title": 5,
+    "faculty": 2
+  },
+  {
+    "pk": 786,
+    "name": "ברק כהן",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3221,
+    "name": "ג'וליה בן חיים",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3367,
+    "name": "ג'ומאנה עיסא",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3865,
+    "name": "ג'יין כהן",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 665,
+    "name": "ג'ינה פורת זימן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3591,
+    "name": "ג'מאל זידאן",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 2532,
+    "name": "ג'פרי וולף",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 3027,
+    "name": "גבריאל פבר",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3747,
+    "name": "גדי דרורי",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 1996,
+    "name": "גדעון לבינסון",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3223,
+    "name": "גדעון ספיר",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2568,
+    "name": "גונן זינגר",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 1521,
+    "name": "גור יערי",
+    "title": 2,
+    "faculty": 6
+  },
+  {
+    "pk": 3490,
+    "name": "גיא אביב",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3362,
+    "name": "גיא בן דוד",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 1869,
+    "name": "גיא זהר",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 3477,
+    "name": "גיא זורנו",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3354,
+    "name": "גיא עוזיאל",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3466,
+    "name": "גידי פרישטיק",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3024,
+    "name": "גילה היימן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3871,
+    "name": "גילה זלכה",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3655,
+    "name": "גילי הרטל",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3081,
+    "name": "גל רובין",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 3416,
+    "name": "גל רכס",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3246,
+    "name": "גלי שילה",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2549,
+    "name": "גליה ינושבסקי",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 2108,
+    "name": "גלית אילון",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3853,
+    "name": "גלית שרם",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3161,
+    "name": "גלעד יהב",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3645,
+    "name": "גלעד ששון",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3619,
+    "name": "דב הרמן",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2438,
+    "name": "דבורה שוורץ",
+    "title": 4,
+    "faculty": 7
+  },
+  {
+    "pk": 2835,
+    "name": "דוד אביעזר",
+    "title": 2,
+    "faculty": 1
+  },
+  {
+    "pk": 3037,
+    "name": "דוד אילוז",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3646,
+    "name": "דוד אלגביש",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3412,
+    "name": "דוד אנשל סייפרס",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2226,
+    "name": "דוד דורון",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 2397,
+    "name": "דוד דנטלסקי",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 3308,
+    "name": "דוד האן",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3353,
+    "name": "דוד הלפגוט",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2865,
+    "name": "דוד זגורי",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 964,
+    "name": "דוד זיתון",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 2430,
+    "name": "דוד פלג",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 1527,
+    "name": "דוד צוקר זביב",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3423,
+    "name": "דוד קרסיק",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 1151,
+    "name": "דולב חדד",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 2973,
+    "name": "דור ברייר",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2198,
+    "name": "דורה סוזנה גרוס",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3603,
+    "name": "דורון דנינו",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 704,
+    "name": "דורית ברט",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3682,
+    "name": "דורית למברגר",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 1214,
+    "name": "דותן ארד",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2596,
+    "name": "דיאנה אידסס",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 2230,
+    "name": "דינה אבו עוביד",
+    "title": 0,
+    "faculty": 9
+  },
+  {
+    "pk": 3497,
+    "name": "דינה נרקיס",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 1162,
+    "name": "דיניאל עיאס",
+    "title": 4,
+    "faculty": 7
+  },
+  {
+    "pk": 516,
+    "name": "דליה טל",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 963,
+    "name": "דן ארז",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3463,
+    "name": "דן גבע",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3602,
+    "name": "דן יפה",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2582,
+    "name": "דן קטקוף",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 2357,
+    "name": "דנה אציל סלונים",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3520,
+    "name": "דנה בנימין",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3709,
+    "name": "דנה כהן",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2332,
+    "name": "דנה סטולוביץ מלמן",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 2920,
+    "name": "דנה ריי פלג חן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2989,
+    "name": "דניאל אלן",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3489,
+    "name": "דניאל באומל",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3556,
+    "name": "דניאל גורל",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3521,
+    "name": "דניאל גליקמן",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3172,
+    "name": "דניאל יצחק",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 962,
+    "name": "דניאל נסים",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 3548,
+    "name": "דניאל צרפתי",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 2953,
+    "name": "דניאלה ג'נה",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3363,
+    "name": "דניאלה גבאי בן זאב",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3491,
+    "name": "דפנה ברקת אליאס",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3541,
+    "name": "דפנה וילנר",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3615,
+    "name": "דרור ארליך",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3672,
+    "name": "דרור ינון",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3327,
+    "name": "דרורה פלפל",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2313,
+    "name": "הארי גוטסדינר",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 3725,
+    "name": "הגר ימין",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3008,
+    "name": "הדס אחדות",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3832,
+    "name": "הדס אניב",
+    "title": 4,
+    "faculty": 0
+  },
+  {
+    "pk": 3837,
+    "name": "הדס ניב",
+    "title": 0,
+    "faculty": 0
+  },
+  {
+    "pk": 3517,
+    "name": "הדס סיבוני בנימיני",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3382,
+    "name": "הדס רייכלסון",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2412,
+    "name": "הדס שינטל",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 140,
+    "name": "הדס שרוני",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3592,
+    "name": "הדסה גולדברג",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3025,
+    "name": "הדר אלטר",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2343,
+    "name": "הדר בן סירא רוטמן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2178,
+    "name": "הדר גלרון",
+    "title": 0,
+    "faculty": 9
+  },
+  {
+    "pk": 3300,
+    "name": "הדר דנציג-רוזנברג",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2392,
+    "name": "הדר קשת",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2683,
+    "name": "הודיה לאופר",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3401,
+    "name": "הילה אוחיון גליקסמן",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 3434,
+    "name": "הילה בן אליהו",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3558,
+    "name": "הילה גיפמן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3332,
+    "name": "הילה זק",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3179,
+    "name": "הילה חמיאל",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3010,
+    "name": "הילה ניסן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3510,
+    "name": "הילה פלד ממן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3355,
+    "name": "הילי מודריק-אבן חן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 572,
+    "name": "הינדי שטרן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3163,
+    "name": "הלל סטולוביץ'",
+    "title": 4,
+    "faculty": 6
+  },
+  {
+    "pk": 2396,
+    "name": "הלל סנהדראי",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 2608,
+    "name": "הלל קוגלר",
+    "title": 2,
+    "faculty": 6
+  },
+  {
+    "pk": 2918,
+    "name": "הלן טקה",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3734,
+    "name": "ודים אקסלרוד",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3778,
+    "name": "ודים זאב אוסטפנקו",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3502,
+    "name": "ווסאל סואעד",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3595,
+    "name": "וורוד סרחאן",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3565,
+    "name": "ויקטור לוי יחיד",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3178,
+    "name": "וסיל אייזנברג",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3428,
+    "name": "וצסלב גורביץ",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3255,
+    "name": "ורד בן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3877,
+    "name": "ורד בן שדה",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 2221,
+    "name": "ורד טוהר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2182,
+    "name": "ורד קופל",
+    "title": 4,
+    "faculty": 2
+  },
+  {
+    "pk": 3744,
+    "name": "ורד קרונפלד-דואניאס",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 1159,
+    "name": "ז'אנה טטוס פורטנוי",
+    "title": 4,
+    "faculty": 7
+  },
+  {
+    "pk": 3698,
+    "name": "זאב (אד) שטרן",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3542,
+    "name": "זאב ישראלי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3610,
+    "name": "זאב קיציס",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2916,
+    "name": "זהבית דאדון",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3527,
+    "name": "זוהר חמו",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3021,
+    "name": "זוהרה באוקר",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3189,
+    "name": "זיו בורר",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3523,
+    "name": "זינב עוסמאן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3731,
+    "name": "זכרי כהן",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3356,
+    "name": "זכריה רכטשאפן",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3376,
+    "name": "ח'אלד כבוב",
+    "title": 7,
+    "faculty": 3
+  },
+  {
+    "pk": 687,
+    "name": "חגי ורד",
+    "title": 6,
+    "faculty": 5
+  },
+  {
+    "pk": 3197,
+    "name": "חגית ברסטל-גינת",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3604,
+    "name": "חגית עמרני",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3864,
+    "name": "חגית ריפינסקי",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3409,
+    "name": "חווה גיל-חן",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 4066,
+    "name": "חזי בטש",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3673,
+    "name": "חזקיה שוהם",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3186,
+    "name": "חיה בורר",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 3852,
+    "name": "חיה פלצ'ר",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3320,
+    "name": "חיים גבאי",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3637,
+    "name": "חיים טלבי",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3458,
+    "name": "חיים פוטרמן",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3614,
+    "name": "חיים פרלמוטר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2637,
+    "name": "חיננית קולטאי",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3755,
+    "name": "חמוטל סלובין",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3165,
+    "name": "חן גנץ",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 858,
+    "name": "חן גפני",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3460,
+    "name": "חן שוחט קרבליו",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3481,
+    "name": "חנין פארס גדבאן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3462,
+    "name": "חנן טרגין",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3566,
+    "name": "טובה גולדמן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 751,
+    "name": "טובה גנזל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2548,
+    "name": "טובי ביברינג",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3543,
+    "name": "טום קוסנקוב",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 2894,
+    "name": "טטיאנה מטיחינה",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3560,
+    "name": "טטיאנה סמולקין",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2422,
+    "name": "טל אלפי",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3727,
+    "name": "טל דלאל",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 2972,
+    "name": "טל זבידה",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3506,
+    "name": "טל זיסקינד",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 862,
+    "name": "טל חן",
+    "title": 4,
+    "faculty": 9
+  },
+  {
+    "pk": 754,
+    "name": "טלי סנקביץ",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3239,
+    "name": "טליה פינס",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3386,
+    "name": "יאיר בלומברג",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3653,
+    "name": "יאיר גור אפטר",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3084,
+    "name": "יאיר ויזנר",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3187,
+    "name": "יאיר לורברבוים",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 975,
+    "name": "יאיר פרומן",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3357,
+    "name": "יאיר שיבר",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3663,
+    "name": "יאלי השש",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3480,
+    "name": "יארא חמשאווי",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2906,
+    "name": "יגאל כהן",
+    "title": 2,
+    "faculty": 1
+  },
+  {
+    "pk": 995,
+    "name": "יגאל מילכטייך",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3285,
+    "name": "ידידיה שטרן",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3426,
+    "name": "יהודה גבאי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3860,
+    "name": "יהודית מנוביץ",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 1489,
+    "name": "יהודית רובנובסקי פז",
+    "title": 4,
+    "faculty": 9
+  },
+  {
+    "pk": 2523,
+    "name": "יהונתן יעקובס",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 3360,
+    "name": "יהושע שגב",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 727,
+    "name": "יואב ברגמן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 1066,
+    "name": "יואב פז",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 1999,
+    "name": "יואל גרינברג",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3224,
+    "name": "יובל גולדמן",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2251,
+    "name": "יובל דולב",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3735,
+    "name": "יובל מאיר",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3721,
+    "name": "יובל סמואלוב כץ",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3430,
+    "name": "יובל פלדמן",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2180,
+    "name": "יובל שמעוני",
+    "title": 3,
+    "faculty": 9
+  },
+  {
+    "pk": 3776,
+    "name": "יוכבד לוינשטרן",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3763,
+    "name": "יוליה פנסו",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3513,
+    "name": "יונתן אוראל",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2005,
+    "name": "יונתן בר יושפט",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 2359,
+    "name": "יונתן חיים מסיקה",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 958,
+    "name": "יונתן יעקב רפאל טישלר",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 2406,
+    "name": "יונתן סלייטר",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 594,
+    "name": "יונתן רבינוביץ",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3241,
+    "name": "יוסף אלן",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 2455,
+    "name": "יוסף גליקסון",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3643,
+    "name": "יוסף פריאל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2990,
+    "name": "יורי ווזילוב",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3741,
+    "name": "יזהר בר-גד",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3609,
+    "name": "יחזקאל כהן",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3276,
+    "name": "יחיאל וינרוט",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3289,
+    "name": "ילנה סבין",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2779,
+    "name": "ילנה פידל",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 1136,
+    "name": "ינאי שנן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2185,
+    "name": "יניב גולדברג",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 972,
+    "name": "יניב קנופ",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 3587,
+    "name": "יסמין גולדופסקי",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2368,
+    "name": "יסמין שחר",
+    "title": 4,
+    "faculty": 7
+  },
+  {
+    "pk": 3126,
+    "name": "יעל אטלי פדהאל",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3654,
+    "name": "יעל בר-צדק",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 2540,
+    "name": "יעל דורון דרורי",
+    "title": 0,
+    "faculty": 2
+  },
+  {
+    "pk": 3611,
+    "name": "יעל וילפנד",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 596,
+    "name": "יעל לויאל",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3440,
+    "name": "יעל לנדי",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3678,
+    "name": "יעל פרי הרצוביץ",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3686,
+    "name": "יעל קנטי יפה",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 576,
+    "name": "יעל קרני ויזל",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 903,
+    "name": "יעל שלוסברג",
+    "title": 0,
+    "faculty": 0
+  },
+  {
+    "pk": 3807,
+    "name": "יעל שמיר",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 2525,
+    "name": "יעל שמש",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 2217,
+    "name": "יעקב (קובי) יוסף",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3574,
+    "name": "יעקב בורנשטיין",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3200,
+    "name": "יעקב חבה",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 857,
+    "name": "יעקב מאשיטי",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3452,
+    "name": "יעקב ממן",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3205,
+    "name": "יעקב נוסים",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2360,
+    "name": "יעקב סגל",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3532,
+    "name": "יפעת חיראק",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3406,
+    "name": "יפתח ברששת",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3688,
+    "name": "יצחק בנימיני",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3397,
+    "name": "יצחק ברנד",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2542,
+    "name": "יצחק גוטליב",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 2519,
+    "name": "יצחק עמר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3561,
+    "name": "יצחק שטרק",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3539,
+    "name": "יקיר אלימלך",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 2478,
+    "name": "ירון הראל",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 3035,
+    "name": "ירון יהושע",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3835,
+    "name": "ירון מושקוביץ",
+    "title": 5,
+    "faculty": 0
+  },
+  {
+    "pk": 3657,
+    "name": "ירון שוורץ",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2321,
+    "name": "ירי גביעון",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3554,
+    "name": "ישי מינצקר",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2376,
+    "name": "ישי קליין",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 3635,
+    "name": "ישעיהו בן-פזי",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3456,
+    "name": "כוכב אלקיים-לוי",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3598,
+    "name": "כמאל חסן",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3585,
+    "name": "לאה אבן",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3647,
+    "name": "לאה הימלפרב",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3019,
+    "name": "לב בריו",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2267,
+    "name": "לב חייקוביץ",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 3274,
+    "name": "לביאה פרידלנד",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3413,
+    "name": "לוי יצחק קופר",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 578,
+    "name": "לוצי קוז'וקרו",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3531,
+    "name": "לי אזולאי",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3444,
+    "name": "לי יצחקי תבור",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2448,
+    "name": "ליאב שינה",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 984,
+    "name": "ליאור אלבז אלון",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 3338,
+    "name": "ליאור ביטון",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2232,
+    "name": "ליאור בן דור",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 2527,
+    "name": "ליאור גוטליב",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2457,
+    "name": "ליאור כהן-רז",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2385,
+    "name": "ליאור סעדיה",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 3812,
+    "name": "ליאור צרפתי",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 669,
+    "name": "ליאור שוחט",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2225,
+    "name": "ליבנת הולצמן",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3446,
+    "name": "ליגת דאודי",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3482,
+    "name": "ליהי גרינברג",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2177,
+    "name": "לילי גלזנר",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3511,
+    "name": "לילך  צליק",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3369,
+    "name": "לילך מלצקי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2200,
+    "name": "לילך נתנאל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3454,
+    "name": "לימור מעודד דנון",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3138,
+    "name": "לינוי אוחיון",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3087,
+    "name": "לינוי מהצרי",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3498,
+    "name": "לינוי מיה  פרנקנשטיין",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2305,
+    "name": "ליעד עוזיאל",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3252,
+    "name": "לירוי לוגסי",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3194,
+    "name": "לירון אמיגה",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3485,
+    "name": "לירון דיויס",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3683,
+    "name": "לירן רזינסקי",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2956,
+    "name": "לסלי כהן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3290,
+    "name": "מאור אבן חן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3271,
+    "name": "מאור אלבאז",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2451,
+    "name": "מאיה אשר",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3581,
+    "name": "מאיה ברעם",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 595,
+    "name": "מאיה כהן-מלייב",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2486,
+    "name": "מאיה קפלן",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3321,
+    "name": "מאיר גלבוע",
+    "title": 3,
+    "faculty": 3
+  },
+  {
+    "pk": 3618,
+    "name": "מאיר סיידלר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3421,
+    "name": "מאיר שמאי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3427,
+    "name": "מאריה  נעמה",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3499,
+    "name": "מג'די חלבי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3330,
+    "name": "מוחמד אטרש",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3559,
+    "name": "מוחמד זועבי",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3742,
+    "name": "מוטי דרור",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3689,
+    "name": "מור אלפא",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3557,
+    "name": "מור זגדון",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3265,
+    "name": "מורן אדרי טרבלסי",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3405,
+    "name": "מורן טייטלבאום",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3359,
+    "name": "מושיקו פרץ",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3394,
+    "name": "מיה גפן",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 2340,
+    "name": "מיה וולף",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2419,
+    "name": "מיה סבג",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3425,
+    "name": "מיטל גל - תנעמי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3228,
+    "name": "מיטל גלבוע",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3012,
+    "name": "מיטשל בוטובסקי",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3437,
+    "name": "מיכאל אדלשטיין",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3420,
+    "name": "מיכאל אסא",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3410,
+    "name": "מיכאל בלנק",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3494,
+    "name": "מיכאל בנד",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3361,
+    "name": "מיכאל בריס",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 1955,
+    "name": "מיכאל יצחקי",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 4111,
+    "name": "מיכאל מגרל",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 2361,
+    "name": "מיכאל רבינוביץ",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 3617,
+    "name": "מיכל אוחנה",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3204,
+    "name": "מיכל אלברשטין",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3819,
+    "name": "מיכל אפרי",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3124,
+    "name": "מיכל ויטמן",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3696,
+    "name": "מיכל ולר",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3873,
+    "name": "מיכל חפר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3468,
+    "name": "מיכל טמיר",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2130,
+    "name": "מיכל פגיס",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3319,
+    "name": "מיכל פיין",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 2404,
+    "name": "מיכל פלדמן-מר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 724,
+    "name": "מיכל שגב ליברטי",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3388,
+    "name": "מילנה מורגנשטרן",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3028,
+    "name": "מיקה רינסקי",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2223,
+    "name": "מירב נדלר-עקירב",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 1104,
+    "name": "מירון שלי",
+    "title": 0,
+    "faculty": 7
+  },
+  {
+    "pk": 3537,
+    "name": "מירי אזולאי",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 747,
+    "name": "מירי בן עמרם",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 566,
+    "name": "מירי גולדרט",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3358,
+    "name": "מנאל תותרי ג'ובראן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 482,
+    "name": "מנחם יערי",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3500,
+    "name": "מעין כהן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 2446,
+    "name": "מעין נאור",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3329,
+    "name": "מרדכי מרק",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2517,
+    "name": "מרדכי סבתו",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 3555,
+    "name": "מרואן עודה",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3379,
+    "name": "מרי רודולף",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3032,
+    "name": "מרים אילה צימרמן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3389,
+    "name": "מרים בנטואיץ'",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3291,
+    "name": "מרים מרקוביץ ביטון",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3218,
+    "name": "מרים סונינו",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 3667,
+    "name": "מרים רוזמרין",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3288,
+    "name": "מרים שיראל כרמון",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3115,
+    "name": "מרינה ספריגין",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3572,
+    "name": "משה בן עמי",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3697,
+    "name": "משה בר",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3419,
+    "name": "משה גלברד",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3380,
+    "name": "משה דסאו",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3568,
+    "name": "משה יחזקאל",
+    "title": 3,
+    "faculty": 3
+  },
+  {
+    "pk": 3281,
+    "name": "משואה שגיב",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3297,
+    "name": "מתניה האן",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3594,
+    "name": "נאוה ולד",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3507,
+    "name": "נג'יב דלי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3687,
+    "name": "נדב אפל",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3262,
+    "name": "נדב דגן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3545,
+    "name": "נדב טולדנו",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3478,
+    "name": "נדב פישר",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3164,
+    "name": "נוי ביטון",
+    "title": 4,
+    "faculty": 6
+  },
+  {
+    "pk": 3529,
+    "name": "נוי פלח",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 3503,
+    "name": "נועה זאקמן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 2921,
+    "name": "נועם בורנשטיין",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2379,
+    "name": "נועם זילברמן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3841,
+    "name": "נועם טופלברג",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3707,
+    "name": "נועם יורן",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3856,
+    "name": "נועם סרי",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3573,
+    "name": "נועם שיBUGO",
+    "title": 3,
+    "faculty": 3
+  },
+  {
+    "pk": 3193,
+    "name": "נופר לויטיקוס",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3139,
+    "name": "נופר שידלובסקי",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3442,
+    "name": "נורית צימרמן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3708,
+    "name": "נח עפרון",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 2388,
+    "name": "נחמה הכהן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3483,
+    "name": "נטליה סלייב",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 517,
+    "name": "ניב גולדשטיין",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2215,
+    "name": "ניבי גומל",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2450,
+    "name": "ניל באוער",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3564,
+    "name": "נילי הופמן",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3571,
+    "name": "נימר עאסי",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 2614,
+    "name": "ניסים יחזקאל",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 3567,
+    "name": "ניסים עסור",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 2594,
+    "name": "ניסן יששכר",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 2444,
+    "name": "ניצן ארנון-ריבנפלד",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3302,
+    "name": "ניצן פרידמן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3600,
+    "name": "ניצן שטיינברג",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3243,
+    "name": "ניר דויטש",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3375,
+    "name": "ניר קוויט",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3549,
+    "name": "ניר קרמרמן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2114,
+    "name": "ניר רון",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 480,
+    "name": "נירית באומינגר",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3014,
+    "name": "נלי קומרובסקי",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2958,
+    "name": "נמרוד בן חיים",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 2260,
+    "name": "נעם הופר",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3724,
+    "name": "נעם פאר",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3436,
+    "name": "נעמה הלר",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3399,
+    "name": "נעמי דיקמן",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2501,
+    "name": "נעמי הדס לידור",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 2011,
+    "name": "נעמי טפלו",
+    "title": 0,
+    "faculty": 9
+  },
+  {
+    "pk": 999,
+    "name": "נעמי פרידמן סוקולר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2184,
+    "name": "נתן כהן",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 2461,
+    "name": "נתן רונאל",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 1164,
+    "name": "נתנאל שפיגל",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 3461,
+    "name": "סאנדי בוטרוס סלימאן",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 1149,
+    "name": "סהר בראלי",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 3534,
+    "name": "סהר גיל",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 3562,
+    "name": "סוניה מודילבסקי",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 2459,
+    "name": "סופי וולש",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 1488,
+    "name": "סופיה אוסמינקין",
+    "title": 0,
+    "faculty": 9
+  },
+  {
+    "pk": 3314,
+    "name": "סיגל שהב",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3479,
+    "name": "סיון אליהו",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2372,
+    "name": "סיון ג'ורג'",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2993,
+    "name": "סיון נאמן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3220,
+    "name": "סיון שלמה אגון",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3433,
+    "name": "סיון שפיצר שוחט",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2210,
+    "name": "סילבינה שאמא גסר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2550,
+    "name": "סלביה אדלר",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3626,
+    "name": "סמדר שרלו",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3583,
+    "name": "סעיד אבוזיד",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3211,
+    "name": "סער כרמלי",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3009,
+    "name": "ספיר אוהב",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3229,
+    "name": "ספיר יזרלביץ",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3334,
+    "name": "ספיר נחום",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3538,
+    "name": "סרגיו שוולב",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3525,
+    "name": "סרינה שבסו",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2307,
+    "name": "עדו קנטר",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 3253,
+    "name": "עדי אייל",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3516,
+    "name": "עדי אשל",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3347,
+    "name": "עדי גרדוניאן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3226,
+    "name": "עדי כהן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2415,
+    "name": "עדי לביא",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 1517,
+    "name": "עדי מכמל",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 3748,
+    "name": "עדי קורסקי",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 2950,
+    "name": "עדי שפרלינג",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3526,
+    "name": "עדן כהן",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3011,
+    "name": "עדן רינה גביש",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3467,
+    "name": "עודד מודריק",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3443,
+    "name": "עודד נשר",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3236,
+    "name": "עומר פלד",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3589,
+    "name": "עופר אמיר",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 1914,
+    "name": "עופר ברגמן",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 1528,
+    "name": "עופר שוורץ",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 3601,
+    "name": "עזרא אייוס",
+    "title": 3,
+    "faculty": 3
+  },
+  {
+    "pk": 3704,
+    "name": "עידו הרטוגזון",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3518,
+    "name": "עידו לביא",
+    "title": 3,
+    "faculty": 4
+  },
+  {
+    "pk": 1484,
+    "name": "עידן ברייר",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2296,
+    "name": "עידן פרשני",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 489,
+    "name": "עינת לוי-גיגי",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3110,
+    "name": "עירית וכטר",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3659,
+    "name": "עליזה פרנקל",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2522,
+    "name": "עמוס פריש",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 1880,
+    "name": "עמיהוד אמיר",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 2915,
+    "name": "עמיחי בן דוד",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3625,
+    "name": "עמיחי כהן",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3641,
+    "name": "עמיחי נחשון",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3201,
+    "name": "עמיחי רדזינר",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 970,
+    "name": "עמיקם לוי",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 739,
+    "name": "עמית בן-יוסף",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3279,
+    "name": "עמית פרידמן ג'ובאני",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3804,
+    "name": "עמית רגב קרוגווסר",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3824,
+    "name": "עמנואל כהן",
+    "title": 0,
+    "faculty": 0
+  },
+  {
+    "pk": 2421,
+    "name": "עמנואל מאייר",
+    "title": 3,
+    "faculty": 7
+  },
+  {
+    "pk": 3400,
+    "name": "עמרי קורן",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 651,
+    "name": "ענבל אביב",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3199,
+    "name": "ענבל רובינשטיין",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3577,
+    "name": "ענבר בן שחר",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 776,
+    "name": "ענבר קמינסקי",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3668,
+    "name": "ענר גוברין",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3504,
+    "name": "ענת אגמור",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 1213,
+    "name": "ענת בבצ'יק",
+    "title": 0,
+    "faculty": 2
+  },
+  {
+    "pk": 2176,
+    "name": "ענת ברייר קופלוביץ",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 2117,
+    "name": "ענת גרתי",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 1005,
+    "name": "ענת דואני",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3664,
+    "name": "ענת הרבסט - דבי",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3141,
+    "name": "ענת ויונטה",
+    "title": 4,
+    "faculty": 6
+  },
+  {
+    "pk": 3706,
+    "name": "ענת לייבלר",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2986,
+    "name": "ענת ליסמן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3508,
+    "name": "ענת עיני",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3450,
+    "name": "ענת פלג",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3846,
+    "name": "ענת קסירר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2978,
+    "name": "ענת רייף",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3000,
+    "name": "עפיף אבו מוך",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3522,
+    "name": "ערן טל-אור",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3547,
+    "name": "פאדיה זגאירה",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3284,
+    "name": "פולה שרייבר",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3745,
+    "name": "פז הר-שי יהב",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 2342,
+    "name": "פטריק סבע",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 2936,
+    "name": "פיקרה פנטהון",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 2173,
+    "name": "פסקל מטיס",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3590,
+    "name": "פריד נח'ול",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3316,
+    "name": "פרנסיס שליט",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 1122,
+    "name": "צבי אורבך",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 1520,
+    "name": "צבי לוטקר",
+    "title": 2,
+    "faculty": 6
+  },
+  {
+    "pk": 3350,
+    "name": "צבי סגל",
+    "title": 7,
+    "faculty": 3
+  },
+  {
+    "pk": 3447,
+    "name": "צופיה אילת-צנעני",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2833,
+    "name": "צחי נוי",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3222,
+    "name": "צילה דגן",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 141,
+    "name": "צילה פוו וונג",
+    "title": 0,
+    "faculty": 9
+  },
+  {
+    "pk": 3441,
+    "name": "ציפורה פליק זכאי",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3381,
+    "name": "ציפי יגלניק-פרישטיק",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3402,
+    "name": "צלסי קורין סטון",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3348,
+    "name": "צפורה ארמן-שטרן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3418,
+    "name": "קטרין ימין",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3318,
+    "name": "קילה רפס",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2365,
+    "name": "קרין ישפה",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3370,
+    "name": "קרינה (קרן) אגאי-שי",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3553,
+    "name": "קרינה בוקלן",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2462,
+    "name": "קרן גואטה",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3295,
+    "name": "קרן יוסט דון יחייא",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 2981,
+    "name": "קרן מנשה",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3435,
+    "name": "קרן צפריר",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 3874,
+    "name": "קרן רז נצר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3622,
+    "name": "רבין שושטרי",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3225,
+    "name": "רבקה איטח",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 3216,
+    "name": "רבקה שולמית המר",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 1175,
+    "name": "רו\"ח בר חן",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 1861,
+    "name": "רו\"ח יפעת רייך",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3432,
+    "name": "רואי להב",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3492,
+    "name": "רובא דבור",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3364,
+    "name": "רויטל חמי-זינימן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3328,
+    "name": "רוייד שלש",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3512,
+    "name": "רולה חמיסה-פרח",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2864,
+    "name": "רומן גולמן",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 1911,
+    "name": "רון כ\"ץ",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 3383,
+    "name": "רון פירן",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 2570,
+    "name": "רון צ'ליק",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 3296,
+    "name": "רונה גינת",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 3431,
+    "name": "רונה שוז",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 2383,
+    "name": "רוני  פשדצקי-שוחט",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 2264,
+    "name": "רוני בארטש",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 2366,
+    "name": "רוני גבע",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 3536,
+    "name": "רוני דויטש",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3671,
+    "name": "רוני מירון",
+    "title": 2,
+    "faculty": 8
+  },
+  {
+    "pk": 3451,
+    "name": "רוני רבינוביץ-פרומר",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 3392,
+    "name": "רוני רוטלר",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 3848,
+    "name": "רונית אייבשיץ",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3374,
+    "name": "רונית אילוז",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3658,
+    "name": "רונית עיר-שי",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 894,
+    "name": "רונן אלקלעי",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 904,
+    "name": "רונן נהוראי",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2402,
+    "name": "רועי אזולאי",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 2917,
+    "name": "רועי אסא",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 2162,
+    "name": "רועי הורוביץ",
+    "title": 1,
+    "faculty": 9
+  },
+  {
+    "pk": 3475,
+    "name": "רועי טבק",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3723,
+    "name": "רועי סלומון",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3722,
+    "name": "רועי עוז",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3662,
+    "name": "רות ברזילי-לומברוזו",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 3833,
+    "name": "רות דורות",
+    "title": 4,
+    "faculty": 0
+  },
+  {
+    "pk": 3198,
+    "name": "רות הלפרין-קדרי",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3196,
+    "name": "רות סינואני",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 3310,
+    "name": "רותי שטרית",
+    "title": 6,
+    "faculty": 3
+  },
+  {
+    "pk": 2975,
+    "name": "רותם חיימוביץ'",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2482,
+    "name": "רותם לשם",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 575,
+    "name": "רותם מאור",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2203,
+    "name": "רחל אלבק-גדרון",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 3648,
+    "name": "רחל בורובסקי",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2394,
+    "name": "רחל בן-ארי",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 2994,
+    "name": "רחל ברוך",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3661,
+    "name": "רחל לוי הרץ",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3486,
+    "name": "רחל לוין",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3656,
+    "name": "רחל פריש",
+    "title": 4,
+    "faculty": 2
+  },
+  {
+    "pk": 3829,
+    "name": "רחל שטיינר",
+    "title": 1,
+    "faculty": 0
+  },
+  {
+    "pk": 1510,
+    "name": "רחלה פופובצר",
+    "title": 2,
+    "faculty": 6
+  },
+  {
+    "pk": 753,
+    "name": "רחלי זרצקי",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3569,
+    "name": "ריימונד פרח",
+    "title": 2,
+    "faculty": 4
+  },
+  {
+    "pk": 3192,
+    "name": "רינה קרייזילמן",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2429,
+    "name": "רינתי מיטלמן-קירשנפלד",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3794,
+    "name": "ריקי פינצי-דותן",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 1868,
+    "name": "רמי גולדשטיין",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2690,
+    "name": "רן ויידס",
+    "title": 2,
+    "faculty": 1
+  },
+  {
+    "pk": 2959,
+    "name": "רנא אבו חמאם",
+    "title": 4,
+    "faculty": 6
+  },
+  {
+    "pk": 3210,
+    "name": "רנא ג'רייס",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3756,
+    "name": "רנין ניקולא",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 2407,
+    "name": "רנן טאוב",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 4055,
+    "name": "רננה שוורץ",
+    "title": 0,
+    "faculty": 7
+  },
+  {
+    "pk": 3579,
+    "name": "רעות בלום",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 2408,
+    "name": "רעות צבאג",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 3251,
+    "name": "רפאל צבי סניטקוף",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3616,
+    "name": "רפאל שוחט",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3738,
+    "name": "רפי חדד",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2256,
+    "name": "שאול דולברג",
+    "title": 2,
+    "faculty": 9
+  },
+  {
+    "pk": 3767,
+    "name": "שאול רבפוגל",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3345,
+    "name": "שאול שוחט",
+    "title": 7,
+    "faculty": 3
+  },
+  {
+    "pk": 582,
+    "name": "שגית לב",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3514,
+    "name": "שולמית בן עוליאל",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 483,
+    "name": "שוש שור",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3474,
+    "name": "שחר אהרוני",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3240,
+    "name": "שחר ליפשיץ",
+    "title": 2,
+    "faculty": 3
+  },
+  {
+    "pk": 3341,
+    "name": "שחר ניצן",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3387,
+    "name": "שי בל",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3312,
+    "name": "שי פרבר",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3424,
+    "name": "שי שטרן",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3013,
+    "name": "שיר זר",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3157,
+    "name": "שיר רבי",
+    "title": 4,
+    "faculty": 6
+  },
+  {
+    "pk": 3789,
+    "name": "שיר שלום",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 2562,
+    "name": "שירה ג'יין גולני",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3535,
+    "name": "שירה דבורה גורדין",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3232,
+    "name": "שירה דסקל",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3244,
+    "name": "שירה לייטרסדורף-שקדי",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3578,
+    "name": "שירה סופר",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3020,
+    "name": "שירה צברי",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2389,
+    "name": "שירה שגב",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 1133,
+    "name": "שירי אלון עירון",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3746,
+    "name": "שירי מקוב",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3501,
+    "name": "שירי ספקטור",
+    "title": 1,
+    "faculty": 4
+  },
+  {
+    "pk": 3214,
+    "name": "שירי רגב-מסלם",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3493,
+    "name": "שירל אוחיון",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 3080,
+    "name": "שירלי לוי",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 3337,
+    "name": "שירן דוקרקר",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 3631,
+    "name": "שלם יהלום",
+    "title": 2,
+    "faculty": 2
+  },
+  {
+    "pk": 893,
+    "name": "שלמה ברנר",
+    "title": 2,
+    "faculty": 5
+  },
+  {
+    "pk": 2107,
+    "name": "שלמה גוזמן",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 3322,
+    "name": "שמואל ילינק",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 3859,
+    "name": "שמיר יגר",
+    "title": 3,
+    "faculty": 5
+  },
+  {
+    "pk": 2976,
+    "name": "שני אליהו",
+    "title": 4,
+    "faculty": 1
+  },
+  {
+    "pk": 2914,
+    "name": "שני זולא",
+    "title": 4,
+    "faculty": 6
+  },
+  {
+    "pk": 3726,
+    "name": "שני ניוינסקי",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3782,
+    "name": "שפרה טרגר",
+    "title": 4,
+    "faculty": 8
+  },
+  {
+    "pk": 3404,
+    "name": "שפרה כץ",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3407,
+    "name": "שפרה מישלוב",
+    "title": 1,
+    "faculty": 3
+  },
+  {
+    "pk": 2696,
+    "name": "שקד יעלה",
+    "title": 0,
+    "faculty": 1
+  },
+  {
+    "pk": 3845,
+    "name": "שרה לנסמן",
+    "title": 4,
+    "faculty": 5
+  },
+  {
+    "pk": 2834,
+    "name": "שרון כהן",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 3469,
+    "name": "שרון מינס",
+    "title": 0,
+    "faculty": 4
+  },
+  {
+    "pk": 3263,
+    "name": "שרון פיאלקוב",
+    "title": 0,
+    "faculty": 3
+  },
+  {
+    "pk": 3613,
+    "name": "שרון שלום",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 3203,
+    "name": "שרי לוז קנר",
+    "title": 4,
+    "faculty": 3
+  },
+  {
+    "pk": 997,
+    "name": "שרית גולדנר",
+    "title": 1,
+    "faculty": 5
+  },
+  {
+    "pk": 2643,
+    "name": "שרית למפרט-קרקו",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 2670,
+    "name": "שרית פרימן",
+    "title": 1,
+    "faculty": 1
+  },
+  {
+    "pk": 1883,
+    "name": "שרית קראוס",
+    "title": 2,
+    "faculty": 7
+  },
+  {
+    "pk": 3676,
+    "name": "תאיר כספי",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 2954,
+    "name": "תומר  לוקר",
+    "title": 3,
+    "faculty": 6
+  },
+  {
+    "pk": 1518,
+    "name": "תומר לוי",
+    "title": 1,
+    "faculty": 6
+  },
+  {
+    "pk": 3551,
+    "name": "תם ניימרקס",
+    "title": 4,
+    "faculty": 4
+  },
+  {
+    "pk": 2955,
+    "name": "תמיר ג'ובני",
+    "title": 3,
+    "faculty": 1
+  },
+  {
+    "pk": 3758,
+    "name": "תמיר הירש",
+    "title": 3,
+    "faculty": 8
+  },
+  {
+    "pk": 3775,
+    "name": "תמר הרפז",
+    "title": 1,
+    "faculty": 8
+  },
+  {
+    "pk": 1157,
+    "name": "תמר טראובה",
+    "title": 1,
+    "faculty": 7
+  },
+  {
+    "pk": 2156,
+    "name": "תמר פרידמן",
+    "title": 0,
+    "faculty": 5
+  },
+  {
+    "pk": 3640,
+    "name": "תמר קדרי",
+    "title": 1,
+    "faculty": 2
+  },
+  {
+    "pk": 2423,
+    "name": "תרה זהבי",
+    "title": 4,
+    "faculty": 5
+  }
+]

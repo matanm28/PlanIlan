@@ -1,0 +1,9 @@
+CREATE DATABASE plan_ilan_dev CHARACTER SET UTF8;
+
+CREATE USER plan_ilan_devs_team@localhost IDENTIFIED BY 'gVrK7jQEqm3DNkQF';
+
+GRANT ALL PRIVILEGES ON plan_ilan_dev.* TO plan_ilan_devs_team@localhost;
+
+FLUSH PRIVILEGES;
+
+exit

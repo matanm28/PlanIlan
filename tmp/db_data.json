@@ -1,0 +1,16 @@
+{
+  "AWS": {
+    "DB_USER_NAME": "admin",
+    "DB_USER_PASSWORD": "V02G6zmHVIDLpdGqfEO8",
+    "DB_HOST_NAME": "plan-ilan-db.ckiihycoqnns.eu-central-1.rds.amazonaws.com",
+    "DB_PORT": 3306,
+    "DB_NAME": "plan_ilan_dev"
+  },
+  "LOCAL": {
+    "DB_USER_NAME": "root",
+    "DB_USER_PASSWORD": "1234",
+    "DB_HOST_NAME": "127.0.0.1",
+    "DB_PORT": 3306,
+    "DB_NAME": "plan_ilan_dev"
+  }
+}
