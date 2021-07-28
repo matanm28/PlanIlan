@@ -28,7 +28,7 @@ SECRET_KEY = '0p!a&2d!ui+clgkdpgj7umd+0$k)m+#@dqacj7)=r)tqyy@_#t'
 DEBUG = True
 
 ALLOWED_HOSTS = ['plan-ilan-env.eba-aq8y523e.eu-central-1.elasticbeanstalk.com',
-                 '127.0.0.1']
+                 '127.0.0.1','52.58.94.40']
 
 # Application definition
 
@@ -216,7 +216,7 @@ EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 
 # MEDIA Configurations
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www','media')
 MEDIA_URL = '/media/'
 
 # used by debug-toolbar
@@ -232,5 +232,5 @@ REST_FRAMEWORK = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+STATIC_URL = 'www/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', "static")
-STATIC_URL = '/static/'
