@@ -135,8 +135,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': './logs/debug.log',
-            'mode': 'w',
+            'filename': 'logs/debug.log',
             'encoding': 'utf-8',
             'formatter': 'verbose',
         },

@@ -1,6 +1,6 @@
 .idea
 logs/*.log
-/static/node_modules
+#/static/node_modules
 
 ## private files ##
 #/tmp
