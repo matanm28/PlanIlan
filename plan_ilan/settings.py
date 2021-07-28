@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '0p!a&2d!ui+clgkdpgj7umd+0$k)m+#@dqacj7)=r)tqyy@_#t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['plan-ilan-env.eba-aq8y523e.eu-central-1.elasticbeanstalk.com',
                  '127.0.0.1','52.58.94.40']
