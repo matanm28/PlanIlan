@@ -28,7 +28,7 @@ SECRET_KEY = '0p!a&2d!ui+clgkdpgj7umd+0$k)m+#@dqacj7)=r)tqyy@_#t'
 DEBUG = False
 
 ALLOWED_HOSTS = ['plan-ilan-env.eba-aq8y523e.eu-central-1.elasticbeanstalk.com',
-                 '127.0.0.1','52.58.94.40']
+                 '127.0.0.1', '52.58.94.40', '172.22.32.1']
 
 # Application definition
 
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -196,12 +197,14 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'www', "static")
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
+STATIC_URL = '/staticfiles/'
 
 # SMTP Configurations
 mail_data = dict(os.environ)
@@ -218,7 +221,7 @@ EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 
 # MEDIA Configurations
-MEDIA_ROOT = os.path.join(BASE_DIR, 'www','media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
 MEDIA_URL = '/media/'
 
 # used by debug-toolbar
