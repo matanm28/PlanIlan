@@ -1,6 +1,5 @@
 .idea
 logs/*.log
-/www/media
 /static/node_modules
 
 ## private files ##
