@@ -5,8 +5,7 @@ import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
 import plan_ilan.apps.web_site.models.review
-import plan_ilan.apps.web_site.models.teacher
-import plan_ilan.apps.web_site.storage
+import plan_ilan.custom_storages
 
 
 class Migration(migrations.Migration):
@@ -93,7 +92,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=254, null=True)),
                 ('office', models.CharField(max_length=100, null=True)),
                 ('website_url', models.URLField(null=True)),
-                ('image', models.ImageField(null=True, storage=plan_ilan.apps.web_site.storage.OverwriteStorage(), upload_to=plan_ilan.apps.web_site.models.teacher.user_directory_path)),
+                ('image', models.ImageField(null=True, storage=plan_ilan.custom_storages.OverwriteStorage(), upload_to=plan_ilan.apps.web_site.models.teacher.user_directory_path)),
                 ('faculty', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='teachers', to='web_site.faculty')),
             ],
             options={

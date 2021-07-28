@@ -6,7 +6,7 @@ from plan_ilan.utils.decorators import static_vars
 from . import BaseModel
 import plan_ilan.apps.web_site.models as my_models
 from .enums import Title, Faculty, Department
-from ..storage import OverwriteStorage
+from plan_ilan.custom_storages import OverwriteStorage
 from django.db.models import Avg, QuerySet
 
 

@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -50,12 +51,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
     'debug_toolbar',
+    'storages',
 ]
 
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -197,12 +198,24 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+AWS_S3_OBJECT_PARAMETERS = {
+    'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+    'CacheControl': 'max-age=94608000',
+}
+
+AWS_STORAGE_BUCKET_NAME = 'plan-ilan-static-server'
+AWS_S3_REGION_NAME = 'eu-central-1'
+AWS_ACCESS_KEY_ID = 'AKIASRQNZ5CYMZUCPQUR'
+AWS_SECRET_ACCESS_KEY = '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'
+
+# Tell django-storages the domain to use to refer to static files.
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'plan_ilan.custom_storages.StaticStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
 STATIC_URL = '/staticfiles/'
 
@@ -221,6 +234,8 @@ EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 
 # MEDIA Configurations
+MEDIAFILES_LOCATION = 'media'
+DEFAULT_FILE_STORAGE = 'plan_ilan.custom_storages.MediaStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
 MEDIA_URL = '/media/'
 
@@ -236,3 +251,5 @@ REST_FRAMEWORK = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+

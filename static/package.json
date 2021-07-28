@@ -10,7 +10,6 @@
     "jquery-ui-dist": "^1.12.1",
     "mdb-ui-kit": "^3.5.1"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
