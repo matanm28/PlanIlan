@@ -232,5 +232,6 @@ REST_FRAMEWORK = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
+STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
+
