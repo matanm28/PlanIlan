@@ -29,7 +29,7 @@ SECRET_KEY = '0p!a&2d!ui+clgkdpgj7umd+0$k)m+#@dqacj7)=r)tqyy@_#t'
 DEBUG = False
 
 ALLOWED_HOSTS = ['plan-ilan-env.eba-aq8y523e.eu-central-1.elasticbeanstalk.com',
-                 '127.0.0.1', '52.58.94.40', '172.22.32.1']
+                 '127.0.0.1', '52.58.94.40', '172.22.32.1','172.31.24.250']
 
 # Application definition
 
