@@ -222,7 +222,7 @@ STATIC_URL = '/staticfiles/'
 MEDIAFILES_LOCATION = 'media'
 DEFAULT_FILE_STORAGE = 'plan_ilan.custom_storages.MediaStorage'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# MEDIA_URL = '/media/'
+# MEDIA_URL = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
 
 # SMTP Configurations
 mail_data = dict(os.environ)
