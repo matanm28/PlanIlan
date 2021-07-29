@@ -29,7 +29,7 @@ SECRET_KEY = '0p!a&2d!ui+clgkdpgj7umd+0$k)m+#@dqacj7)=r)tqyy@_#t'
 DEBUG = False
 
 ALLOWED_HOSTS = ['plan-ilan-env.eba-aq8y523e.eu-central-1.elasticbeanstalk.com',
-                 '127.0.0.1', '52.58.94.40', '172.22.32.1','172.31.24.250']
+                 '127.0.0.1', '52.58.94.40', '172.22.32.1', '172.31.24.250']
 
 # Application definition
 
@@ -202,10 +202,11 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=94608000',
 }
 
-AWS_STORAGE_BUCKET_NAME = 'plan-ilan-static-server'
-AWS_S3_REGION_NAME = 'eu-central-1'
 AWS_ACCESS_KEY_ID = 'AKIASRQNZ5CYMZUCPQUR'
 AWS_SECRET_ACCESS_KEY = '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'
+
+AWS_STORAGE_BUCKET_NAME = 'plan-ilan-static-server'
+AWS_S3_REGION_NAME = 'eu-central-1'
 
 # Tell django-storages the domain to use to refer to static files.
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
@@ -215,8 +216,13 @@ STATICFILES_DIRS = [
 ]
 STATICFILES_LOCATION = 'static'
 STATICFILES_STORAGE = 'plan_ilan.custom_storages.StaticStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
 STATIC_URL = '/staticfiles/'
+
+# MEDIA Configurations
+MEDIAFILES_LOCATION = 'media'
+DEFAULT_FILE_STORAGE = 'plan_ilan.custom_storages.MediaStorage'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
 
 # SMTP Configurations
 mail_data = dict(os.environ)
@@ -232,12 +238,6 @@ EMAIL_USE_TLS = (True if mail_data['EMAIL_USE_TLS'] == "True" else False)
 EMAIL_HOST_USER = mail_data['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = mail_data['EMAIL_HOST_PASSWORD']
 
-# MEDIA Configurations
-MEDIAFILES_LOCATION = 'media'
-DEFAULT_FILE_STORAGE = 'plan_ilan.custom_storages.MediaStorage'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
-MEDIA_URL = '/media/'
-
 # used by debug-toolbar
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -250,5 +250,3 @@ REST_FRAMEWORK = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-

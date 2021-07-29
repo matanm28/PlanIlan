@@ -12,7 +12,7 @@ from django.db.models import Avg, QuerySet
 
 def user_directory_path(instance: 'Teacher', filename: str):
     # file will be uploaded to MEDIA_ROOT/teachers/<name>/profile_pic.<extension>
-    return fr'teachers\{instance.name}\profile.{filename.split(".")[-1]}'
+    return f'teachers/{instance.name}/profile.{filename.split(".")[-1]}'
 
 
 overwrite_storage = OverwriteStorage()
@@ -26,7 +26,7 @@ class Teacher(BaseModel):
     email = models.EmailField(null=True)
     office = models.CharField(max_length=100, null=True)
     website_url = models.URLField(null=True)
-    image = models.ImageField(upload_to=user_directory_path, storage=overwrite_storage, null=True)
+    image = models.ImageField(upload_to=user_directory_path, null=True)
 
     class Meta:
         ordering = ['name', 'title', 'pk']
