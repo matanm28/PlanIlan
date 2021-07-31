@@ -38,8 +38,9 @@
                             {% for course_group in mandatory_courses %}
                                 <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
                                 {% for course in course_group.list %}
-                                    <label for="{{ course.code }}">
-                                        <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
+                                    <label for="{{ course.code }}_mandatory">
+                                        <input type="checkbox" id="{{ course.code }}_mandatory"
+                                               value="{{ course.code }}"
                                                name="mandatory">
                                         {{ course }}
                                     </label>
@@ -63,8 +64,9 @@
                                 {% for course_group in elective_courses %}
                                     <p class="lead h5"><u>{{ course_group.grouper }}</u></p>
                                     {% for course in course_group.list %}
-                                        <label for="{{ course.code }}">
-                                            <input type="checkbox" id="{{ course.code }}" value="{{ course.code }}"
+                                        <label for="{{ course.code }}_elective">
+                                            <input type="checkbox" id="{{ course.code }}_elective"
+                                                   value="{{ course.code }}"
                                                    name="elective">
                                             {{ course }}
                                         </label>

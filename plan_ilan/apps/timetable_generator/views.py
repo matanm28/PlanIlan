@@ -73,7 +73,7 @@ class FirstView(AuthenticatedUserTemplateView):
 
     def get_context(self):
         data = None
-        if 'timetable_pk' in self.request.session:
+        if 'timetable_pk' in self.request.session and self.request.session['timetable_pk']:
             timetable = get_object_or_404(Timetable, pk=self.request.session['timetable_pk'])
             data = {
                 'name': timetable.name,
@@ -83,22 +83,15 @@ class FirstView(AuthenticatedUserTemplateView):
         blocked_times_formset = BlockedTimesFormSet()
         return {'form': FirstForm(initial=data), 'is_rerun': True, 'blocked_times_formset': blocked_times_formset}
 
-    def get(self, request, *args, **kwargs):
-        account = get_object_or_404(Account, user=self.request.user)
-        timetables = Timetable.objects.filter(common_info__account=account)
-        if timetables.exists() and 'is_landing_page' in self.request.session and \
-                not self.request.session['is_landing_page']:
-            return redirect('landing-page')
-        self.request.session['is_landing_page'] = False
-        return super().get(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
         blocked_times_formset = BlockedTimesFormSet(self.request.POST)
         form = FirstForm(self.request.POST)
         if not form.is_valid() or not blocked_times_formset.is_valid():
-            return HttpResponseBadRequest(form.errors.as_data())
+            return HttpResponseBadRequest("הטופס לא תקין. נא לחזור אחורה ולתקן את הטופס")
         blocked_times_dict = {}
         for block in blocked_times_formset.cleaned_data:
+            if not block:
+                continue
             time_interval = TimeInterval.create(block['start'], block['end'])
             if block['day'] in blocked_times_dict:
                 blocked_times_dict[block['day']].append(time_interval)
@@ -226,22 +219,11 @@ class BuildTimeTableView(QueryStringHandlingTemplateView):
             timetable = get_object_or_404(Timetable, pk=self.request.session.get('timetable_pk', None))
             timetable.mandatory_lessons.set(mandatory_ranked_lessons)
             timetable.elective_lessons.set(elective_ranked_lessons)
+            timetable.is_done = True
             timetable.save()
         solutions = timetable.get_solutions()
-        l = []
-        d = [s.as_dict for s in solutions.all()]
-        for sol in d:
-            dict_list = []
-            for day in sorted(sol.keys()):
-                lessons_list = []
-                for hour in sorted(sol[day].keys()):
-                    lessons_list.append(hour)
-                    lessons_list.append([sol[day][hour]])
-                dict_list.append(day)
-                dict_list.append(lessons_list)
-            l.append(dict_list)
-
-        return {'solutions': solutions, 'solution_dict': l}
+        d = [s.as_table_arr for s in solutions.all()]
+        return {'solutions': solutions, 'solution_arr': d}
 
 
 class LandingPageView(QueryStringHandlingTemplateView):
@@ -250,14 +232,15 @@ class LandingPageView(QueryStringHandlingTemplateView):
 
     def get_context(self):
         account = get_object_or_404(Account, user=self.request.user)
-        timetable_names = Timetable.objects.filter(common_info__account=account).values_list('common_info__name',
-                                                                                             flat=True)
+        timetable_names = Timetable.objects.filter(common_info__account=account, is_done=True).values_list(
+            'common_info__name',
+            flat=True)
         return {"timetable_names": timetable_names}
 
     def post(self, request, *args, **kwargs):
         if 'new_timetable' in request.POST:
-            self.request.session['is_landing_page'] = True
             return redirect('first-form')
+
         timetable_dict = {'ready_timetable': Timetable.objects.get(common_info__name=
                                                                    request.POST.get('old_timetable')).pk}
         return redirect(reverse_querystring('build-timetable', query_kwargs=timetable_dict))

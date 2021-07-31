@@ -37,7 +37,7 @@
         <a class="act" aria-current="page" href="{% url 'home' %}">דף הבית </a>
         <a class="act" aria-current="page" href="{% url 'search' %}">חיפוש</a>
         {% if user.is_authenticated %}
-            <a class="act" aria-current="page" href="{% url 'first-form' %}">בנה מערכת שעות</a>
+            <a class="act" aria-current="page" href="{% url 'landing-page' %}">ניהול מערכת שעות</a>
         {% endif %}
         <a class="act" aria-current="page" href="{% url 'about' %}">אודות</a>
     </div>

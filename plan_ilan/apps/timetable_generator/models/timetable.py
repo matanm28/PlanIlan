@@ -48,6 +48,7 @@ class Timetable(TimeStampedModel, BaseModel):
                                               default=get_default_elective_points_bound,
                                               related_name='timetables', null=True)
     max_num_of_days = models.PositiveSmallIntegerField(default=6)
+    is_done = models.BooleanField(default=False, null=True)
 
     @classmethod
     def create(cls, account: Account, name: str, mandatory_lessons: RankedLessonList,
@@ -182,6 +183,28 @@ class TimetableSolution(TimeStampedModel, BaseModel):
             for lesson_time in lesson.session_times.all().order_by('start_time'):
                 ret[lesson_time.day][lesson_time.time_str()] = lesson
         return ret
+
+    @property
+    def as_table_arr(self):
+        colors = (
+            '#E3E3FF', '#DFF2FD', '#E2FCE6', '#FCFADE', '#FFEEE2', '#FFDBDB', '#66BBC9', '#B4CFB1', '#F7F4EB',
+            '#EAB5B9',
+            '#EADEC6', '#D0EAFA', '#C5D2EF')
+        times = ('08:00-09:00', '09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00',
+                 '14:00-15:00', '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00',
+                 '20:00-21:00', '21:00-22:00')
+        courses_colors = {}
+        days = [[] for _ in range(Day.objects.count())]
+        table = [[t, days.copy()] for t in times]
+        for i, lesson in enumerate(self.lessons.all()):
+            if lesson.course not in courses_colors.keys():
+                courses_colors[lesson.course] = colors[i % (len(colors) - 1)]
+            for lesson_time in lesson.session_times.all().order_by('start_time'):
+                day_number = lesson_time.day.number - 1
+                for hour in range(lesson_time.start_time.hour, lesson_time.end_time.hour):
+                    lesson_details = [lesson, courses_colors[lesson.course]]
+                    table[hour - 8][1][day_number] = lesson_details
+        return table
 
     class Meta:
         ordering = ['-score', 'created', 'modified', 'pk']

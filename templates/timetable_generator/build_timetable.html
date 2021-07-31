@@ -2,6 +2,7 @@
 {% block css_block %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'timetable_generator/css/timetable_style.css' %}"/>
 {% endblock %}
 {% block js_block %}
     {% load static %}
@@ -12,44 +13,137 @@
 <title>{% block title %}בנה מערכת שעות{% endblock %}</title>
 {% block content %}
     {% if solutions %}
-        <div class="d-flex align-items-start">
-            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                {% for solution in solutions %}
-                    <button class="nav-link {% if forloop.first %}active{% endif %}"
-                            id="solution{{ forloop.counter }}tab"
-                            data-bs-toggle="pill" data-bs-target="#solution{{ forloop.counter }}content" role="tab"
-                            aria-controls="solution{{ forloop.counter }}content" type="button"
-                            aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">{{ solution.display_name }}
-                    </button>
+        <div id="carouselControls" class="carousel slide" data-bs-interval="false">
+            <div class="carousel-inner">
+                {% for table in solution_arr %}
+                    <div class="carousel-item {% if forloop.first %} active{% endif %}">
+                        <h2 style="margin: 1%; text-align: center"><b>
+                            {{ solutions.0.name }}{% if solutions|length > 1 %} -
+                                גרסה {{ forloop.counter }}{% endif %}</b></h2>
+                        <div class="table-responsive">
+                            <table class="timetable table table-responsive ">
+                                <thead>
+                                <tr class="text-center">
+                                    <th scope="col"></th>
+                                    <th scope="col"><b>ראשון</b></th>
+                                    <th scope="col"><b>שני</b></th>
+                                    <th scope="col"><b>שלישי</b></th>
+                                    <th scope="col"><b>רביעי</b></th>
+                                    <th scope="col"><b>חמישי</b></th>
+                                    <th scope="col"><b>שישי</b></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in table %}
+                                    <tr>
+                                        <th scope="row" style="width: 12%;"><b>{{ row.0 }}</b></th>
+                                        {% for lesson_details_cell in row.1 %}
+                                            {% if lesson_details_cell %}
+                                                <td style="background: {{ lesson_details_cell.1 }}">
+                                                    {{ lesson_details_cell.0 }}
+                                                </td>
+                                            {% else %}
+                                                <td></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
+            {% if solutions|length > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselControls"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="color: black"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselControls"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="color: black"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            {% endif %}
         </div>
-        <div class="tab-content" id="v-pills-tabContent">
-            {% for solution in solutions %}
-                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
-                     id="solution{{ forloop.counter }}content"
-                     role="tabpanel" aria-labelledby="solution{{ forloop.counter }}tab">
-                    <p class="lead"><u>{{ solution.display_name }}</u></p>
-                    <p>ציון: {{ solution.score }}</p>
-                    <div class="container">
-                        <ul>
-                            {% for var in solution_dict %}
-                                {{ var|unordered_list }}
-                                {#                            <li>{{ day }}:#}
-                                {#                                <ul>#}
-                                {#                                    {% for hour,lesson in hours.item %}#}
-                                {#                                        <li>{{ hour }}:{{ lesson.code_and_group }} - {{ lesson.name }}</li>#}
-                                {#                                    {% endfor %}#}
-                                {#                                </ul>#}
-                                {#                            </li>#}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+
+        {##}
+        {#        <br><br><br><br>#}
+        {#        <!-- time-table -->#}
+        {#        <div class="content">#}
+        {#            <div class="row">#}
+        {#                {% for table in solution_arr %}#}
+        {#                    <div class="table-responsive">#}
+        {#                        <table class="timetable table table-responsive ">#}
+        {#                            <thead>#}
+        {#                            <tr class="text-center">#}
+        {#                                <th scope="col"></th>#}
+        {#                                <th scope="col"><b>ראשון</b></th>#}
+        {#                                <th scope="col"><b>שני</b></th>#}
+        {#                                <th scope="col"><b>שלישי</b></th>#}
+        {#                                <th scope="col"><b>רביעי</b></th>#}
+        {#                                <th scope="col"><b>חמישי</b></th>#}
+        {#                                <th scope="col"><b>שישי</b></th>#}
+        {#                            </tr>#}
+        {#                            </thead>#}
+        {#                            <tbody>#}
+        {#                            {% for row in table %}#}
+        {#                                <tr>#}
+        {#                                    <th scope="row" style="width: 12%;"><b>{{ row.0 }}</b></th>#}
+        {#                                    {% for lesson_details_cell in row.1 %}#}
+        {#                                        {% if lesson_details_cell %}#}
+        {#                                            <td style="background: {{ lesson_details_cell.1 }}">#}
+        {#                                                {{ lesson_details_cell.0 }}#}
+        {#                                            </td>#}
+        {#                                        {% else %}#}
+        {#                                            <td></td>#}
+        {#                                        {% endif %}#}
+        {#                                    {% endfor %}#}
+        {#                                </tr>#}
+        {#                            {% endfor %}#}
+        {#                            </tbody>#}
+        {#                        </table>#}
+        {#                    </div>#}
+        {#                {% endfor %}#}
+        {#            </div>#}
+        {#        </div>#}
+        {##}
+        {#        <div class="d-flex align-items-start">#}
+        {#            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">#}
+        {#                {% for solution in solutions %}#}
+        {#                    <button class="nav-link {% if forloop.first %}active{% endif %}"#}
+        {#                            id="solution{{ forloop.counter }}tab"#}
+        {#                            data-bs-toggle="pill" data-bs-target="#solution{{ forloop.counter }}content" role="tab"#}
+        {#                            aria-controls="solution{{ forloop.counter }}content" type="button"#}
+        {#                            aria-selected="{% if forloop.first %} true {% else %} false {% endif %}">{{ solution.display_name }}#}
+        {#                    </button>#}
+        {#                {% endfor %}#}
+        {#            </div>#}
+        {#        </div>#}
+        {#        <div class="tab-content" id="v-pills-tabContent">#}
+        {#            {% for solution in solutions %}#}
+        {#                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"#}
+        {#                     id="solution{{ forloop.counter }}content"#}
+        {#                     role="tabpanel" aria-labelledby="solution{{ forloop.counter }}tab">#}
+        {#                    <p class="lead"><u>{{ solution.display_name }}</u></p>#}
+        {#                    <p>ציון: {{ solution.score }}</p>#}
+        {#                    <div class="container">#}
+        {#                        <!-- time-table -->#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            {% endfor %}#}
+        {#        </div>#}
     {% else %}
-        <p>מצטערים יא קאקר אין פתרון למערכת שעות שלך</p>
-        <button>בוא ננסה שוב</button>
+        <div class="bg_image"></div>
+        <div class="container h-100">
+            <div class="d-flex justify-content-center h-100">
+                <div class="user_card">
+                    <h1 class="display-1" style="text-align: center"><b>מצטערים, אין פתרון למערכת שעות שלך</b></h1>
+                    <a class="btn btn-light" style="width: 100%" type="submit" href="{% url 'pick-deps' %}"><b>בוא ננסה
+                        שוב</b></a>
+                </div>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
