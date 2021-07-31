@@ -69,7 +69,7 @@ class TeacherInstanceFilter(django_filters.FilterSet):
     name = CharFilter(field_name='name', lookup_expr='icontains', widget=forms.TextInput(
         attrs={'placeholder': "שם המרצה/המתרגל...",
                'style': 'width:fit-content; text-align: center; border-radius: 5px;'}))
-    faculty = ChoiceFilter(field_name='faculty', choices=Faculty.choices(), empty_label="פקולטה...",
+    faculty = ChoiceFilter(field_name='faculties', choices=Faculty.choices(), empty_label="פקולטה...",
                            widget=forms.Select(
                                attrs={'style': 'width:fit-content; text-align: center; border-radius: 5px;'}))
     ratings = ChoiceFilter(field_name='ratings__value', choices=RATING_CHOICES, method='filter_ratings',
