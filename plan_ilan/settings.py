@@ -156,7 +156,7 @@ LOGGING = {
         },
         'plan_ilan.apps.web_site.management.commands.populate_database': {
             'level': 'DEBUG',
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'propagate': False,
         }
 
