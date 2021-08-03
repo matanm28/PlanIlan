@@ -1,7 +1,6 @@
 import concurrent
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from typing import List
 
 from codetiming import Timer
 from django.core.management import BaseCommand

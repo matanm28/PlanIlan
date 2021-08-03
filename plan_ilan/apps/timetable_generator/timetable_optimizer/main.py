@@ -5,7 +5,7 @@ from typing import List
 from optimized_course import OptimizedCourse
 import pickle
 
-from plan_ilan.logger.logging import configure_logging
+from plan_ilan.logging.costume_handlers import configure_logging
 
 
 def main(db_name: str, collection_name: str, courses_code_list: List[str]):
