@@ -31,7 +31,7 @@ class Account(BaseModel):
         pass
 
     def __str__(self):
-        return self.username
+        return self.full_name if len(self.full_name) > 0 else self.username
 
     @classmethod
     def get_user_by_user_name(cls, name: str) -> 'Account':

@@ -1,7 +1,6 @@
 {% extends 'plan_ilan/base.html' %}
 {% block css_block %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/rating_style.css' %}"/>
     <link rel="stylesheet" href="{% static 'plan_ilan/css/teacher_and_course_style.css' %}"/>
@@ -11,14 +10,11 @@
 {% endblock %}
 {% block js_block %}
     {% load static %}
-    <script type="text/javascript"
-            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
-    <script type="text/javascript" src="{% static 'plan_ilan/js/rating.js' %}"></script>
-    <script type="text/javascript" src="{% static 'plan_ilan/js/comment_likes.js' %}"></script>
-    <script type="text/javascript" src="{% static 'plan_ilan/js/open_close_edit_modal.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/rating.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/comment_likes.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/open_close_edit_modal.js' %}" defer></script>
 {% endblock %}
 {% block title %}דף הבית{% endblock %}
 {% block content %}
