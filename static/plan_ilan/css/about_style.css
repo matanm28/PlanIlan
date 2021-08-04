@@ -40,10 +40,6 @@ html {
     color: blue;
 }
 
-.container {
-    padding: 0 0;
-    /*padding: 0 16px;*/
-}
 
 .container::after, .row::after {
     content: "";
@@ -124,3 +120,81 @@ html {
     transform: translate3d(0px, -5px, 0px);
     color: #316ce8;
 }
+
+.icon-social-linkedin, .icon-social-facebook {
+    color: #3b5998;
+    background-image: linear-gradient(to bottom, transparent 20%, white 20%, white 93%, transparent 93%);
+    background-size: 55%;
+    background-position: 70% 0;
+    background-repeat: no-repeat;
+}
+
+.fa-facebook-square,
+.fa-twitter-square,
+.fa-google-plus-square,
+.fa-youtube-square,
+.fa-tumblr-square,
+.fa-vimeo-square,
+.fa-pinterest-square,
+.fa-linkedin-square,
+.fa-instagram-square,
+.fa-spotify {
+    background-color: white !important;
+    background-image: linear-gradient(to bottom, transparent 20%, white 20%, white 93%, transparent 93%);
+    background-size: 55%;
+    background-position: 70% 0;
+    background-repeat: no-repeat;
+}
+
+.fa-facebook, .fa-facebook-square {
+    color: #3b5998
+}
+
+.fa-twitter, .fa-twitter-square {
+    color: #00aced
+}
+
+.fa-google-plus, .fa-google-plus-square {
+    color: #dd4b39
+}
+
+.fa-youtube, .fa-youtube-play, .fa-youtube-square {
+    color: #bb0000
+}
+
+.fa-tumblr, .fa-tumblr-square {
+    color: #32506d
+}
+
+.fa-vine {
+    color: #00bf8f
+}
+
+.fa-flickr {
+    color: #ff0084
+}
+
+.fa-vimeo-square {
+    color: #aad450
+}
+
+.fa-pinterest, .fa-pinterest-square {
+    color: #cb2027
+}
+
+.fa-linkedin, .fa-linkedin-square {
+    color: #007bb6
+}
+
+.fa-instagram {
+    color: #fd368e;
+}
+
+.fa-spotify {
+    color: #1ED760;
+}
+
+.fa-envelope{
+    color: slategrey;
+}
+
