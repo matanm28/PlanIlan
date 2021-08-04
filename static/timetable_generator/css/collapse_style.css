@@ -45,5 +45,6 @@
 }
 
 .quantity {
-    max-width: 4%;
+    max-width: 4em;
+    width: 3em;
 }

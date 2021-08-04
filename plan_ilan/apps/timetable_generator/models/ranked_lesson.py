@@ -53,3 +53,6 @@ class RankedLesson(BaseModel):
     @property
     def points(self) -> float:
         return self.lesson.points
+
+    def __str__(self):
+        return f'{self.lesson} ({self.rank})'

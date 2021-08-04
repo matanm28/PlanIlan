@@ -25,6 +25,9 @@ class TimetableCommonInfo(BaseModel):
         cls.log_created(common_info, created)
         return common_info
 
+    def __str__(self):
+        return f'{self.name} - {self.account} ({self.semester})'
+
     class Meta:
         ordering = ['account', 'semester', 'name', 'pk']
         unique_together = ['account', 'name', 'semester']
@@ -68,8 +71,11 @@ class Timetable(TimeStampedModel, BaseModel):
         timetable.save()
         return timetable
 
+    def __str__(self):
+        return f'{self.common_info}'
+
     def get_solutions(self, only_solved=True) -> QuerySet['TimetableSolution']:
-        from plan_ilan.apps.timetable_generator.timetable_optimizer.optimizer_new import TimetableOptimizer
+        from plan_ilan.apps.timetable_generator.timetable_optimizer.optimizer import TimetableOptimizer
         if not self.solutions.exists():
             optimizer = TimetableOptimizer(self)
             optimizer_solutions = optimizer.solve()
@@ -148,6 +154,11 @@ class TimetableSolution(TimeStampedModel, BaseModel):
     iterations = models.IntegerField(editable=False)
     is_solved = models.BooleanField(editable=False)
     possibly_invalid = models.BooleanField(editable=False, default=False)
+
+    def __str__(self):
+        score = f'({self.score})' if self.is_solved else ''
+        possibly_invalid_warning = f'- Might be incorrect!' if self.possibly_invalid else ''
+        return f'{self.common_info} {score} {possibly_invalid_warning}'.strip()
 
     @classmethod
     def create(cls, common_info: TimetableCommonInfo, ranked_lessons: QuerySet[RankedLesson], iterations: int,

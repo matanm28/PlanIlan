@@ -47,8 +47,10 @@ class BaseSettings(Settings):
             'polymorphic',
             'rest_framework',
             'crispy_forms',
+            'django_user_agents',
         ]
         return apps
+
 
     MIDDLEWARE = (
         'django.middleware.security.SecurityMiddleware',
@@ -58,6 +60,7 @@ class BaseSettings(Settings):
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'django_user_agents.middleware.UserAgentMiddleware',
     )
 
     @property
@@ -65,8 +68,7 @@ class BaseSettings(Settings):
         return [
             {
                 'BACKEND': 'django.template.backends.django.DjangoTemplates',
-                'DIRS': [self.TEMPLATE_ROOT]
-                ,
+                'DIRS': [self.TEMPLATE_ROOT],
                 'APP_DIRS': True,
                 'OPTIONS': {
                     'context_processors': [
@@ -172,20 +174,7 @@ class BaseSettings(Settings):
     # Password validation
     # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
-    AUTH_PASSWORD_VALIDATORS = [
-        {
-            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-        },
-        {
-            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        },
-        {
-            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-        },
-        {
-            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-        },
-    ]
+    AUTH_PASSWORD_VALIDATORS = []
 
     # Internationalization
     # https://docs.djangoproject.com/en/3.1/topics/i18n/
