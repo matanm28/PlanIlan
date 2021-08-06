@@ -27,14 +27,19 @@ function changeHeart(pressed) {
 }
 
 window.onload = function () {
+    let data = {
+        'load_likes': true,
+        'csrfmiddlewaretoken': csrftoken,
+    };
     $.ajax({
         url: window.location.pathname,
-        type: 'GET',
+        type: 'POST',
+        data: data,
         success: function (data) {
             let likes_from_json = JSON.parse(data.json_likes_list);
             for (let i = 0; i < likes_from_json.length; i++) {
                 let post = document.getElementById("heart_course_" + likes_from_json[i]["fields"]["review"]);
-                if (post === null){
+                if (post === null) {
                     post = document.getElementById("heart_teacher_" + likes_from_json[i]["fields"]["review"]);
                 }
                 if (post !== null) {
@@ -43,8 +48,9 @@ window.onload = function () {
             }
         },
         error: function (error) {
-            
+
         }
     });
+    return false;
 }
 

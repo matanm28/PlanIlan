@@ -47,6 +47,10 @@ class CourseDetailView(generic.DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if request.POST.get('load_likes', '') and request.user.is_authenticated:
+            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
+            json_likes_list = serializers.serialize("json", all_likes)
+            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
         if request.POST.get('action', '') == 'edit':
             update_review_and_rating(request)
         elif request.POST.get('PostID', ''):
@@ -56,9 +60,4 @@ class CourseDetailView(generic.DetailView):
         return HttpResponseRedirect(reverse('course_detail', kwargs={'pk': self.object.pk}))
 
     def get(self, request, *args, **kwargs):
-        if request.is_ajax() and request.user.is_authenticated:
-            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
-            json_likes_list = serializers.serialize("json", all_likes)
-            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
-        else:
-            return super(CourseDetailView, self).get(request, *args, **kwargs)
+        return super(CourseDetailView, self).get(request, *args, **kwargs)
