@@ -28,7 +28,11 @@ class TeacherDetailView(generic.DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if request.POST.get('action', '') == 'edit':
+        if request.POST.get('load_likes', '') and request.user.is_authenticated:
+            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
+            json_likes_list = serializers.serialize("json", all_likes)
+            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
+        elif request.POST.get('action', '') == 'edit':
             update_review_and_rating(request)
         elif request.POST.get('PostID', ''):
             return JsonResponse(add_or_remove_like(request), safe=False)
@@ -37,10 +41,5 @@ class TeacherDetailView(generic.DetailView):
         return HttpResponseRedirect(reverse('teacher_detail', kwargs={'pk': self.object.pk}))
 
     def get(self, request, *args, **kwargs):
-        if request.is_ajax() and request.user.is_authenticated:
-            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
-            json_likes_list = serializers.serialize("json", all_likes)
-            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
-        else:
-            return super(TeacherDetailView, self).get(request, *args, **kwargs)
+        return super(TeacherDetailView, self).get(request, *args, **kwargs)
 
