@@ -56,14 +56,15 @@ def get_course_details(code):
 
 def home(request):
     if request.method == 'GET':
-        if request.is_ajax() and request.user.is_authenticated:
-            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
-            json_likes_list = serializers.serialize("json", all_likes)
-            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
+
         context = show_best_teacher_courses()
         return render(request, 'plan_ilan/home.html', context)
     elif request.method == 'POST':
-        if request.POST.get('action', '') == 'edit':
+        if request.POST.get('load_likes', '') and request.user.is_authenticated:
+            all_likes = Like.objects.filter(user=Account.objects.get(user=request.user))
+            json_likes_list = serializers.serialize("json", all_likes)
+            return JsonResponse({'json_likes_list': json_likes_list}, safe=False)
+        elif request.POST.get('action', '') == 'edit':
             update_review_and_rating(request)
         elif request.POST.get('PostID', ''):
             return JsonResponse(add_or_remove_like(request), safe=False)
