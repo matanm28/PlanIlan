@@ -21,6 +21,7 @@ class ProductionSettings(BaseSettings):
     ]
 
     ALLOWED_HOSTS = ['plan-ilan-env.eba-aq8y523e.eu-central-1.elasticbeanstalk.com',
+                     'planilan-prod.eu-central-1.elasticbeanstalk.com', ' 3.69.136.247',
                      '127.0.0.1', '52.58.94.40', '172.22.32.1', '172.31.24.250']
 
     @property

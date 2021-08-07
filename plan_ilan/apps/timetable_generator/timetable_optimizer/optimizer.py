@@ -15,7 +15,7 @@ EPSILON = 1e-3
 class TimetableOptimizer:
     def __init__(self, timetable: Timetable) -> None:
         self.timetable = timetable
-        self.model = Gekko()
+        self.model = Gekko(remote=False)
         self.model_ready = False
         self.__is_done = False
         self.objective = []
@@ -70,7 +70,6 @@ class TimetableOptimizer:
 
         self.model_ready = True
 
-    @Timer('solve')
     def solve(self) -> List[Tuple[List[str], Dict]]:
         if not self.model_ready:
             self.__prepare_model_for_solve()
