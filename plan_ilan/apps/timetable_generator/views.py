@@ -10,6 +10,9 @@ from django.views.generic import TemplateView
 from plan_ilan.apps.web_site.models import Lesson, Course, Account, Department
 from .forms import FirstForm, DepartmentsForm, BlockedTimesFormSet
 from .models import RankedLesson, Timetable, Interval, TimeInterval
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def reverse_querystring(view, urlconf=None, args=None, kwargs=None, current_app=None, query_kwargs=None):
@@ -114,7 +117,6 @@ class PickDepartmentsView(AuthenticatedUserTemplateView):
         if not mandatory.is_valid():
             messages.info(request, 'יש לבחור לפחות מחלקת חובה אחת')
             return redirect('pick-deps')
-            # return HttpResponseBadRequest("test")
         elective.full_clean()
         query_dict = {
             'mandatory': mandatory.cleaned_data.get('departments', Department.objects.none()).values_list('number',
@@ -181,9 +183,14 @@ class PickLessonsView(QueryStringHandlingTemplateView):
         query_dict = QueryDict(self.request.session.get(f'data_{self.view_name}', None))
         if not query_dict:
             pass
+        timetable = get_object_or_404(Timetable, pk=self.request.session.get('timetable_pk', None))
         mandatory_courses = Course.objects.filter(code__in=query_dict.getlist('mandatory', []))
         elective_courses = Course.objects.filter(code__in=query_dict.getlist('elective', []))
-        return {"mandatory_courses": mandatory_courses, "elective_courses": elective_courses}
+        return {
+            "mandatory_courses": mandatory_courses,
+            "elective_courses": elective_courses,
+            'valid_semesters': timetable.valid_semesters
+        }
 
     def post(self, request, *args, **kwargs):
         mandatory_lessons = request.POST.getlist('mandatory-lessons', [])
@@ -240,7 +247,11 @@ class LandingPageView(QueryStringHandlingTemplateView):
     def post(self, request, *args, **kwargs):
         if 'new_timetable' in request.POST:
             return redirect('first-form')
-
-        timetable_dict = {'ready_timetable': Timetable.objects.get(common_info__name=
-                                                                   request.POST.get('old_timetable')).pk}
+        ready_timetable = Timetable.objects.filter(common_info__name=request.POST.get('old_timetable'),
+                                                   common_info__account=request.user.account).first()
+        if ready_timetable is None:
+            logger.warning(f'old timetable with name {request.POST.get("old_timetable")} of account {request.user.account.pk}')
+            redirect('first-form')
+        timetable_dict = {
+            'ready_timetable': ready_timetable.pk}
         return redirect(reverse_querystring('build-timetable', query_kwargs=timetable_dict))

@@ -2,9 +2,7 @@
 {% block css_block %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'plan_ilan/css/about_style.css' %}"/>
-{% endblock %}
-{% block js_block %}
-
+    <link rel="stylesheet" href="{% static 'node_modules/simple-line-icons/css/simple-line-icons.css' %}"/>
 {% endblock %}
 {% block title %}אודות{% endblock %}
 {% block content %}
@@ -19,22 +17,18 @@
             קורסים מומלצים או קורסים של מרצים מומלצים. לאחר בחירת הקורסים, האתר בונה לו מערכת שעות.</p>
         <p>כתוצאה מכך, הסטודנט יותר מוכן ורגוע לקראת מועד בניית המערכת שלו באינבר.</p>
     </div>
-
-    <h2 style="text-align:center"><b>~ הצוות שלנו ~</b></h2>
+    <p class="display-6" style="text-align:center"><b>~ הצוות שלנו ~</b></p>
     <div class="row">
         <div class="column">
             <div class="card">
                 <img src="{% static 'plan_ilan/images/matan.jpg' %}" alt="Matan" class="profile_image"
                      style="width:100%"/>
-                <div class="container">
+                <div class="container team4">
                     <h2 class="name">מתן מלכה</h2>
-                    <p class="title">Backend Developer & DB Designer</p>
-                    <p>סטודנט שנה ג' באוניברסיטת בר אילן. עובד משרת סטודנט בחברת Cisco</p>
+                    <p class="title subtitle">Backend Developer & DB Designer</p>
+                    <p>סטודנט שנה ג' באוניברסיטת בר אילן. עובד כמהנדס תוכנה ב-Cisco</p>
                     <p>שם הכלב: קפטן</p>
-                    <p class="email">matanmlk@gmail.com</p>
-                    {#                    <p>#}
-                    {#                        <button class="button">Contact</button>#}
-                    {#                    </p>#}
+                    {% include "plan_ilan/social_network_icons.html" with facebook="mkl1888" instagram="matanmkl" linkedin="matan-malka" mail="matanmkl@gmail.com" subject="About your project" %}
                 </div>
             </div>
         </div>
@@ -43,15 +37,12 @@
             <div class="card">
                 <img src="{% static 'plan_ilan/images/yana.jpeg' %}" alt="Yana" class="profile_image"
                      style="width:100%"/>
-                <div class="container">
+                <div class="container team4">
                     <h2 class="name">יאנה מולודצקי</h2>
-                    <p class="title">Full Stack Developer</p>
-                    <p>סטודנטית שנה ג' באוניברסיטת בר אילן. עובדת משרת סטודנט בחברת Toga Networks</p>
+                    <p class="title subtitle">Full Stack Developer</p>
+                    <p>סטודנטית שנה ג' באוניברסיטת בר אילן. עובדת כמהנדסת תוכנה ב-Toga Networks</p>
                     <p>שם הכלב: ריקו</p>
-                    <p class="email">yanamolo96@gmail.com</p>
-                    {#                    <p>#}
-                    {#                        <button class="button">Contact</button>#}
-                    {#                    </p>#}
+                    {% include "plan_ilan/social_network_icons.html" with facebook="yana.molodetsky" instagram="yanamolo135" linkedin="yana-molodetsky-5945a919b" mail="yanamolo96@gmail.com" subject="About your project" %}
                 </div>
             </div>
         </div>
@@ -60,15 +51,12 @@
             <div class="card">
                 <img src="{% static 'plan_ilan/images/sapir.jpeg' %}" alt="Sapir" class="profile_image"
                      style="width:100%"/>
-                <div class="container">
-                    <h2 class="name">ספיר גראפי</h2>
-                    <p class="title">Frontend Developer & UI x UX Designer</p>
-                    <p>סטודנטית שנה ג' באוניברסיטת בר אילן. עובדת משרת סטודנט בחברת Radeware</p>
+                <div class="container team4">
+                    <p class="h2 name">ספיר גראפי</p>
+                    <p class="title subtitle">Frontend Developer & UI x UX Designer</p>
+                    <p>סטודנטית שנה ג' באוניברסיטת בר אילן. עובדת כמהנדסת תוכנה ב-Radware</p>
                     <p>שם הכלבה: אמה</p>
-                    <p class="email">sapirg50@gmail.com</p>
-                    {#                    <p>#}
-                    {#                        <button class="button">Contact</button>#}
-                    {#                    </p>#}
+                    {% include "plan_ilan/social_network_icons.html" with facebook="sapir.graffi" instagram="sapirgraffi" linkedin="sapir-graffi" mail="sapirg50@gmail.com" subject="About your project" %}
                 </div>
             </div>
         </div>

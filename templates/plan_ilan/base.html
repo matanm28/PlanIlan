@@ -2,94 +2,57 @@
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="{% static 'node_modules/bootstrap/dist/css/bootstrap.rtl.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'node_modules/@fortawesome/fontawesome-free/css/all.min.css' %}">
+    {#todo: necessary?#}
+    <link rel="stylesheet" href="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.css' %}"/>
     <link href="{% static 'node_modules/mdb-ui-kit/css/mdb.rtl.min.css' %}" rel="stylesheet">
+    <link href="{% static 'node_modules/bootstrap/dist/css/bootstrap.rtl.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'plan_ilan/css/navbar_style.css' %}"/>
-    <script type="text/javascript" src="{% static 'node_modules/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'node_modules/mdb-ui-kit/js/mdb.min.js' %}"></script>
     {% block css_block %}
     {% endblock %}
+    <script type="text/javascript"
+            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'node_modules/mdb-ui-kit/js/mdb.min.js' %}"></script>
+
     {% block js_block %}
     {% endblock %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar" style="padding: 1%">
-    <div class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
-        <a class="dis" href="#" tabindex="-1" aria-disabled="true">
-            שלום&nbsp;
-        </a>
-        <a class="dis" href="#" tabindex="-1" aria-disabled="true">
+<nav class="navbar">
+    {% load user_agents %}
+    <div class="navbar navbar-expand-lg plan-ilan-nav {% if not request.user|is_mobile %}d-flex{% endif %}">
+        <div class="container-fluid">
+            <a class="dis" href="#" tabindex="-1" aria-disabled="true">
+                שלום&nbsp;
+            </a>
+            <a class="dis" href="#" tabindex="-1" aria-disabled="true">
+                {% if user.is_authenticated %}
+                    {{ request.user.account }},
+                {% else %}
+                    אורח,
+                {% endif %}
+            </a>
             {% if user.is_authenticated %}
-                {{ request.user }},
+                <a class="act" href="{% url 'logout' %}">&nbspהתנתק</a>
             {% else %}
-                אורח,
+                <a class="act" href="{% url 'login' %}">&nbspהתחבר</a>
             {% endif %}
-        </a>
-        {% if user.is_authenticated %}
-            <a class="act" href="{% url 'logout' %}">&nbspהתנתק</a>
-        {% else %}
-            <a class="act" href="{% url 'login' %}">&nbspהתחבר</a>
-        {% endif %}
-        <a class="act" aria-current="page" href="{% url 'home' %}">דף הבית </a>
-        <a class="act" aria-current="page" href="{% url 'search' %}">חיפוש</a>
-        {% if user.is_authenticated %}
-            <a class="act" aria-current="page" href="{% url 'landing-page' %}">ניהול מערכת שעות</a>
-        {% endif %}
-        <a class="act" aria-current="page" href="{% url 'about' %}">אודות</a>
+            <a class="act" aria-current="page" href="{% url 'home' %}">דף הבית </a>
+            <a class="act" aria-current="page" href="{% url 'search' %}">חיפוש</a>
+            {% if user.is_authenticated %}
+                <a class="act" aria-current="page" href="{% url 'landing-page' %}">ניהול מערכת שעות</a>
+            {% endif %}
+            <a class="act" aria-current="page" href="{% url 'about' %}">אודות</a>
+        </div>
     </div>
-    <div class="logo-navbar">
-        <img src="{% static 'plan_ilan/images/logo.png' %}" class="logo-navbar-img"/>
-    </div>
-    {#        <ul class="navbar-nav mx-auto">#}
-    {#            <li class="nav-item" style="float: right">#}
-    {#                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">#}
-    {#                    שלום#}
-    {#                </a>#}
-    {#            </li>#}
-    {#            <li class="nav-item">#}
-    {#                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">#}
-    {#                    {% if user.is_authenticated %}#}
-    {#                        {{ request.user }}#}
-    {#                    {% else %}#}
-    {#                        אורח#}
-    {#                    {% endif %}#}
-    {#                </a>#}
-    {#            </li>#}
-    {#            <li class="nav-item">#}
-    {#                {% if user.is_authenticated %}#}
-    {#                    <a class="nav-link active" href="{% url 'logout' %}">התנתק</a>#}
-    {#                {% else %}#}
-    {#                    <a class="nav-link active" href="{% url 'login' %}">התחבר</a>#}
-    {#                {% endif %}#}
-    {#            </li>#}
-    {#            <li class="nav-item">#}
-    {#                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">דף הבית</a>#}
-    {#            </li>#}
-    {#            <li class="nav-item">#}
-    {#                <a class="nav-link active" aria-current="page" href="{% url 'search' %}">חיפוש</a>#}
-    {#            </li>#}
-    {#            <li class="nav-item">#}
-    {#                <a class="nav-link active" aria-current="page" href="{% url 'about' %}">אודות</a>#}
-    {#            </li>#}
-    {#            {% if user.is_authenticated %}#}
-    {#                <li class="nav-item">#}
-    {#                    <a class="nav-link active" aria-current="page" href="{% url 'timetable' %}">בנה מערכת שעות</a>#}
-    {#                </li>#}
-    {#            {% endif %}#}
-    {#        </ul>#}
-    {#        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"#}
-    {#                aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">#}
-    {#            <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>#}
-    {#        </button>#}
-    {#        <div class="collapse navbar-collapse" id="navbarNav" style="height: 30%">#}
-    {#            #}
-    {#        </div>#}
 </nav>
-<div class="container" style="height: 90%">
+<div class="container">
     {% block content %}
     {% endblock %}
 </div>

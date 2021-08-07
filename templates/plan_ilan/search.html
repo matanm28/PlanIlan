@@ -9,12 +9,8 @@
 {% endblock %}
 {% block js_block %}
     {% load static %}
-    <script type="text/javascript"
-            src="{% static 'node_modules/@fortawesome/fontawesome-free/js/all.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'node_modules/jquery-ui-dist/jquery-ui.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}"></script>
-    <script type="text/javascript" src="{% static 'plan_ilan/js/search.js' %}"></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/csrf_token_script.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'plan_ilan/js/search.js' %}" defer></script>
 {% endblock %}
 {% block title %}חיפוש{% endblock %}
 {% block content %}

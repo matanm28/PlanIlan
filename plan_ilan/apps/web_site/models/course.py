@@ -1,12 +1,12 @@
 import logging
-from typing import List
+from typing import List, Set
 
 from django.db import models
 from django.db.models import Avg, QuerySet
 
 from plan_ilan.exceptaions.enum_not_exist_error import EnumNotExistError
 from . import BaseModel, LessonTime, Location, Teacher, LessonTypeEnum, Exam
-from .enums import Department, Faculty, LessonType, Day
+from .enums import Department, Faculty, LessonType, Day, Semester
 
 
 class Course(BaseModel):
@@ -169,16 +169,20 @@ class Lesson(BaseModel):
         return self.teachers.first()
 
     @property
-    def semester(self):
-        semesters = set()
-        for session_times in self.session_times.all():
-            semesters.add(session_times.semester)
+    def semester(self) -> Semester:
+        semesters = self.get_semesters()
         if len(semesters) != 1:
             if len(semesters) == 0:
                 logging.warning('Course with no listed semesters')
             else:
                 logging.warning('Course with more than one different semesters')
-        return semesters.pop()
+        return semesters.pop() if len(semesters) > 0 else None
+
+    def get_semesters(self) -> Set[Semester]:
+        semesters = set()
+        for session_times in self.session_times.all():
+            semesters.add(session_times.semester)
+        return semesters
 
     @property
     def days(self) -> QuerySet[Day]:

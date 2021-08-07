@@ -14,15 +14,17 @@ $(document).ready(function () {
         {
             id: "points_slider",
             min: 0,
-            max: 50,
+            max: 30,
             range: true,
             reversed: true,
-            formatter: sliderFormatter
+            /*formatter: sliderFormatter,
+            tooltip_position:'top',*/
+            tooltip: 'hide',
         });
     slider.on("change", value => {
         const [left, right] = value.newValue;
         leftSliderText.innerHTML = `${left} נקודות`;
         rightSliderText.innerHTML = `${right} נקודות`;
     });
-    slider.setValue([0,50]);
+    slider.setValue([0,30]);
 });

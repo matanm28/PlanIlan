@@ -1,16 +1,6 @@
-from collections import defaultdict
 from typing import List, Dict
 
 from plan_ilan.apps.web_site.models import LessonTime
-from plan_ilan.apps.timetable_generator.timetable_optimizer.optimized_course import OptimizedCourse
-
-
-def cut_by_day(courses_list: List[OptimizedCourse]) -> List:
-    days_to_courses_dict = defaultdict(list)
-    for course in courses_list:
-        for day in course.days_list:
-            days_to_courses_dict[day].append(course)
-    return days_to_courses_dict
 
 
 def single_overlap(course_times: List[LessonTime], spec_time: LessonTime) -> bool:
@@ -87,4 +77,3 @@ class Interval:
     @property
     def size(self) -> float:
         return self._right - self._left
-

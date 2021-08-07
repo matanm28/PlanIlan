@@ -30,6 +30,7 @@
                     {% csrf_token %}
                     <h2 style="text-align: center; color: #de6e6e"><u>שיעורי חובה</u></h2>
                     <div class="accordion">
+                        {% load timetable_extras %}
                         {% for course in mandatory_courses %}
                             <button type="button" class="collapsible">{{ course.name }} - {{ course.code }}</button>
                             <div class="content">
@@ -37,77 +38,81 @@
                                 {% for lesson_group in grouped_lessons %}
                                     <h2 class="lead" style="text-align: center"><u>{{ lesson_group.grouper }}</u></h2>
                                     {% for lesson in lesson_group.list %}
-                                        <div class="one-lesson" style="height: fit-content; width: 100%">
-                                            <div style="height: 100%; width: auto; float: right">
-                                                <label for="check_{{ lesson.code_and_group }}">
-                                                    <input type="checkbox" id="check_{{ lesson.code_and_group }}"
-                                                           value="{{ lesson.pk }}"
-                                                           name="mandatory-lessons" checked>
-                                                </label>
+                                        {% if not lesson.get_semesters|has_common_items:valid_semesters %}
+                                            <!-- continue -->
+                                        {% else %}
+                                            <div class="one-lesson" style="height: fit-content; width: 100%">
+                                                <div style="height: 100%; width: auto; float: right">
+                                                    <label for="check_{{ lesson.code_and_group }}">
+                                                        <input type="checkbox" id="check_{{ lesson.code_and_group }}"
+                                                               value="{{ lesson.pk }}"
+                                                               name="mandatory-lessons" checked>
+                                                    </label>
+                                                </div>
+                                                <div style="margin-right: 5%; margin-bottom: 1%">
+                                                    <div>
+                                                        <p class="mb-0"><span class="btn-group icon"
+                                                                              style="padding: 3px; background: black"><i
+                                                                class="fas fa-chalkboard-teacher fa-1x"
+                                                                aria-hidden="true"></i></span>
+                                                            &nbsp<strong>מרצה:</strong>
+                                                            {{ lesson.teacher }}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0"><span class="btn-group icon"
+                                                                              style="padding: 3px; background: black"><i
+                                                                class="fas fa-map-marked-alt fa-1x"
+                                                                aria-hidden="true"></i></span>
+                                                            &nbsp<strong>מיקום:</strong>
+                                                            {% for location in lesson.locations.all %}
+                                                                {% if forloop.first %}
+                                                                    {{ location }}
+                                                                {% else %}
+                                                                    ; {{ location }}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0"><span class="btn-group icon"
+                                                                              style="padding: 3px; background: black"><i
+                                                                class="fas fa-calendar-alt fa-1x"
+                                                                aria-hidden="true"></i></span>
+                                                            &nbsp<strong>זמני המפגש:</strong>
+                                                            {% for time in lesson.session_times.all %}
+                                                                {% if forloop.first %}
+                                                                    {{ time }}
+                                                                {% else %}
+                                                                    ; {{ time }}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0"><span class="btn-group icon"
+                                                                              style="padding: 3px; background: black"><i
+                                                                class="fas fa-user fa-1x"
+                                                                aria-hidden="true"></i></span>
+                                                            &nbsp<strong>דף פרופיל:</strong>&nbsp<a
+                                                                    href="{% url 'course_detail' course.code %}"
+                                                                    target="_blank">לחצו כאן</a>
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <p class="mb-0"><span class="btn-group icon"
+                                                                              style="padding: 3px; background: black"><i
+                                                                class="fas fa-clipboard-list fa-1x"
+                                                                aria-hidden="true"></i></span>
+                                                            &nbsp<strong>דירוג חשיבות:</strong>
+                                                            <input type="number" name="rank-mandatory-lesson"
+                                                                   class="quantity" min="" max=""
+                                                                   value="1">
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div style="margin-right: 5%; margin-bottom: 1%">
-                                                <div>
-                                                    <p class="mb-0"><span class="btn-group icon"
-                                                                          style="padding: 3px; background: black"><i
-                                                            class="fas fa-chalkboard-teacher fa-1x"
-                                                            aria-hidden="true"></i></span>
-                                                        &nbsp<strong>מרצה:</strong>
-                                                        {{ lesson.teacher }}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <p class="mb-0"><span class="btn-group icon"
-                                                                          style="padding: 3px; background: black"><i
-                                                            class="fas fa-map-marked-alt fa-1x"
-                                                            aria-hidden="true"></i></span>
-                                                        &nbsp<strong>מיקום:</strong>
-                                                        {% for location in lesson.locations.all %}
-                                                            {% if forloop.first %}
-                                                                {{ location }}
-                                                            {% else %}
-                                                                ; {{ location }}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <p class="mb-0"><span class="btn-group icon"
-                                                                          style="padding: 3px; background: black"><i
-                                                            class="fas fa-calendar-alt fa-1x"
-                                                            aria-hidden="true"></i></span>
-                                                        &nbsp<strong>זמני המפגש:</strong>
-                                                        {% for time in lesson.session_times.all %}
-                                                            {% if forloop.first %}
-                                                                {{ time }}
-                                                            {% else %}
-                                                                ; {{ time }}
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <p class="mb-0"><span class="btn-group icon"
-                                                                          style="padding: 3px; background: black"><i
-                                                            class="fas fa-user fa-1x"
-                                                            aria-hidden="true"></i></span>
-                                                        &nbsp<strong>דף פרופיל:</strong>&nbsp<a
-                                                                href="{% url 'course_detail' course.code %}"
-                                                                target="_blank">לחצו כאן</a>
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <p class="mb-0"><span class="btn-group icon"
-                                                                          style="padding: 3px; background: black"><i
-                                                            class="fas fa-clipboard-list fa-1x"
-                                                            aria-hidden="true"></i></span>
-                                                        &nbsp<strong>דירוג חשיבות:</strong>
-                                                        <input type="number" name="rank-mandatory-lesson"
-                                                               class="quantity" min="" max=""
-                                                               value="1">
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        {% endif %}
                                     {% endfor %}
                                 {% endfor %}
                             </div>

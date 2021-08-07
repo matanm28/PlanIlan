@@ -1,6 +1,7 @@
 import logging
 from django.shortcuts import redirect
 
+logger = logging.getLogger(__name__)
 
 def unauthenticated_user(view_func):
     def wrapper_func(request, *args, **kwargs):
@@ -53,7 +54,7 @@ def receiver_subclasses(signal, sender, dispatch_uid_prefix, weak=True, **kwargs
 
     def _decorator(func):
         all_senders = get_subclasses(sender)
-        logging.info(all_senders)
+        logger.debug(f'got subclasses {all_senders} for sender {sender}')
         for snd in all_senders:
             signal.connect(func, sender=snd, weak=weak, dispatch_uid=f'{dispatch_uid_prefix}_{snd.__name__}', **kwargs)
         return func
