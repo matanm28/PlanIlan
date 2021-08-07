@@ -199,7 +199,6 @@ class BaseSettings(Settings):
     STATIC_URL = '/static/'
     STATICFILES_DIRS = [
         os.path.join(SITE_ROOT, 'static'),
-        os.path.join(SITE_ROOT, 'media')
     ]
 
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

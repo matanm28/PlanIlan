@@ -7,14 +7,14 @@ from typing import Optional
 class CostumeSuffixTimedRotatingFileHandler(TimedRotatingFileHandler):
     def __init__(self, filename, when='h', interval=1, backupCount=0,
                  encoding=None, delay=False, utc=False, atTime=None,
-                 errors=None, suffix: str = '', sep: str = '-') -> None:
+                 errors=None, sep: str = '-') -> None:
         if '.' in filename:
             basename, extension = filename.split('.')
         else:
             basename = filename
             extension = 'log'
         self._file_suffix = extension
-        super().__init__(filename, when, interval, backupCount, encoding, delay, utc, atTime, errors)
+        super().__init__(filename, when, interval, backupCount, encoding, delay, utc)
         self.baseFilename = basename
         self.sep = sep
 

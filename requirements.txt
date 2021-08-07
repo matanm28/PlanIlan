@@ -25,6 +25,7 @@ django-filter==2.4.0
 django-model-utils==4.1.1
 django-polymorphic==3.0.0
 django-storages==1.11.1
+django-user-agents==0.4.0
 django-widget-tweaks==1.4.8
 djangorestframework==3.12.4
 dnspython==2.1.0
@@ -59,6 +60,7 @@ Pygments==2.7.3
 pymongo==3.12.0
 pyparsing==2.4.7
 python-dateutil==2.8.1
+python-decouple==3.4
 pytz==2020.5
 PyYAML==5.4.1
 requests==2.25.1
@@ -71,7 +73,9 @@ sqlparse==0.4.1
 termcolor==1.1.0
 traitlets==5.0.5
 typing-extensions==3.7.4.3
+ua-parser==0.10.0
 urllib3==1.25.11
+user-agents==2.2.0
 wcwidth==0.1.9
 webdriver-manager==3.4.0
 Werkzeug==1.0.1
