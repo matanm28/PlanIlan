@@ -3,7 +3,7 @@ from .config import config
 
 
 class ProductionSettings(BaseSettings):
-    DEBUG = False
+    DEBUG = True
 
     AUTH_PASSWORD_VALIDATORS = [
         {
