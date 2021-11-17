@@ -24,12 +24,8 @@
 
 svg {
     display: block;
-    /*font: 10.5em 'Arial';*/
-    /*font: 10.5em 'BN Alpaca';*/
-    /*font: 10.5em 'BN Cloud';*/
-    font: 9em 'BN Cloud';
-    /*width: 960px;*/
-    /*height: 300px;*/
+    font-size: 9em;
+    font-family: "BN Cloud", serif;
     width: auto;
     height: auto;
     margin: 0 auto;

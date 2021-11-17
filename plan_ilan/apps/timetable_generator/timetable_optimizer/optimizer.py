@@ -1,4 +1,5 @@
 import itertools
+import logging
 from collections import defaultdict, deque
 from typing import List, Dict, Tuple, Union, Iterator
 
@@ -10,6 +11,7 @@ from plan_ilan.apps.timetable_generator.models import Timetable, BlockedTimePeri
 from plan_ilan.apps.web_site.models import Lesson, Day, SemesterEnum
 
 EPSILON = 1e-3
+logger = logging.getLogger(__name__)
 
 
 class TimetableOptimizer:
@@ -70,6 +72,7 @@ class TimetableOptimizer:
 
         self.model_ready = True
 
+    @Timer('solve', logger=logger)
     def solve(self) -> List[Tuple[List[str], Dict]]:
         if not self.model_ready:
             self.__prepare_model_for_solve()
